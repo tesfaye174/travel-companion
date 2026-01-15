@@ -30,7 +30,8 @@ class TripAdapter(private val onItemClick: (Trip) -> Unit) :
         fun bind(trip: Trip) {
             binding.textDestination.text = trip.destination
             binding.textDate.text = dateFormat.format(Date(trip.startDate))
-            binding.textType.text = trip.type.name
+            binding.textType.text = trip.type.name.replace("_", "-")
+            binding.textDistance.text = String.format(Locale.getDefault(), "%.1f km", trip.totalDistance)
             binding.root.setOnClickListener { onItemClick(trip) }
         }
     }

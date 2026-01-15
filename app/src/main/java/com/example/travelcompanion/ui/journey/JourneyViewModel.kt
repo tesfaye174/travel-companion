@@ -23,9 +23,10 @@ class JourneyViewModel(private val repository: TravelRepository) : ViewModel() {
     }
 
     fun stopJourney() = viewModelScope.launch {
-        _currentJourney.value?.let { 
-            val updated = it.copy(endTime = System.currentTimeMillis())
+        _currentJourney.value?.let { journey ->
+            val updated = journey.copy(endTime = System.currentTimeMillis())
             // Update in DB (need to add updateJourney to repo)
+            repository.updateJourney(updated)
             _currentJourney.value = null
             _activeTripId.value = -1L
         }

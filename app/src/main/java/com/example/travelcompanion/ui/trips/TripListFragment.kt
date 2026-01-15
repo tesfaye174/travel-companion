@@ -29,13 +29,42 @@ class TripListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TripAdapter { trip ->
-            // Handle trip click
+        val adapter = TripAdapter { _ ->
+            // Handle trip click - could navigate to trip details
         }
         binding.recyclerViewTrips.adapter = adapter
 
         viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
             adapter.submitList(trips)
+        }
+
+        // Setup filter destination
+        binding.editFilterDestination.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                viewModel.setFilterDestination(s?.toString() ?: "")
+            }
+        })
+
+        // Setup filter type dropdown
+        val typeItems = arrayOf("All Types", "Local", "Day", "Multi-day")
+        val typeAdapter = android.widget.ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            typeItems
+        )
+        binding.spinnerFilterType.setAdapter(typeAdapter)
+        binding.spinnerFilterType.setText("All Types", false)
+        binding.spinnerFilterType.setOnItemClickListener { _, _, position, _ ->
+            val type = when (position) {
+                0 -> null
+                1 -> com.example.travelcompanion.domain.model.TripType.LOCAL
+                2 -> com.example.travelcompanion.domain.model.TripType.DAY
+                3 -> com.example.travelcompanion.domain.model.TripType.MULTI_DAY
+                else -> null
+            }
+            viewModel.setFilterType(type)
         }
 
         binding.fabAddTrip.setOnClickListener {

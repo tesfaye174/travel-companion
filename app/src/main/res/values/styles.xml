@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Text Appearance Style -->
+    <style name="TextAppearance.TravelCompanion" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/md_theme_light_onSurface</item>
+    </style>
+    
+    <!-- Section Title Style -->
+    <style name="TextAppearance.TravelCompanion.SectionTitle" parent="TextAppearance.TravelCompanion">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <!-- Title Style -->
+    <style name="TextAppearance.TravelCompanion.Title" parent="TextAppearance.TravelCompanion">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <!-- Body Text Styles -->
+    <style name="TextAppearance.TravelCompanion.Body1" parent="TextAppearance.TravelCompanion">
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="TextAppearance.TravelCompanion.Body2" parent="TextAppearance.TravelCompanion">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/md_theme_light_onSurfaceVariant</item>
+    </style>
+    
+    <!-- Card Styles -->
+    <style name="Widget.TravelCompanion.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
+    </style>
+    
+    <style name="Widget.TravelCompanion.Card.Outlined" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/md_theme_light_outline</item>
+        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
+    </style>
+    
+    <!-- Button Styles -->
+    <style name="Widget.TravelCompanion.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
+        <item name="backgroundTint">@color/md_theme_light_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+    
+    <style name="Widget.TravelCompanion.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/md_theme_light_primary</item>
+        <item name="strokeColor">@color/md_theme_light_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+    
+    <!-- TextInput Styles -->
+    <style name="Widget.TravelCompanion.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="hintTextColor">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="boxStrokeColor">@color/md_theme_light_outline</item>
+    </style>
+</resources>

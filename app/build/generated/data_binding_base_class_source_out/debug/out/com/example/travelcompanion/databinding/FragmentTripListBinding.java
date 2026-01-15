@@ -4,6 +4,8 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -21,16 +25,34 @@ public final class FragmentTripListBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final TextInputEditText editFilterDestination;
+
+  @NonNull
   public final FloatingActionButton fabAddTrip;
+
+  @NonNull
+  public final MaterialCardView filterCard;
+
+  @NonNull
+  public final LinearLayout filterLayout;
 
   @NonNull
   public final RecyclerView recyclerViewTrips;
 
+  @NonNull
+  public final AutoCompleteTextView spinnerFilterType;
+
   private FragmentTripListBinding(@NonNull ConstraintLayout rootView,
-      @NonNull FloatingActionButton fabAddTrip, @NonNull RecyclerView recyclerViewTrips) {
+      @NonNull TextInputEditText editFilterDestination, @NonNull FloatingActionButton fabAddTrip,
+      @NonNull MaterialCardView filterCard, @NonNull LinearLayout filterLayout,
+      @NonNull RecyclerView recyclerViewTrips, @NonNull AutoCompleteTextView spinnerFilterType) {
     this.rootView = rootView;
+    this.editFilterDestination = editFilterDestination;
     this.fabAddTrip = fabAddTrip;
+    this.filterCard = filterCard;
+    this.filterLayout = filterLayout;
     this.recyclerViewTrips = recyclerViewTrips;
+    this.spinnerFilterType = spinnerFilterType;
   }
 
   @Override
@@ -60,9 +82,27 @@ public final class FragmentTripListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.edit_filter_destination;
+      TextInputEditText editFilterDestination = ViewBindings.findChildViewById(rootView, id);
+      if (editFilterDestination == null) {
+        break missingId;
+      }
+
       id = R.id.fab_add_trip;
       FloatingActionButton fabAddTrip = ViewBindings.findChildViewById(rootView, id);
       if (fabAddTrip == null) {
+        break missingId;
+      }
+
+      id = R.id.filter_card;
+      MaterialCardView filterCard = ViewBindings.findChildViewById(rootView, id);
+      if (filterCard == null) {
+        break missingId;
+      }
+
+      id = R.id.filter_layout;
+      LinearLayout filterLayout = ViewBindings.findChildViewById(rootView, id);
+      if (filterLayout == null) {
         break missingId;
       }
 
@@ -72,8 +112,14 @@ public final class FragmentTripListBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentTripListBinding((ConstraintLayout) rootView, fabAddTrip,
-          recyclerViewTrips);
+      id = R.id.spinner_filter_type;
+      AutoCompleteTextView spinnerFilterType = ViewBindings.findChildViewById(rootView, id);
+      if (spinnerFilterType == null) {
+        break missingId;
+      }
+
+      return new FragmentTripListBinding((ConstraintLayout) rootView, editFilterDestination,
+          fabAddTrip, filterCard, filterLayout, recyclerViewTrips, spinnerFilterType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -42,3 +42,12 @@ data class Photo(
     val filePath: String,
     val timestamp: Long
 )
+
+data class Note(
+    val id: Long = 0,
+    val tripId: Long,
+    val journeyId: Long?,
+    val pointId: Long?,
+    val content: String,
+    val timestamp: Long
+)

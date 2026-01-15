@@ -4,15 +4,15 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,10 +20,10 @@ import java.lang.String;
 
 public final class FragmentAddTripBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final NestedScrollView rootView;
 
   @NonNull
-  public final Button buttonSave;
+  public final MaterialButton buttonSave;
 
   @NonNull
   public final TextInputEditText editDestination;
@@ -40,10 +40,10 @@ public final class FragmentAddTripBinding implements ViewBinding {
   @NonNull
   public final RadioButton radioMulti;
 
-  private FragmentAddTripBinding(@NonNull LinearLayout rootView, @NonNull Button buttonSave,
-      @NonNull TextInputEditText editDestination, @NonNull RadioButton radioDay,
-      @NonNull RadioGroup radioGroupType, @NonNull RadioButton radioLocal,
-      @NonNull RadioButton radioMulti) {
+  private FragmentAddTripBinding(@NonNull NestedScrollView rootView,
+      @NonNull MaterialButton buttonSave, @NonNull TextInputEditText editDestination,
+      @NonNull RadioButton radioDay, @NonNull RadioGroup radioGroupType,
+      @NonNull RadioButton radioLocal, @NonNull RadioButton radioMulti) {
     this.rootView = rootView;
     this.buttonSave = buttonSave;
     this.editDestination = editDestination;
@@ -55,7 +55,7 @@ public final class FragmentAddTripBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -81,7 +81,7 @@ public final class FragmentAddTripBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.button_save;
-      Button buttonSave = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton buttonSave = ViewBindings.findChildViewById(rootView, id);
       if (buttonSave == null) {
         break missingId;
       }
@@ -116,7 +116,7 @@ public final class FragmentAddTripBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAddTripBinding((LinearLayout) rootView, buttonSave, editDestination,
+      return new FragmentAddTripBinding((NestedScrollView) rootView, buttonSave, editDestination,
           radioDay, radioGroupType, radioLocal, radioMulti);
     }
     String missingId = rootView.getResources().getResourceName(id);

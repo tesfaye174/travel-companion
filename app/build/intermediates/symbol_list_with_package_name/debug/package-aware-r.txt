@@ -1504,12 +1504,14 @@ color dim_foreground_disabled_material_dark
 color dim_foreground_disabled_material_light
 color dim_foreground_material_dark
 color dim_foreground_material_light
+color error
 color error_color_material_dark
 color error_color_material_light
 color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
+color info
 color m3_appbar_overlay_color
 color m3_assist_chip_icon_tint_color
 color m3_assist_chip_stroke_color
@@ -2106,6 +2108,34 @@ color material_timepicker_button_stroke
 color material_timepicker_clock_text_color
 color material_timepicker_clockface
 color material_timepicker_modebutton_tint
+color md_theme_light_background
+color md_theme_light_error
+color md_theme_light_errorContainer
+color md_theme_light_inverseOnSurface
+color md_theme_light_inversePrimary
+color md_theme_light_inverseSurface
+color md_theme_light_onBackground
+color md_theme_light_onError
+color md_theme_light_onErrorContainer
+color md_theme_light_onPrimary
+color md_theme_light_onPrimaryContainer
+color md_theme_light_onSecondary
+color md_theme_light_onSecondaryContainer
+color md_theme_light_onSurface
+color md_theme_light_onSurfaceVariant
+color md_theme_light_onTertiary
+color md_theme_light_outline
+color md_theme_light_outlineVariant
+color md_theme_light_primary
+color md_theme_light_primaryContainer
+color md_theme_light_scrim
+color md_theme_light_secondary
+color md_theme_light_secondaryContainer
+color md_theme_light_shadow
+color md_theme_light_surface
+color md_theme_light_surfaceTint
+color md_theme_light_surfaceVariant
+color md_theme_light_tertiary
 color mtrl_btn_bg_color_selector
 color mtrl_btn_ripple_color
 color mtrl_btn_stroke_color_selector
@@ -2180,6 +2210,7 @@ color secondary_text_default_material_dark
 color secondary_text_default_material_light
 color secondary_text_disabled_material_dark
 color secondary_text_disabled_material_light
+color success
 color switch_thumb_disabled_material_dark
 color switch_thumb_disabled_material_light
 color switch_thumb_material_dark
@@ -2190,6 +2221,7 @@ color teal_200
 color teal_700
 color tooltip_background_dark
 color tooltip_background_light
+color warning
 color white
 dimen abc_action_bar_content_inset_material
 dimen abc_action_bar_content_inset_with_nav
@@ -3382,6 +3414,7 @@ id easeOut
 id east
 id edge
 id edit_destination
+id edit_filter_destination
 id edit_query
 id edit_text_id
 id elastic
@@ -3402,6 +3435,8 @@ id fillStart
 id fill_horizontal
 id fill_vertical
 id filled
+id filter_card
+id filter_layout
 id fitCenter
 id fitEnd
 id fitStart
@@ -3647,6 +3682,7 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
+id spinner_filter_type
 id spline
 id split_action_bar
 id spread
@@ -3694,6 +3730,7 @@ id textStart
 id textTop
 id text_date
 id text_destination
+id text_distance
 id text_forecast
 id text_input_end_icon
 id text_input_error_icon
@@ -4684,6 +4721,11 @@ style TextAppearance_MaterialComponents_Subtitle1
 style TextAppearance_MaterialComponents_Subtitle2
 style TextAppearance_MaterialComponents_TimePicker_Title
 style TextAppearance_MaterialComponents_Tooltip
+style TextAppearance_TravelCompanion
+style TextAppearance_TravelCompanion_Body1
+style TextAppearance_TravelCompanion_Body2
+style TextAppearance_TravelCompanion_SectionTitle
+style TextAppearance_TravelCompanion_Title
 style TextAppearance_Widget_AppCompat_ExpandedMenu_Item
 style TextAppearance_Widget_AppCompat_Toolbar_Subtitle
 style TextAppearance_Widget_AppCompat_Toolbar_Title
@@ -5281,6 +5323,12 @@ style Widget_MaterialComponents_Toolbar_PrimarySurface
 style Widget_MaterialComponents_Toolbar_Surface
 style Widget_MaterialComponents_Tooltip
 style Widget_Support_CoordinatorLayout
+style Widget_TravelCompanion_BottomNavigation
+style Widget_TravelCompanion_Button_Primary
+style Widget_TravelCompanion_Button_Secondary
+style Widget_TravelCompanion_Card
+style Widget_TravelCompanion_Card_Outlined
+style Widget_TravelCompanion_TextInputLayout_OutlinedBox
 styleable ActionBar background backgroundSplit backgroundStacked contentInsetEnd contentInsetEndWithActions contentInsetLeft contentInsetRight contentInsetStart contentInsetStartWithNavigation customNavigationLayout displayOptions divider elevation height hideOnContentScroll homeAsUpIndicator homeLayout icon indeterminateProgressStyle itemPadding logo navigationMode popupTheme progressBarPadding progressBarStyle subtitle subtitleTextStyle title titleTextStyle
 styleable ActionBarLayout android_layout_gravity
 styleable ActionMenuItemView android_minWidth

@@ -48,20 +48,26 @@
             android:text="Ready to Start"
             android:textSize="18sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_toggle_tracking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Start Journey" />
+            android:text="Start Journey"
+            style="@style/Widget.TravelCompanion.Button.Primary"
+            app:icon="@android:drawable/ic_menu_mylocation"
+            app:iconGravity="start" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_take_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Take Photo"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/Widget.TravelCompanion.Button.Secondary"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:iconGravity="start" />
 
     </LinearLayout>
 

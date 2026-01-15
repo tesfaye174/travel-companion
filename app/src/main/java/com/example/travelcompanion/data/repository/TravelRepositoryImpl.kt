@@ -44,6 +44,10 @@ class TravelRepositoryImpl(
         return journeyDao.insertJourney(journey.toEntity())
     }
 
+    override suspend fun updateJourney(journey: Journey) {
+        journeyDao.updateJourney(journey.toEntity())
+    }
+
     override fun getPointsByJourney(journeyId: Long): Flow<List<Point>> {
         return journeyDao.getPointsByJourney(journeyId).map { entities ->
             entities.map { it.toDomain() }
@@ -63,6 +67,22 @@ class TravelRepositoryImpl(
             entities.map { it.toDomain() }
         }
     }
+
+    override suspend fun insertNote(note: Note) {
+        journeyDao.insertNote(note.toEntity())
+    }
+
+    override fun getNotesByTrip(tripId: Long): Flow<List<Note>> {
+        return journeyDao.getNotesByTrip(tripId).map { entities ->
+            entities.map { it.toDomain() }
+        }
+    }
+
+    override fun getNotesByJourney(journeyId: Long): Flow<List<Note>> {
+        return journeyDao.getNotesByJourney(journeyId).map { entities ->
+            entities.map { it.toDomain() }
+        }
+    }
 }
 
 // Extension functions for mapping
@@ -77,3 +97,6 @@ fun Point.toEntity() = PointEntity(id, journeyId, latitude, longitude, timestamp
 
 fun PhotoEntity.toDomain() = Photo(id, tripId, journeyId, pointId, filePath, timestamp)
 fun Photo.toEntity() = PhotoEntity(id, tripId, journeyId, pointId, filePath, timestamp)
+
+fun NoteEntity.toDomain() = Note(id, tripId, journeyId, pointId, content, timestamp)
+fun Note.toEntity() = NoteEntity(id, tripId, journeyId, pointId, content, timestamp)

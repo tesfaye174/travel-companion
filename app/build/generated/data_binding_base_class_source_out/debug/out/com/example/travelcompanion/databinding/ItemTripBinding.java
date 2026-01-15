@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -26,13 +27,17 @@ public final class ItemTripBinding implements ViewBinding {
   public final TextView textDestination;
 
   @NonNull
-  public final TextView textType;
+  public final TextView textDistance;
+
+  @NonNull
+  public final Chip textType;
 
   private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull TextView textDate,
-      @NonNull TextView textDestination, @NonNull TextView textType) {
+      @NonNull TextView textDestination, @NonNull TextView textDistance, @NonNull Chip textType) {
     this.rootView = rootView;
     this.textDate = textDate;
     this.textDestination = textDestination;
+    this.textDistance = textDistance;
     this.textType = textType;
   }
 
@@ -75,13 +80,20 @@ public final class ItemTripBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.text_distance;
+      TextView textDistance = ViewBindings.findChildViewById(rootView, id);
+      if (textDistance == null) {
+        break missingId;
+      }
+
       id = R.id.text_type;
-      TextView textType = ViewBindings.findChildViewById(rootView, id);
+      Chip textType = ViewBindings.findChildViewById(rootView, id);
       if (textType == null) {
         break missingId;
       }
 
-      return new ItemTripBinding((MaterialCardView) rootView, textDate, textDestination, textType);
+      return new ItemTripBinding((MaterialCardView) rootView, textDate, textDestination,
+          textDistance, textType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

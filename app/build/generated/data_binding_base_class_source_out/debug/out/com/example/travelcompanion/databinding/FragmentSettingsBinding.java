@@ -4,13 +4,13 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -21,7 +21,7 @@ public final class FragmentSettingsBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final Button buttonExport;
+  public final MaterialButton buttonExport;
 
   @NonNull
   public final SwitchMaterial switchGeofencing;
@@ -29,8 +29,9 @@ public final class FragmentSettingsBinding implements ViewBinding {
   @NonNull
   public final SwitchMaterial switchReminders;
 
-  private FragmentSettingsBinding(@NonNull LinearLayout rootView, @NonNull Button buttonExport,
-      @NonNull SwitchMaterial switchGeofencing, @NonNull SwitchMaterial switchReminders) {
+  private FragmentSettingsBinding(@NonNull LinearLayout rootView,
+      @NonNull MaterialButton buttonExport, @NonNull SwitchMaterial switchGeofencing,
+      @NonNull SwitchMaterial switchReminders) {
     this.rootView = rootView;
     this.buttonExport = buttonExport;
     this.switchGeofencing = switchGeofencing;
@@ -65,7 +66,7 @@ public final class FragmentSettingsBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.button_export;
-      Button buttonExport = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton buttonExport = ViewBindings.findChildViewById(rootView, id);
       if (buttonExport == null) {
         break missingId;
       }

@@ -4,7 +4,6 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.gms.maps.MapView;
+import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,10 +25,10 @@ public final class FragmentJourneyBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
-  public final Button buttonTakePhoto;
+  public final MaterialButton buttonTakePhoto;
 
   @NonNull
-  public final Button buttonToggleTracking;
+  public final MaterialButton buttonToggleTracking;
 
   @NonNull
   public final FrameLayout cameraLayout;
@@ -46,7 +46,7 @@ public final class FragmentJourneyBinding implements ViewBinding {
   public final TextView textStatus;
 
   private FragmentJourneyBinding(@NonNull ConstraintLayout rootView,
-      @NonNull Button buttonTakePhoto, @NonNull Button buttonToggleTracking,
+      @NonNull MaterialButton buttonTakePhoto, @NonNull MaterialButton buttonToggleTracking,
       @NonNull FrameLayout cameraLayout, @NonNull LinearLayout controlPanel,
       @NonNull MapView mapView, @NonNull PreviewView previewView, @NonNull TextView textStatus) {
     this.rootView = rootView;
@@ -87,13 +87,13 @@ public final class FragmentJourneyBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.button_take_photo;
-      Button buttonTakePhoto = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton buttonTakePhoto = ViewBindings.findChildViewById(rootView, id);
       if (buttonTakePhoto == null) {
         break missingId;
       }
 
       id = R.id.button_toggle_tracking;
-      Button buttonToggleTracking = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton buttonToggleTracking = ViewBindings.findChildViewById(rootView, id);
       if (buttonToggleTracking == null) {
         break missingId;
       }

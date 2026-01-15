@@ -3,6 +3,7 @@ package com.example.travelcompanion.data.db.dao;
 import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.room.CoroutinesRoom;
+import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
@@ -41,6 +42,8 @@ public final class JourneyDao_Impl implements JourneyDao {
   private final EntityInsertionAdapter<NoteEntity> __insertionAdapterOfNoteEntity;
 
   private final EntityInsertionAdapter<PhotoEntity> __insertionAdapterOfPhotoEntity;
+
+  private final EntityDeletionOrUpdateAdapter<JourneyEntity> __updateAdapterOfJourneyEntity;
 
   public JourneyDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -145,6 +148,29 @@ public final class JourneyDao_Impl implements JourneyDao {
         statement.bindLong(6, entity.getTimestamp());
       }
     };
+    this.__updateAdapterOfJourneyEntity = new EntityDeletionOrUpdateAdapter<JourneyEntity>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `journeys` SET `id` = ?,`tripId` = ?,`startTime` = ?,`endTime` = ?,`distance` = ?,`time` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final JourneyEntity entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getTripId());
+        statement.bindLong(3, entity.getStartTime());
+        if (entity.getEndTime() == null) {
+          statement.bindNull(4);
+        } else {
+          statement.bindLong(4, entity.getEndTime());
+        }
+        statement.bindDouble(5, entity.getDistance());
+        statement.bindLong(6, entity.getTime());
+        statement.bindLong(7, entity.getId());
+      }
+    };
   }
 
   @Override
@@ -211,6 +237,25 @@ public final class JourneyDao_Impl implements JourneyDao {
         __db.beginTransaction();
         try {
           __insertionAdapterOfPhotoEntity.insert(photo);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateJourney(final JourneyEntity journey,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfJourneyEntity.handle(journey);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -331,6 +376,67 @@ public final class JourneyDao_Impl implements JourneyDao {
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, tripId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"notes"}, new Callable<List<NoteEntity>>() {
+      @Override
+      @NonNull
+      public List<NoteEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfTripId = CursorUtil.getColumnIndexOrThrow(_cursor, "tripId");
+          final int _cursorIndexOfJourneyId = CursorUtil.getColumnIndexOrThrow(_cursor, "journeyId");
+          final int _cursorIndexOfPointId = CursorUtil.getColumnIndexOrThrow(_cursor, "pointId");
+          final int _cursorIndexOfContent = CursorUtil.getColumnIndexOrThrow(_cursor, "content");
+          final int _cursorIndexOfTimestamp = CursorUtil.getColumnIndexOrThrow(_cursor, "timestamp");
+          final List<NoteEntity> _result = new ArrayList<NoteEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final NoteEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpTripId;
+            _tmpTripId = _cursor.getLong(_cursorIndexOfTripId);
+            final Long _tmpJourneyId;
+            if (_cursor.isNull(_cursorIndexOfJourneyId)) {
+              _tmpJourneyId = null;
+            } else {
+              _tmpJourneyId = _cursor.getLong(_cursorIndexOfJourneyId);
+            }
+            final Long _tmpPointId;
+            if (_cursor.isNull(_cursorIndexOfPointId)) {
+              _tmpPointId = null;
+            } else {
+              _tmpPointId = _cursor.getLong(_cursorIndexOfPointId);
+            }
+            final String _tmpContent;
+            if (_cursor.isNull(_cursorIndexOfContent)) {
+              _tmpContent = null;
+            } else {
+              _tmpContent = _cursor.getString(_cursorIndexOfContent);
+            }
+            final long _tmpTimestamp;
+            _tmpTimestamp = _cursor.getLong(_cursorIndexOfTimestamp);
+            _item = new NoteEntity(_tmpId,_tmpTripId,_tmpJourneyId,_tmpPointId,_tmpContent,_tmpTimestamp);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<NoteEntity>> getNotesByJourney(final long journeyId) {
+    final String _sql = "SELECT * FROM notes WHERE journeyId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, journeyId);
     return CoroutinesRoom.createFlow(__db, false, new String[] {"notes"}, new Callable<List<NoteEntity>>() {
       @Override
       @NonNull

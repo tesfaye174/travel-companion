@@ -77,7 +77,7 @@ class CameraHelper(private val context: Context) {
     }
 
     private fun getOutputDirectory(): File {
-        val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
+        val mediaDir = context.getExternalFilesDir(null)?.let {
             File(it, "TravelCompanion").apply { mkdirs() }
         }
         return if (mediaDir != null && mediaDir.exists()) mediaDir else context.filesDir

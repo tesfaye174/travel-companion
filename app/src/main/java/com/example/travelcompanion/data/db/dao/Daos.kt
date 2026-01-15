@@ -30,6 +30,9 @@ interface JourneyDao {
     @Insert
     suspend fun insertJourney(journey: JourneyEntity): Long
 
+    @Update
+    suspend fun updateJourney(journey: JourneyEntity)
+
     @Query("SELECT * FROM points WHERE journeyId = :journeyId ORDER BY timestamp ASC")
     fun getPointsByJourney(journeyId: Long): Flow<List<PointEntity>>
 
@@ -38,6 +41,9 @@ interface JourneyDao {
 
     @Query("SELECT * FROM notes WHERE tripId = :tripId")
     fun getNotesByTrip(tripId: Long): Flow<List<NoteEntity>>
+
+    @Query("SELECT * FROM notes WHERE journeyId = :journeyId")
+    fun getNotesByJourney(journeyId: Long): Flow<List<NoteEntity>>
 
     @Insert
     suspend fun insertNote(note: NoteEntity)

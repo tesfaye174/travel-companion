@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Monthly Distance (km)"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textSize="18sp" />
+        android:textColor="?attr/colorOnSurface" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/bar_chart"
@@ -21,7 +22,8 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="24dp"
+        style="@style/Widget.TravelCompanion.Card">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,15 +35,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Next Month Forecast"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/text_forecast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Predicted: 0 trips" />
+                android:text="Predicted: 0 trips"
+                android:textSize="14sp"
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/text_suggestion"
@@ -49,8 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Suggestion: ..."
-                android:textColor="@color/purple_500"
-                android:textStyle="italic" />
+                android:textSize="14sp"
+                android:textColor="?attr/colorPrimary" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

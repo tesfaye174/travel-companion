@@ -15,9 +15,7 @@ object PredictionEngine {
     fun predictNextMonthDistance(history: List<MonthlyStat>): Double {
         if (history.size < 2) return 50.0
         
-        // Linear regression attempt (simplified)
-        val xSum = history.indices.sum().toDouble()
-        val ySum = history.sumOf { it.distance }
+        // Simple trend-based prediction
         val lastTrend = if (history.size >= 2) {
             history.last().distance - history[history.size - 2].distance
         } else 0.0
