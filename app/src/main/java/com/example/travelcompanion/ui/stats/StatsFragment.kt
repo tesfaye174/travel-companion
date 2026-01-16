@@ -13,6 +13,8 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 
+import com.example.travelcompanion.R
+
 class StatsFragment : Fragment() {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
@@ -30,22 +32,24 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.tripStats.observe(viewLifecycleOwner) { stats ->
-            // Calculate Totals
-            val totalTrips = stats.sumOf { it.tripCount }
+            // Calculate Totals safely
+            val totalTrips = stats.sumOf { it.count }
             val totalDist = stats.sumOf { it.distance }
-            val totalDuration = stats.size * 2.5 // Mock duration logic if not in stats
+            val totalDuration = 0 // Placeholder, add duration to MonthlyStat if needed
             
             binding.textTotalTrips.text = totalTrips.toString()
             binding.textTotalDistance.text = String.format("%.0f km", totalDist)
-            binding.textTotalDuration.text = String.format("%.0f hrs", totalDuration)
+            binding.textTotalDuration.text = String.format("%.0f hrs", totalDuration.toDouble())
 
             val entries = stats.map { 
                 BarEntry(it.month.toFloat(), it.distance.toFloat())
             }
-            val dataSet = BarDataSet(entries, "Distance (km)")
-            dataSet.color = requireContext().getColor(R.color.purple_500)
-            binding.barChart.data = BarData(dataSet)
-            binding.barChart.invalidate()
+            if (entries.isNotEmpty()) {
+                val dataSet = BarDataSet(entries, "Distance (km)")
+                dataSet.color = requireContext().getColor(R.color.md_theme_light_primary)
+                binding.barChart.data = BarData(dataSet)
+                binding.barChart.invalidate()
+            }
         }
 
         viewModel.forecast.observe(viewLifecycleOwner) { forecast ->

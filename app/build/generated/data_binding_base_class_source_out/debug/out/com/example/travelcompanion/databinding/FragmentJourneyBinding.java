@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +15,7 @@ import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.gms.maps.MapView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,16 +25,16 @@ public final class FragmentJourneyBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final MaterialCardView bottomSheet;
+
+  @NonNull
+  public final MaterialButton buttonStopTracking;
+
+  @NonNull
   public final MaterialButton buttonTakePhoto;
 
   @NonNull
-  public final MaterialButton buttonToggleTracking;
-
-  @NonNull
   public final FrameLayout cameraLayout;
-
-  @NonNull
-  public final LinearLayout controlPanel;
 
   @NonNull
   public final MapView mapView;
@@ -43,20 +43,38 @@ public final class FragmentJourneyBinding implements ViewBinding {
   public final PreviewView previewView;
 
   @NonNull
-  public final TextView textStatus;
+  public final TextView textPhotosCount;
+
+  @NonNull
+  public final TextView textSpeed;
+
+  @NonNull
+  public final TextView textTimeElapsed;
+
+  @NonNull
+  public final TextView textTripTitleTracking;
+
+  @NonNull
+  public final MaterialCardView topInfoCard;
 
   private FragmentJourneyBinding(@NonNull ConstraintLayout rootView,
-      @NonNull MaterialButton buttonTakePhoto, @NonNull MaterialButton buttonToggleTracking,
-      @NonNull FrameLayout cameraLayout, @NonNull LinearLayout controlPanel,
-      @NonNull MapView mapView, @NonNull PreviewView previewView, @NonNull TextView textStatus) {
+      @NonNull MaterialCardView bottomSheet, @NonNull MaterialButton buttonStopTracking,
+      @NonNull MaterialButton buttonTakePhoto, @NonNull FrameLayout cameraLayout,
+      @NonNull MapView mapView, @NonNull PreviewView previewView, @NonNull TextView textPhotosCount,
+      @NonNull TextView textSpeed, @NonNull TextView textTimeElapsed,
+      @NonNull TextView textTripTitleTracking, @NonNull MaterialCardView topInfoCard) {
     this.rootView = rootView;
+    this.bottomSheet = bottomSheet;
+    this.buttonStopTracking = buttonStopTracking;
     this.buttonTakePhoto = buttonTakePhoto;
-    this.buttonToggleTracking = buttonToggleTracking;
     this.cameraLayout = cameraLayout;
-    this.controlPanel = controlPanel;
     this.mapView = mapView;
     this.previewView = previewView;
-    this.textStatus = textStatus;
+    this.textPhotosCount = textPhotosCount;
+    this.textSpeed = textSpeed;
+    this.textTimeElapsed = textTimeElapsed;
+    this.textTripTitleTracking = textTripTitleTracking;
+    this.topInfoCard = topInfoCard;
   }
 
   @Override
@@ -86,27 +104,27 @@ public final class FragmentJourneyBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.bottom_sheet;
+      MaterialCardView bottomSheet = ViewBindings.findChildViewById(rootView, id);
+      if (bottomSheet == null) {
+        break missingId;
+      }
+
+      id = R.id.button_stop_tracking;
+      MaterialButton buttonStopTracking = ViewBindings.findChildViewById(rootView, id);
+      if (buttonStopTracking == null) {
+        break missingId;
+      }
+
       id = R.id.button_take_photo;
       MaterialButton buttonTakePhoto = ViewBindings.findChildViewById(rootView, id);
       if (buttonTakePhoto == null) {
         break missingId;
       }
 
-      id = R.id.button_toggle_tracking;
-      MaterialButton buttonToggleTracking = ViewBindings.findChildViewById(rootView, id);
-      if (buttonToggleTracking == null) {
-        break missingId;
-      }
-
       id = R.id.camera_layout;
       FrameLayout cameraLayout = ViewBindings.findChildViewById(rootView, id);
       if (cameraLayout == null) {
-        break missingId;
-      }
-
-      id = R.id.control_panel;
-      LinearLayout controlPanel = ViewBindings.findChildViewById(rootView, id);
-      if (controlPanel == null) {
         break missingId;
       }
 
@@ -122,14 +140,39 @@ public final class FragmentJourneyBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.text_status;
-      TextView textStatus = ViewBindings.findChildViewById(rootView, id);
-      if (textStatus == null) {
+      id = R.id.text_photos_count;
+      TextView textPhotosCount = ViewBindings.findChildViewById(rootView, id);
+      if (textPhotosCount == null) {
         break missingId;
       }
 
-      return new FragmentJourneyBinding((ConstraintLayout) rootView, buttonTakePhoto,
-          buttonToggleTracking, cameraLayout, controlPanel, mapView, previewView, textStatus);
+      id = R.id.text_speed;
+      TextView textSpeed = ViewBindings.findChildViewById(rootView, id);
+      if (textSpeed == null) {
+        break missingId;
+      }
+
+      id = R.id.text_time_elapsed;
+      TextView textTimeElapsed = ViewBindings.findChildViewById(rootView, id);
+      if (textTimeElapsed == null) {
+        break missingId;
+      }
+
+      id = R.id.text_trip_title_tracking;
+      TextView textTripTitleTracking = ViewBindings.findChildViewById(rootView, id);
+      if (textTripTitleTracking == null) {
+        break missingId;
+      }
+
+      id = R.id.top_info_card;
+      MaterialCardView topInfoCard = ViewBindings.findChildViewById(rootView, id);
+      if (topInfoCard == null) {
+        break missingId;
+      }
+
+      return new FragmentJourneyBinding((ConstraintLayout) rootView, bottomSheet,
+          buttonStopTracking, buttonTakePhoto, cameraLayout, mapView, previewView, textPhotosCount,
+          textSpeed, textTimeElapsed, textTripTitleTracking, topInfoCard);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

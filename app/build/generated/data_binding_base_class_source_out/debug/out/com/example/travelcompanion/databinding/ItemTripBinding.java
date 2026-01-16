@@ -4,6 +4,8 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +13,6 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.chip.Chip;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -19,6 +20,15 @@ import java.lang.String;
 public final class ItemTripBinding implements ViewBinding {
   @NonNull
   private final MaterialCardView rootView;
+
+  @NonNull
+  public final ImageView imageTripBg;
+
+  @NonNull
+  public final LinearLayout rowType;
+
+  @NonNull
+  public final View separator;
 
   @NonNull
   public final TextView textDate;
@@ -30,14 +40,28 @@ public final class ItemTripBinding implements ViewBinding {
   public final TextView textDistance;
 
   @NonNull
-  public final Chip textType;
+  public final TextView textLocation;
 
-  private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull TextView textDate,
-      @NonNull TextView textDestination, @NonNull TextView textDistance, @NonNull Chip textType) {
+  @NonNull
+  public final TextView textPhotosCount;
+
+  @NonNull
+  public final TextView textType;
+
+  private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull ImageView imageTripBg,
+      @NonNull LinearLayout rowType, @NonNull View separator, @NonNull TextView textDate,
+      @NonNull TextView textDestination, @NonNull TextView textDistance,
+      @NonNull TextView textLocation, @NonNull TextView textPhotosCount,
+      @NonNull TextView textType) {
     this.rootView = rootView;
+    this.imageTripBg = imageTripBg;
+    this.rowType = rowType;
+    this.separator = separator;
     this.textDate = textDate;
     this.textDestination = textDestination;
     this.textDistance = textDistance;
+    this.textLocation = textLocation;
+    this.textPhotosCount = textPhotosCount;
     this.textType = textType;
   }
 
@@ -68,6 +92,24 @@ public final class ItemTripBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.image_trip_bg;
+      ImageView imageTripBg = ViewBindings.findChildViewById(rootView, id);
+      if (imageTripBg == null) {
+        break missingId;
+      }
+
+      id = R.id.row_type;
+      LinearLayout rowType = ViewBindings.findChildViewById(rootView, id);
+      if (rowType == null) {
+        break missingId;
+      }
+
+      id = R.id.separator;
+      View separator = ViewBindings.findChildViewById(rootView, id);
+      if (separator == null) {
+        break missingId;
+      }
+
       id = R.id.text_date;
       TextView textDate = ViewBindings.findChildViewById(rootView, id);
       if (textDate == null) {
@@ -86,14 +128,26 @@ public final class ItemTripBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.text_location;
+      TextView textLocation = ViewBindings.findChildViewById(rootView, id);
+      if (textLocation == null) {
+        break missingId;
+      }
+
+      id = R.id.text_photos_count;
+      TextView textPhotosCount = ViewBindings.findChildViewById(rootView, id);
+      if (textPhotosCount == null) {
+        break missingId;
+      }
+
       id = R.id.text_type;
-      Chip textType = ViewBindings.findChildViewById(rootView, id);
+      TextView textType = ViewBindings.findChildViewById(rootView, id);
       if (textType == null) {
         break missingId;
       }
 
-      return new ItemTripBinding((MaterialCardView) rootView, textDate, textDestination,
-          textDistance, textType);
+      return new ItemTripBinding((MaterialCardView) rootView, imageTripBg, rowType, separator,
+          textDate, textDestination, textDistance, textLocation, textPhotosCount, textType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

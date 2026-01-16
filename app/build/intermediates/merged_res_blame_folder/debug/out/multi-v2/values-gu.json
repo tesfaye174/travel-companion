@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.travelcompanion.app-mergeDebugResources-62:/values-gu/values-gu.xml",
+            "outputFile": "com.example.travelcompanion.app-mergeDebugResources-63:/values-gu/values-gu.xml",
             "map": [
                 {
                     "source": "C:\\Users\\tesfa\\.gradle\\caches\\8.10\\transforms\\c1488ff86e3a72b9579ae104390f4bb7\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-gu\\values.xml",

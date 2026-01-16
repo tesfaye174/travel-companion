@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.travelcompanion.app-mergeDebugResources-62:/values-es-rUS/values-es-rUS.xml",
+            "outputFile": "com.example.travelcompanion.app-mergeDebugResources-63:/values-es-rUS/values-es-rUS.xml",
             "map": [
                 {
                     "source": "C:\\Users\\tesfa\\.gradle\\caches\\8.10\\transforms\\6038f835723128a42cee114713ae98e8\\transformed\\material-1.11.0\\res\\values-es-rUS\\values-es-rUS.xml",

@@ -29,12 +29,26 @@ public final class FragmentStatsBinding implements ViewBinding {
   @NonNull
   public final TextView textSuggestion;
 
+  @NonNull
+  public final TextView textTotalDistance;
+
+  @NonNull
+  public final TextView textTotalDuration;
+
+  @NonNull
+  public final TextView textTotalTrips;
+
   private FragmentStatsBinding(@NonNull LinearLayout rootView, @NonNull BarChart barChart,
-      @NonNull TextView textForecast, @NonNull TextView textSuggestion) {
+      @NonNull TextView textForecast, @NonNull TextView textSuggestion,
+      @NonNull TextView textTotalDistance, @NonNull TextView textTotalDuration,
+      @NonNull TextView textTotalTrips) {
     this.rootView = rootView;
     this.barChart = barChart;
     this.textForecast = textForecast;
     this.textSuggestion = textSuggestion;
+    this.textTotalDistance = textTotalDistance;
+    this.textTotalDuration = textTotalDuration;
+    this.textTotalTrips = textTotalTrips;
   }
 
   @Override
@@ -82,8 +96,26 @@ public final class FragmentStatsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.text_total_distance;
+      TextView textTotalDistance = ViewBindings.findChildViewById(rootView, id);
+      if (textTotalDistance == null) {
+        break missingId;
+      }
+
+      id = R.id.text_total_duration;
+      TextView textTotalDuration = ViewBindings.findChildViewById(rootView, id);
+      if (textTotalDuration == null) {
+        break missingId;
+      }
+
+      id = R.id.text_total_trips;
+      TextView textTotalTrips = ViewBindings.findChildViewById(rootView, id);
+      if (textTotalTrips == null) {
+        break missingId;
+      }
+
       return new FragmentStatsBinding((LinearLayout) rootView, barChart, textForecast,
-          textSuggestion);
+          textSuggestion, textTotalDistance, textTotalDuration, textTotalTrips);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
