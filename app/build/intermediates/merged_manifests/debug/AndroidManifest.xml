@@ -25,6 +25,9 @@
         android:name="android.hardware.location.gps"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
     <queries>
         <intent>
             <action android:name="androidx.camera.extensions.action.VENDOR_ACTION" />
@@ -40,7 +43,6 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <permission
         android:name="com.example.travelcompanion.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
@@ -80,6 +82,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.travelcompanion.ui.TrackingJourneyActivity" />
+        <activity android:name="com.example.travelcompanion.ui.StatisticsActivity" />
+        <activity android:name="com.example.travelcompanion.ui.MyTripsActivity" />
+        <activity android:name="com.example.travelcompanion.ui.NoTripsActivity" />
 
         <uses-library
             android:name="androidx.camera.extensions.impl"

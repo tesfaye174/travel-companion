@@ -32,6 +32,7 @@ id action_row
 id action_trips_to_add
 id bar_chart
 id bottom_navigation
+id btn_search
 id btn_stop
 id btn_stop_tracking
 id btn_take_photo
@@ -43,14 +44,18 @@ id camera_layout
 id card_chart
 id card_stats
 id chart_trips_per_month
+id chip_all
+id chip_day
+id chip_group_filters
+id chip_local
+id chip_multi
 id control_panel
 id edit_destination
-id edit_filter_destination
 id fab_add
 id fab_add_trip
-id filter_card
-id filter_layout
+id header_title
 id image_no_trips
+id layout_empty_state
 id map_view
 id message_no_trips
 id metrics_row
@@ -67,7 +72,6 @@ id radio_group_type
 id radio_local
 id radio_multi
 id recycler_view_trips
-id spinner_filter_type
 id sub_message_no_trips
 id switch_geofencing
 id switch_reminders
@@ -148,5 +152,6 @@ style Widget.TravelCompanion.Card
 style Widget.TravelCompanion.Card.Outlined
 style Widget.TravelCompanion.FloatingActionButton
 style Widget.TravelCompanion.TextInputLayout.OutlinedBox
+xml backup_rules
 xml data_extraction_rules
 xml file_paths

@@ -30,10 +30,20 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.tripStats.observe(viewLifecycleOwner) { stats ->
+            // Calculate Totals
+            val totalTrips = stats.sumOf { it.tripCount }
+            val totalDist = stats.sumOf { it.distance }
+            val totalDuration = stats.size * 2.5 // Mock duration logic if not in stats
+            
+            binding.textTotalTrips.text = totalTrips.toString()
+            binding.textTotalDistance.text = String.format("%.0f km", totalDist)
+            binding.textTotalDuration.text = String.format("%.0f hrs", totalDuration)
+
             val entries = stats.map { 
                 BarEntry(it.month.toFloat(), it.distance.toFloat())
             }
             val dataSet = BarDataSet(entries, "Distance (km)")
+            dataSet.color = requireContext().getColor(R.color.purple_500)
             binding.barChart.data = BarData(dataSet)
             binding.barChart.invalidate()
         }

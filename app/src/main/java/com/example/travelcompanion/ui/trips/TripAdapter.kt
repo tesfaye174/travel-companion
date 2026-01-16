@@ -32,6 +32,13 @@ class TripAdapter(private val onItemClick: (Trip) -> Unit) :
             binding.textDate.text = dateFormat.format(Date(trip.startDate))
             binding.textType.text = trip.type.name.replace("_", "-")
             binding.textDistance.text = String.format(Locale.getDefault(), "%.1f km", trip.totalDistance)
+            
+            // Premium UI fields
+            binding.textLocation.text = trip.destination // Could be city, country
+            binding.textPhotosCount.text = "0 photos" // Placeholder until photo count is in model
+            binding.imageTripBg.setImageResource(android.R.drawable.gallery_thumb) // Placeholder image
+            binding.imageTripBg.setColorFilter(0x88000000.toInt(), android.graphics.PorterDuff.Mode.SRC_ATOP) // Darken
+
             binding.root.setOnClickListener { onItemClick(trip) }
         }
     }

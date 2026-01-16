@@ -56,7 +56,7 @@ class JourneyFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        binding.buttonToggleTracking.setOnClickListener {
+        binding.buttonStopTracking.setOnClickListener {
             checkPermissionsAndToggle()
         }
 
@@ -93,14 +93,21 @@ class JourneyFragment : Fragment(), OnMapReadyCallback {
         lifecycleScope.launch {
             viewModel.currentJourney.collectLatest { journey ->
                 if (journey == null) {
-                    binding.buttonToggleTracking.text = "Start Journey"
-                    binding.textStatus.text = "Ready"
+                    binding.buttonStopTracking.text = "Start Tracking"
+                    binding.buttonStopTracking.setBackgroundColor(requireContext().getColor(android.R.color.holo_green_dark))
+                    binding.textTripTitleTracking.text = "Ready to Start"
+                    binding.textTimeElapsed.text = "00:00:00"
+                    
                     binding.cameraLayout.visibility = View.GONE
-                    binding.buttonTakePhoto.visibility = View.GONE
+                    binding.buttonTakePhoto.visibility = View.GONE // Or disable
                     stopTrackingService()
                 } else {
-                    binding.buttonToggleTracking.text = "Stop Journey"
-                    binding.textStatus.text = "Tracking..."
+                    binding.buttonStopTracking.text = "Stop Tracking"
+                    binding.buttonStopTracking.setBackgroundColor(requireContext().getColor(android.R.color.holo_red_dark))
+                    binding.textTripTitleTracking.text = "Tracking Active"
+                    // In a real app, calculate elapsed time here based on journey.startTime
+                    binding.textTimeElapsed.text = "Recording..."
+
                     binding.cameraLayout.visibility = View.VISIBLE
                     binding.buttonTakePhoto.visibility = View.VISIBLE
                     cameraHelper?.startCamera(viewLifecycleOwner, binding.previewView)
@@ -110,10 +117,9 @@ class JourneyFragment : Fragment(), OnMapReadyCallback {
             }
         }
         
+        // Handle Map Ready to set layout
         if (viewModel.currentJourney.value == null) {
-            viewModel.startJourney(activeTripId)
-        } else {
-            viewModel.stopJourney()
+            // Nothing specific
         }
     }
 

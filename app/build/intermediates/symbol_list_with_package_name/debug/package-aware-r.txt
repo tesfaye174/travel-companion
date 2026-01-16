@@ -3322,6 +3322,7 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btn_search
 id btn_stop
 id btn_stop_tracking
 id btn_take_photo
@@ -3348,6 +3349,11 @@ id chains
 id chart_trips_per_month
 id checkbox
 id checked
+id chip_all
+id chip_day
+id chip_group_filters
+id chip_local
+id chip_multi
 id chronometer
 id circle_center
 id clear_text
@@ -3410,7 +3416,6 @@ id easeOut
 id east
 id edge
 id edit_destination
-id edit_filter_destination
 id edit_query
 id edit_text_id
 id elastic
@@ -3432,8 +3437,6 @@ id fillStart
 id fill_horizontal
 id fill_vertical
 id filled
-id filter_card
-id filter_layout
 id fitCenter
 id fitEnd
 id fitStart
@@ -3482,6 +3485,7 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layout_empty_state
 id left
 id leftToRight
 id legacy
@@ -3682,7 +3686,6 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
-id spinner_filter_type
 id spline
 id split_action_bar
 id spread
@@ -5527,5 +5530,6 @@ styleable ViewPager2 android_orientation
 styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration ifTagNotSet ifTagSet motionInterpolator motionTarget onStateTransition pathMotionArc setsTag transitionDisable upDuration viewTransitionMode
 styleable include constraintSet
+xml backup_rules
 xml data_extraction_rules
 xml file_paths

@@ -2,74 +2,136 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/filter_card"
+    <!-- Header Row -->
+    <TextView
+        android:id="@+id/header_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        style="@style/Widget.TravelCompanion.Card"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="I Miei Viaggi"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/btn_search"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/filter_layout"
-            android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/btn_search"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_search"
+        app:tint="?attr/colorOnSurface"
+        android:contentDescription="Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_title"
+        app:layout_constraintBottom_toBottomOf="@id/header_title" />
+
+    <!-- Filter Chips -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_filters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:layout_constraintTop_toBottomOf="@id/header_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_all"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:text="Tutti"
+            android:checked="true"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Filter by destination"
-                style="@style/Widget.TravelCompanion.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@android:drawable/ic_menu_search">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_filter_destination"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Locali"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:hint="Type"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                app:startIconDrawable="@android:drawable/ic_menu_sort_by_size">
-                <AutoCompleteTextView
-                    android:id="@+id/spinner_filter_type"
-                    android:layout_width="140dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:focusable="false" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giornalieri"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
 
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_multi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Multi-giorno"
+            style="@style/Widget.MaterialComponents.Chip.Choice" />
 
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Trip List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_trips"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_group_filters"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_layout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="Add Trip"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Crea Viaggio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layout_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/chip_group_filters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_no_trips"
+            app:tint="?attr/colorOnSurfaceVariant"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No trips yet"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="?attr/colorOnSurface"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap the '+' button to start planning\nyour first journey."
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="?attr/colorOnSurfaceVariant"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

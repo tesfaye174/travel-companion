@@ -4,8 +4,9 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
-import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,34 +26,51 @@ public final class FragmentTripListBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
-  public final TextInputEditText editFilterDestination;
+  public final ImageButton btnSearch;
+
+  @NonNull
+  public final Chip chipAll;
+
+  @NonNull
+  public final Chip chipDay;
+
+  @NonNull
+  public final ChipGroup chipGroupFilters;
+
+  @NonNull
+  public final Chip chipLocal;
+
+  @NonNull
+  public final Chip chipMulti;
 
   @NonNull
   public final FloatingActionButton fabAddTrip;
 
   @NonNull
-  public final MaterialCardView filterCard;
+  public final TextView headerTitle;
 
   @NonNull
-  public final LinearLayout filterLayout;
+  public final LinearLayout layoutEmptyState;
 
   @NonNull
   public final RecyclerView recyclerViewTrips;
 
-  @NonNull
-  public final AutoCompleteTextView spinnerFilterType;
-
   private FragmentTripListBinding(@NonNull ConstraintLayout rootView,
-      @NonNull TextInputEditText editFilterDestination, @NonNull FloatingActionButton fabAddTrip,
-      @NonNull MaterialCardView filterCard, @NonNull LinearLayout filterLayout,
-      @NonNull RecyclerView recyclerViewTrips, @NonNull AutoCompleteTextView spinnerFilterType) {
+      @NonNull ImageButton btnSearch, @NonNull Chip chipAll, @NonNull Chip chipDay,
+      @NonNull ChipGroup chipGroupFilters, @NonNull Chip chipLocal, @NonNull Chip chipMulti,
+      @NonNull FloatingActionButton fabAddTrip, @NonNull TextView headerTitle,
+      @NonNull LinearLayout layoutEmptyState, @NonNull RecyclerView recyclerViewTrips) {
     this.rootView = rootView;
-    this.editFilterDestination = editFilterDestination;
+    this.btnSearch = btnSearch;
+    this.chipAll = chipAll;
+    this.chipDay = chipDay;
+    this.chipGroupFilters = chipGroupFilters;
+    this.chipLocal = chipLocal;
+    this.chipMulti = chipMulti;
     this.fabAddTrip = fabAddTrip;
-    this.filterCard = filterCard;
-    this.filterLayout = filterLayout;
+    this.headerTitle = headerTitle;
+    this.layoutEmptyState = layoutEmptyState;
     this.recyclerViewTrips = recyclerViewTrips;
-    this.spinnerFilterType = spinnerFilterType;
   }
 
   @Override
@@ -82,9 +100,39 @@ public final class FragmentTripListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.edit_filter_destination;
-      TextInputEditText editFilterDestination = ViewBindings.findChildViewById(rootView, id);
-      if (editFilterDestination == null) {
+      id = R.id.btn_search;
+      ImageButton btnSearch = ViewBindings.findChildViewById(rootView, id);
+      if (btnSearch == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_all;
+      Chip chipAll = ViewBindings.findChildViewById(rootView, id);
+      if (chipAll == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_day;
+      Chip chipDay = ViewBindings.findChildViewById(rootView, id);
+      if (chipDay == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_group_filters;
+      ChipGroup chipGroupFilters = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupFilters == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_local;
+      Chip chipLocal = ViewBindings.findChildViewById(rootView, id);
+      if (chipLocal == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_multi;
+      Chip chipMulti = ViewBindings.findChildViewById(rootView, id);
+      if (chipMulti == null) {
         break missingId;
       }
 
@@ -94,15 +142,15 @@ public final class FragmentTripListBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.filter_card;
-      MaterialCardView filterCard = ViewBindings.findChildViewById(rootView, id);
-      if (filterCard == null) {
+      id = R.id.header_title;
+      TextView headerTitle = ViewBindings.findChildViewById(rootView, id);
+      if (headerTitle == null) {
         break missingId;
       }
 
-      id = R.id.filter_layout;
-      LinearLayout filterLayout = ViewBindings.findChildViewById(rootView, id);
-      if (filterLayout == null) {
+      id = R.id.layout_empty_state;
+      LinearLayout layoutEmptyState = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmptyState == null) {
         break missingId;
       }
 
@@ -112,14 +160,9 @@ public final class FragmentTripListBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.spinner_filter_type;
-      AutoCompleteTextView spinnerFilterType = ViewBindings.findChildViewById(rootView, id);
-      if (spinnerFilterType == null) {
-        break missingId;
-      }
-
-      return new FragmentTripListBinding((ConstraintLayout) rootView, editFilterDestination,
-          fabAddTrip, filterCard, filterLayout, recyclerViewTrips, spinnerFilterType);
+      return new FragmentTripListBinding((ConstraintLayout) rootView, btnSearch, chipAll, chipDay,
+          chipGroupFilters, chipLocal, chipMulti, fabAddTrip, headerTitle, layoutEmptyState,
+          recyclerViewTrips);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

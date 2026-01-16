@@ -8,16 +8,8 @@
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_add_trip.xml"
     },
     {
-        "merged": "com.example.travelcompanion.app-mergeDebugResources-63:/layout/fragment_statistics.xml",
-        "source": "com.example.travelcompanion.app-main-66:/layout/fragment_statistics.xml"
-    },
-    {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\activity_statistics.xml",
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\activity_statistics.xml"
-    },
-    {
-        "merged": "com.example.travelcompanion.app-mergeDebugResources-63:/layout/fragment_tracking.xml",
-        "source": "com.example.travelcompanion.app-main-66:/layout/fragment_tracking.xml"
     },
     {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\fragment_journey.xml",
@@ -28,24 +20,28 @@
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_stats.xml"
     },
     {
-        "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\fragment_statistics.xml",
-        "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_statistics.xml"
-    },
-    {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\fragment_settings.xml",
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\fragment_statistics.xml",
+        "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_statistics.xml"
     },
     {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\fragment_trip_list.xml",
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\fragment_trip_list.xml"
     },
     {
+        "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\activity_tracking_journey.xml",
+        "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\activity_tracking_journey.xml"
+    },
+    {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\item_trip.xml",
         "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\item_trip.xml"
     },
     {
-        "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\activity_tracking_journey.xml",
-        "source": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-main-66:\\layout\\activity_tracking_journey.xml"
+        "merged": "com.example.travelcompanion.app-mergeDebugResources-63:/layout/fragment_trip_list.xml",
+        "source": "com.example.travelcompanion.app-main-66:/layout/fragment_trip_list.xml"
     },
     {
         "merged": "C:\\Users\\tesfa\\.gradle\\daemon\\8.10\\com.example.travelcompanion.app-mergeDebugResources-63:\\layout\\activity_no_trips.xml",

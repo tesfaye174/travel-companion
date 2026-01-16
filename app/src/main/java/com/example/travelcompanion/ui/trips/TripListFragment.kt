@@ -35,36 +35,31 @@ class TripListFragment : Fragment() {
         binding.recyclerViewTrips.adapter = adapter
 
         viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
-            adapter.submitList(trips)
+            if (trips.isEmpty()) {
+                binding.recyclerViewTrips.visibility = View.GONE
+                binding.layoutEmptyState.visibility = View.VISIBLE
+            } else {
+                binding.recyclerViewTrips.visibility = View.VISIBLE
+                binding.layoutEmptyState.visibility = View.GONE
+                adapter.submitList(trips)
+            }
         }
 
-        // Setup filter destination
-        binding.editFilterDestination.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
-                viewModel.setFilterDestination(s?.toString() ?: "")
-            }
-        })
-
-        // Setup filter type dropdown
-        val typeItems = arrayOf("All Types", "Local", "Day", "Multi-day")
-        val typeAdapter = android.widget.ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            typeItems
-        )
-        binding.spinnerFilterType.setAdapter(typeAdapter)
-        binding.spinnerFilterType.setText("All Types", false)
-        binding.spinnerFilterType.setOnItemClickListener { _, _, position, _ ->
-            val type = when (position) {
-                0 -> null
-                1 -> com.example.travelcompanion.domain.model.TripType.LOCAL
-                2 -> com.example.travelcompanion.domain.model.TripType.DAY
-                3 -> com.example.travelcompanion.domain.model.TripType.MULTI_DAY
+        // Setup ChipGroup filter
+        binding.chipGroupFilters.setOnCheckedChangeListener { _, checkedId ->
+            val type = when (checkedId) {
+                R.id.chip_all -> null
+                R.id.chip_local -> com.example.travelcompanion.domain.model.TripType.LOCAL
+                R.id.chip_day -> com.example.travelcompanion.domain.model.TripType.DAY
+                R.id.chip_multi -> com.example.travelcompanion.domain.model.TripType.MULTI_DAY
                 else -> null
             }
             viewModel.setFilterType(type)
+        }
+
+        binding.btnSearch.setOnClickListener {
+             // Future: Implement search dialog or expand
+             com.google.android.material.snackbar.Snackbar.make(view, "Search functionality coming soon", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
         }
 
         binding.fabAddTrip.setOnClickListener {
