@@ -1436,7 +1436,6 @@ color background_floating_material_dark
 color background_floating_material_light
 color background_material_dark
 color background_material_light
-color black
 color bright_foreground_disabled_material_dark
 color bright_foreground_disabled_material_light
 color bright_foreground_inverse_material_dark
@@ -1504,14 +1503,12 @@ color dim_foreground_disabled_material_dark
 color dim_foreground_disabled_material_light
 color dim_foreground_material_dark
 color dim_foreground_material_light
-color error
 color error_color_material_dark
 color error_color_material_light
 color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
-color info
 color m3_appbar_overlay_color
 color m3_assist_chip_icon_tint_color
 color m3_assist_chip_stroke_color
@@ -2123,19 +2120,13 @@ color md_theme_light_onSecondary
 color md_theme_light_onSecondaryContainer
 color md_theme_light_onSurface
 color md_theme_light_onSurfaceVariant
-color md_theme_light_onTertiary
 color md_theme_light_outline
-color md_theme_light_outlineVariant
 color md_theme_light_primary
 color md_theme_light_primaryContainer
-color md_theme_light_scrim
 color md_theme_light_secondary
 color md_theme_light_secondaryContainer
-color md_theme_light_shadow
 color md_theme_light_surface
-color md_theme_light_surfaceTint
 color md_theme_light_surfaceVariant
-color md_theme_light_tertiary
 color mtrl_btn_bg_color_selector
 color mtrl_btn_ripple_color
 color mtrl_btn_stroke_color_selector
@@ -2201,7 +2192,6 @@ color primary_text_default_material_dark
 color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
-color purple_200
 color purple_500
 color purple_700
 color ripple_material_dark
@@ -2210,18 +2200,15 @@ color secondary_text_default_material_dark
 color secondary_text_default_material_light
 color secondary_text_disabled_material_dark
 color secondary_text_disabled_material_light
-color success
 color switch_thumb_disabled_material_dark
 color switch_thumb_disabled_material_light
 color switch_thumb_material_dark
 color switch_thumb_material_light
 color switch_thumb_normal_material_dark
 color switch_thumb_normal_material_light
-color teal_200
 color teal_700
 color tooltip_background_dark
 color tooltip_background_light
-color warning
 color white
 dimen abc_action_bar_content_inset_material
 dimen abc_action_bar_content_inset_with_nav
@@ -3135,6 +3122,7 @@ drawable design_password_eye
 drawable design_snackbar_background
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
+drawable ic_add
 drawable ic_arrow_back_black_24
 drawable ic_call_answer
 drawable ic_call_answer_low
@@ -3152,6 +3140,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_no_trips
 drawable ic_search_black_24
 drawable m3_avd_hide_password
 drawable m3_avd_show_password
@@ -3295,6 +3284,7 @@ id action_menu_presenter
 id action_mode_bar
 id action_mode_bar_stub
 id action_mode_close_button
+id action_row
 id action_text
 id action_trips_to_add
 id actions
@@ -3332,6 +3322,9 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btn_stop
+id btn_stop_tracking
+id btn_take_photo
 id buttonPanel
 id button_export
 id button_save
@@ -3341,6 +3334,8 @@ id cache_measures
 id callMeasure
 id camera_layout
 id cancel_button
+id card_chart
+id card_stats
 id carryVelocity
 id center
 id centerCrop
@@ -3350,6 +3345,7 @@ id center_vertical
 id chain
 id chain2
 id chains
+id chart_trips_per_month
 id checkbox
 id checked
 id chronometer
@@ -3426,6 +3422,7 @@ id enterAlwaysCollapsed
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
+id fab_add
 id fab_add_trip
 id fade
 id fill
@@ -3472,6 +3469,7 @@ id ifRoom
 id ignore
 id ignoreRequest
 id image
+id image_no_trips
 id immediateStop
 id included
 id indeterminate
@@ -3523,6 +3521,8 @@ id material_timepicker_view
 id material_value_index
 id matrix
 id message
+id message_no_trips
+id metrics_row
 id middle
 id mini
 id month_grid
@@ -3701,12 +3701,14 @@ id staticLayout
 id staticPostLayout
 id stop
 id stretch
+id sub_message_no_trips
 id submenuarrow
 id submit_area
 id supportScrollUp
 id switch_geofencing
 id switch_reminders
 id tabMode
+id tab_layout
 id tag_accessibility_actions
 id tag_accessibility_clickable_spans
 id tag_accessibility_heading
@@ -3747,11 +3749,18 @@ id textinput_suffix_text
 id time
 id title
 id titleDividerNoCustom
+id title_my_trips
+id title_statistics
 id title_template
 id toggle
 id top
 id topPanel
+id total_distance
+id total_duration
+id total_stats
+id total_trips
 id touch_outside
+id tracking_controls
 id transitionToEnd
 id transitionToStart
 id transition_current_scene
@@ -3760,6 +3769,13 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tv_distance
+id tv_distance_label
+id tv_time_elapsed
+id tv_time_label
+id tv_total_distance
+id tv_total_duration
+id tv_total_trips
 id unchecked
 id uniform
 id unlabeled
@@ -3901,6 +3917,10 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_main
+layout activity_my_trips
+layout activity_no_trips
+layout activity_statistics
+layout activity_tracking_journey
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
@@ -3920,7 +3940,9 @@ layout design_text_input_start_icon
 layout fragment_add_trip
 layout fragment_journey
 layout fragment_settings
+layout fragment_statistics
 layout fragment_stats
+layout fragment_tracking
 layout fragment_trip_list
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
@@ -4016,6 +4038,7 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string add
 string androidx_startup
 string app_name
 string appbar_scrolling_view_behavior
@@ -4175,6 +4198,7 @@ string mtrl_timepicker_confirm
 string nav_app_bar_navigate_up_description
 string nav_app_bar_open_drawer_description
 string nav_gallery
+string nav_settings
 string nav_stats
 string nav_tracking
 string nav_trips
@@ -5328,6 +5352,7 @@ style Widget_TravelCompanion_Button_Primary
 style Widget_TravelCompanion_Button_Secondary
 style Widget_TravelCompanion_Card
 style Widget_TravelCompanion_Card_Outlined
+style Widget_TravelCompanion_FloatingActionButton
 style Widget_TravelCompanion_TextInputLayout_OutlinedBox
 styleable ActionBar background backgroundSplit backgroundStacked contentInsetEnd contentInsetEndWithActions contentInsetLeft contentInsetRight contentInsetStart contentInsetStartWithNavigation customNavigationLayout displayOptions divider elevation height hideOnContentScroll homeAsUpIndicator homeLayout icon indeterminateProgressStyle itemPadding logo navigationMode popupTheme progressBarPadding progressBarStyle subtitle subtitleTextStyle title titleTextStyle
 styleable ActionBarLayout android_layout_gravity
@@ -5502,6 +5527,5 @@ styleable ViewPager2 android_orientation
 styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration ifTagNotSet ifTagSet motionInterpolator motionTarget onStateTransition pathMotionArc setsTag transitionDisable upDuration viewTransitionMode
 styleable include constraintSet
-xml backup_rules
 xml data_extraction_rules
 xml file_paths

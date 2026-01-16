@@ -1,17 +1,18 @@
 <resources>
     <string name="app_name">Travel Companion</string>
-    
+
     <!-- Bottom Navigation -->
     <string name="nav_trips">Viaggi</string>
     <string name="nav_tracking">Traccia</string>
     <string name="nav_gallery">Galleria</string>
     <string name="nav_stats">Statistiche</string>
-    
+    <string name="nav_settings">Impostazioni</string>
+
     <!-- Trip Types -->
     <string name="trip_type_local">Locale</string>
     <string name="trip_type_day">Giornaliero</string>
     <string name="trip_type_multi_day">Multi-giorno</string>
-    
+
     <!-- Common -->
     <string name="save">Salva</string>
     <string name="cancel">Annulla</string>
@@ -19,20 +20,21 @@
     <string name="edit">Modifica</string>
     <string name="start">Avvia</string>
     <string name="stop">Ferma</string>
-    
+    <string name="add">Add</string>
+
     <!-- Trip Creation -->
     <string name="create_trip">Crea Viaggio</string>
     <string name="destination">Destinazione</string>
     <string name="start_date">Data Inizio</string>
     <string name="end_date">Data Fine</string>
     <string name="trip_type">Tipo Viaggio</string>
-    
+
     <!-- Tracking -->
     <string name="tracking_active">Registrazione in corso</string>
     <string name="distance">Distanza</string>
     <string name="duration">Durata</string>
     <string name="current_speed">Velocità</string>
-    
+
     <!-- Permissions -->
     <string name="permission_location_rationale">L\'app necessita dell\'accesso alla posizione per tracciare i tuoi viaggi</string>
     <string name="permission_camera_rationale">L\'app necessita dell\'accesso alla fotocamera per scattare foto</string>

@@ -1,99 +1,71 @@
 # Travel Companion 📱✈️
 
-Un'app Android moderna per gestire e tracciare i tuoi viaggi, con funzionalità avanzate di geolocalizzazione, statistiche e galleria fotografica.
+Travel Companion is a modern Android application designed to help users manage and track their trips efficiently. With advanced geolocation features, detailed statistics, and a photo gallery, it provides a seamless travel experience.
 
-## 🚀 Caratteristiche
+## 🚀 Features
 
-- **Gestione Viaggi**: Crea e gestisci i tuoi viaggi con destinazione, date e tipo
-- **Tracciamento GPS**: Traccia i tuoi spostamenti in tempo reale durante i viaggi
-- **Galleria Fotografica**: Scatta e organizza foto durante i tuoi viaggi
-- **Statistiche**: Visualizza statistiche dettagliate sui tuoi viaggi e spostamenti
-- **Geofencing**: Notifiche automatiche quando entri o esci da aree specifiche
-- **Promemoria**: Imposta promemoria per i tuoi viaggi
-- **Filtri Avanzati**: Filtra i viaggi per destinazione e tipo
+- **Trip Management**: Create and manage trips with destination, dates, and type.
+- **Real-Time GPS Tracking**: Monitor your movements during trips.
+- **Photo Gallery**: Capture and organize photos during your travels.
+- **Detailed Statistics**: View comprehensive statistics about your trips and movements.
+- **Geofencing**: Receive automatic notifications when entering or leaving specific areas.
+- **Reminders**: Set reminders for your trips.
+- **Advanced Filters**: Filter trips by destination and type.
 
-## 🛠️ Tecnologie Utilizzate
+## 🛠️ Technologies Used
 
-- **Kotlin**: Linguaggio di programmazione principale
+- **Kotlin**: Primary programming language.
 - **Android Jetpack**:
-  - ViewModel & LiveData per la gestione dello stato
-  - Navigation Component per la navigazione
-  - Room Database per la persistenza dei dati
-  - WorkManager per i task in background
-- **Google Maps API**: Per la visualizzazione delle mappe
-- **CameraX**: Per la gestione della fotocamera
-- **Material Design 3**: Per un'interfaccia moderna e intuitiva
+  - ViewModel & LiveData for state management.
+  - WorkManager for background tasks.
+- **Google Maps API**: For map visualization.
+- **CameraX**: For camera management.
+- **Material Design 3**: For a modern and intuitive interface.
 
-## 📋 Requisiti
+## 📋 Requirements
 
-- Android Studio Hedgehog | 2023.1.1 o superiore
-- Android SDK 26 (Android 8.0) o superiore
-- Gradle 8.10
-- Kotlin 1.9.0+
+- Android Studio Hedgehog | 2023.1.1 or higher.
+- Android SDK 26 (Android 8.0) or higher.
+- Gradle 8.10.
+- Kotlin 1.9.0+.
 
-## 🔧 Installazione
+## 🔧 Installation
 
-1. Clona il repository:
-```bash
-git clone https://github.com/tesfaye174/travel-companion.git
-```
+1. Clone the repository:
 
-2. Apri il progetto in Android Studio
-
-3. Configura la Google Maps API Key:
-   - Ottieni una chiave API da [Google Cloud Console](https://console.cloud.google.com/)
-   - Aggiungi la chiave in `app/build.gradle` nella sezione `manifestPlaceholders`:
-   ```gradle
-   manifestPlaceholders = [MAPS_API_KEY: "YOUR_API_KEY_HERE"]
+   ```bash
+   git clone https://github.com/tesfaye174/travel-companion.git
    ```
 
-4. Sincronizza il progetto con Gradle
+2. Open the project in Android Studio.
 
-5. Esegui l'app su un emulatore o dispositivo Android
+3. Configure the Google Maps API Key:
 
-## 📱 Screenshots
+   ```gradle
+   // Obtain an API key from Google Cloud Console
+   ```
 
-*(Aggiungi screenshot dell'app qui)*
+4. Sync the project with Gradle.
 
-## 🏗️ Struttura del Progetto
+5. Run the app on an emulator or Android device.
 
-```
-travel-companion/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/example/travelcompanion/
-│   │   │   │   ├── data/          # Layer di dati (Room, Repository)
-│   │   │   │   ├── domain/         # Modelli di dominio e repository interface
-│   │   │   │   ├── ui/            # UI (Fragment, ViewModel, Activity)
-│   │   │   │   └── utils/         # Utility (CameraHelper, TrackingService, ecc.)
-│   │   │   ├── res/               # Risorse (layout, drawable, values)
-│   │   │   └── AndroidManifest.xml
-│   │   └── test/                  # Test unitari
-│   └── build.gradle
-├── gradle/
-└── build.gradle
-```
+### App Screenshots
 
-## 🎨 Design
-
-L'app utilizza Material Design 3 con una palette di colori moderna e personalizzata. I componenti UI seguono le best practices di Material Design per garantire un'esperienza utente ottimale.
-
-## 📝 Licenza
-
-Questo progetto è stato sviluppato come parte di un progetto accademico.
-
-## 👤 Autore
-
-**Tesfaye**
-
-- GitHub: [@tesfaye174](https://github.com/tesfaye174)
-
-## 🙏 Ringraziamenti
-
-- Google per Android Jetpack e Material Design
-- La comunità Android per il supporto e le risorse
+(Add app screenshots here)
 
 ---
 
-⭐ Se ti piace questo progetto, considera di lasciare una stella!
+### Author
+
+Tesfaye
+
+- GitHub: [@tesfaye174](https://github.com/tesfaye174)
+
+## 🙏 Acknowledgments
+
+- Google for Android Jetpack and Material Design.
+- The Android community for support and resources.
+
+---
+
+⭐ If you like this project, consider giving it a star!

@@ -12,6 +12,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -24,13 +25,17 @@ public final class ActivityMainBinding implements ViewBinding {
   public final BottomNavigationView bottomNavigation;
 
   @NonNull
+  public final FloatingActionButton fabAdd;
+
+  @NonNull
   public final FragmentContainerView navHostFragment;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView,
-      @NonNull BottomNavigationView bottomNavigation,
+      @NonNull BottomNavigationView bottomNavigation, @NonNull FloatingActionButton fabAdd,
       @NonNull FragmentContainerView navHostFragment) {
     this.rootView = rootView;
     this.bottomNavigation = bottomNavigation;
+    this.fabAdd = fabAdd;
     this.navHostFragment = navHostFragment;
   }
 
@@ -67,13 +72,19 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.fab_add;
+      FloatingActionButton fabAdd = ViewBindings.findChildViewById(rootView, id);
+      if (fabAdd == null) {
+        break missingId;
+      }
+
       id = R.id.nav_host_fragment;
       FragmentContainerView navHostFragment = ViewBindings.findChildViewById(rootView, id);
       if (navHostFragment == null) {
         break missingId;
       }
 
-      return new ActivityMainBinding((ConstraintLayout) rootView, bottomNavigation,
+      return new ActivityMainBinding((ConstraintLayout) rootView, bottomNavigation, fabAdd,
           navHostFragment);
     }
     String missingId = rootView.getResources().getResourceName(id);

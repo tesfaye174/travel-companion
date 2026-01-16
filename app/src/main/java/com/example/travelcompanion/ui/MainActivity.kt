@@ -21,5 +21,11 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
+
+        // Add functionality for Floating Action Button
+        binding.fabAdd.setOnClickListener {
+            // Corrected action to navigate to AddTripFragment
+            navController.navigate(R.id.action_trips_to_add)
+        }
     }
 }
