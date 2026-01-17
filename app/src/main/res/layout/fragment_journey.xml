@@ -1,62 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Map Full Screen -->
     <com.google.android.gms.maps.MapView
-        android:id="@+id/map_view"
+        android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/trackingCard"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Top Info Overlay -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/top_info_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"
-        app:cardBackgroundColor="#CCFFFFFF"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
-            <TextView
-                android:id="@+id/text_trip_title_tracking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Weekend in Rome"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"/>
-            <TextView
-                android:id="@+id/text_time_elapsed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:12:35"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Bottom Control Sheet -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
+        android:id="@+id/trackingCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,112 +31,102 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Title -->
             <TextView
-                android:text="Tracking Active"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
+                android:id="@+id/textTripTitleTracking"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="12dp"/>
+                android:text="Ready to Start"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <!-- Camera Preview / Photo Area (Initially Hidden or Placeholder) -->
-            <FrameLayout
-                android:id="@+id/camera_layout"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:visibility="gone"
-                android:layout_marginBottom="12dp">
-                <androidx.camera.view.PreviewView
-                    android:id="@+id/preview_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </FrameLayout>
-
-            <!-- Stats Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="16dp">
-                
+                android:layout_marginTop="12dp">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_compass"
-                        app:tint="?attr/colorPrimary"/>
-                    <TextView
-                        android:id="@+id/text_speed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5.5 km/h"
-                        android:textStyle="bold"/>
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Speed"
-                        android:textSize="12sp"/>
+                        android:text="Tempo Trascorso"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textTimeElapsed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00:00"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp" />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_camera"
-                        app:tint="?attr/colorPrimary"/>
-                    <TextView
-                        android:id="@+id/text_photos_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="14"
-                        android:textStyle="bold"/>
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Photos Captured"
-                        android:textSize="12sp"/>
+                        android:text="Distanza"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/textDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0 km"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp" />
+
                 </LinearLayout>
+
             </LinearLayout>
 
-            <!-- Buttons -->
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonStopTracking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="Start Tracking"
+                android:layout_marginTop="16dp"
+                app:cornerRadius="8dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_stop_tracking"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Stop Tracking"
-                    android:backgroundTint="#D32F2F"
-                    android:layout_marginEnd="8dp"/>
+            <FrameLayout
+                android:id="@+id/cameraLayout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_take_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Button.Icon"
-                    app:icon="@android:drawable/ic_menu_camera"
-                    android:text=""
-                    android:backgroundTint="#616161"/>
-            </LinearLayout>
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/previewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonTakePhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Take Photo"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_camera"
+                app:cornerRadius="8dp" />
 
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

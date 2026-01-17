@@ -1,32 +1,20 @@
 package com.example.travelcompanion
 
 import android.app.Application
-import androidx.work.*
-import com.example.travelcompanion.data.db.AppDatabase
-import com.example.travelcompanion.data.repository.TravelRepositoryImpl
-import com.example.travelcompanion.domain.repository.TravelRepository
-import com.example.travelcompanion.utils.ReminderWorker
-import java.util.concurrent.TimeUnit
+import com.example.travelcompanion.data.local.TravelDatabase
+import com.example.travelcompanion.data.repository.TravelRepository
 
 class TravelCompanionApplication : Application() {
-    val database by lazy { AppDatabase.getDatabase(this) }
-    val repository: TravelRepository by lazy { 
-        TravelRepositoryImpl(database.tripDao(), database.journeyDao()) 
-    }
 
-    override fun onCreate() {
-        super.onCreate()
-        scheduleReminder()
-    }
+    private val database by lazy { TravelDatabase.getDatabase(this) }
 
-    private fun scheduleReminder() {
-        val request = PeriodicWorkRequestBuilder<ReminderWorker>(1, TimeUnit.DAYS)
-            .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
-            .build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "trip_reminder",
-            ExistingPeriodicWorkPolicy.KEEP,
-            request
+    val repository by lazy {
+        TravelRepository(
+            database.tripDao(),
+            database.journeyDao(),
+            database.locationPointDao(),
+            database.photoDao(),
+            database.noteDao()
         )
     }
 }

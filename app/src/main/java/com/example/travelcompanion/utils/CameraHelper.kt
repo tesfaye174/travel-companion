@@ -2,88 +2,75 @@ package com.example.travelcompanion.utils
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class CameraHelper(private val context: Context) {
 
     private var imageCapture: ImageCapture? = null
-    private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var preview: Preview? = null
 
-    fun startCamera(lifecycleOwner: LifecycleOwner, previewView: androidx.camera.view.PreviewView) {
+    fun startCamera(lifecycleOwner: LifecycleOwner, previewView: PreviewView) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
         cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder()
+            preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
+
+            imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build()
-                .also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-
-            imageCapture = ImageCapture.Builder().build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview, imageCapture
+                    lifecycleOwner,
+                    cameraSelector,
+                    preview,
+                    imageCapture
                 )
-            } catch (exc: Exception) {
-                Log.e("CameraHelper", "Use case binding failed", exc)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
         }, ContextCompat.getMainExecutor(context))
     }
 
-    fun takePhoto(onPhotoSaved: (Uri) -> Unit) {
+    fun takePhoto(onPhotoTaken: (Uri) -> Unit) {
         val imageCapture = imageCapture ?: return
 
-        val photoFile = File(
-            getOutputDirectory(),
-            SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-                .format(System.currentTimeMillis()) + ".jpg"
-        )
-
+        val photoFile = createImageFile()
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e("CameraHelper", "Photo capture failed: ${exc.message}", exc)
-                }
-
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-                    onPhotoSaved(savedUri)
+                    onPhotoTaken(savedUri)
+                }
+
+                override fun onError(exc: ImageCaptureException) {
+                    exc.printStackTrace()
                 }
             }
         )
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = context.getExternalFilesDir(null)?.let {
-            File(it, "TravelCompanion").apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists()) mediaDir else context.filesDir
-    }
-
-    fun shutdown() {
-        cameraExecutor.shutdown()
+    private fun createImageFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir = context.getExternalFilesDir(null)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 }

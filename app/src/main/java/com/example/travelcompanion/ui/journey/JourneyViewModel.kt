@@ -1,43 +1,46 @@
 package com.example.travelcompanion.ui.journey
 
 import androidx.lifecycle.*
+import com.example.travelcompanion.data.repository.TravelRepository
 import com.example.travelcompanion.domain.model.*
-import com.example.travelcompanion.domain.repository.TravelRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class JourneyViewModel(private val repository: TravelRepository) : ViewModel() {
 
-    private val _currentJourney = MutableStateFlow<Journey?>(null)
-    val currentJourney: StateFlow<Journey?> = _currentJourney
+    val currentJourney: StateFlow<Journey?> = repository.getActiveJourney()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private val _activeTripId = MutableStateFlow<Long>(-1L)
-    val activeTripId: StateFlow<Long> = _activeTripId
+    val activeTrip: StateFlow<Trip?> = repository.getActiveTrip()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    fun startJourney(tripId: Long) = viewModelScope.launch {
-        val journey = Journey(tripId = tripId, startTime = System.currentTimeMillis(), endTime = null)
-        val id = repository.insertJourney(journey)
-        _currentJourney.value = journey.copy(id = id)
-        _activeTripId.value = tripId
-    }
+    fun getPointsForJourney(journeyId: Long): LiveData<List<LocationPoint>> =
+        repository.getPointsForJourney(journeyId)
 
-    fun stopJourney() = viewModelScope.launch {
-        _currentJourney.value?.let { journey ->
-            val updated = journey.copy(endTime = System.currentTimeMillis())
-            // Update in DB (need to add updateJourney to repo)
-            repository.updateJourney(updated)
-            _currentJourney.value = null
-            _activeTripId.value = -1L
+    fun startJourney(tripId: Long) {
+        viewModelScope.launch {
+            repository.startJourney(tripId)
         }
     }
 
-    fun getPointsForJourney(journeyId: Long): LiveData<List<Point>> {
-        return repository.getPointsByJourney(journeyId).asLiveData()
+    fun stopJourney(journeyId: Long) {
+        viewModelScope.launch {
+            repository.stopJourney(journeyId)
+        }
     }
 
-    fun insertPhoto(photo: Photo) = viewModelScope.launch {
-        repository.insertPhoto(photo)
+    fun insertLocationPoint(point: LocationPoint) {
+        viewModelScope.launch {
+            repository.insertLocationPoint(point)
+        }
+    }
+
+    fun insertPhoto(photo: Photo) {
+        viewModelScope.launch {
+            repository.insertPhoto(photo)
+        }
     }
 }
 

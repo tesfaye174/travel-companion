@@ -1,41 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Travel Companion</string>
 
-    <!-- Bottom Navigation -->
+    <!-- Navigation -->
     <string name="nav_trips">Viaggi</string>
-    <string name="nav_tracking">Traccia</string>
-    <string name="nav_gallery">Galleria</string>
-    <string name="nav_stats">Statistiche</string>
-    <string name="nav_settings">Impostazioni</string>
+    <string name="nav_map">Mappa</string>
+    <string name="nav_statistics">Statistiche</string>
+
+    <!-- Trips -->
+    <string name="my_trips">I Miei Viaggi</string>
+    <string name="new_trip">Nuovo Viaggio</string>
+    <string name="upcoming_trips">Prossimi</string>
+    <string name="past_trips">Passati</string>
+    <string name="all_trips">Tutti</string>
+    <string name="no_trips">Non ci sono viaggi</string>
+    <string name="no_trips_message">Clicca sul pulsante + per iniziare a pianificare il tuo primo viaggio</string>
+
+    <!-- Trip Details -->
+    <string name="trip_details">Dettaglio Viaggio</string>
+    <string name="destination">Destinazione</string>
+    <string name="trip_type">Tipo di Viaggio</string>
+    <string name="start_date">Data Inizio</string>
+    <string name="end_date">Data Fine</string>
+    <string name="total_days">Totale</string>
+    <string name="total_distance">Distanza</string>
+    <string name="total_duration">Durata</string>
+    <string name="trip_photos">Foto del Viaggio</string>
+    <string name="trip_notes">Note del Viaggio</string>
+    <string name="start_tracking">Ferma Tracking</string>
+    <string name="stop_tracking">Stop Tracking</string>
+    <string name="add_photo">Aggiungi Foto</string>
+    <string name="add_note">Aggiungi Nota</string>
+
+    <!-- Journey Tracking -->
+    <string name="tracking_active">Tracking Attivo</string>
+    <string name="ready_to_start">Pronto per Iniziare</string>
+    <string name="time_elapsed">Tempo Trascorso</string>
+    <string name="distance_traveled">Distanza</string>
+    <string name="take_photo">Scatta Foto</string>
+    <string name="recording">Registrazione...</string>
+
+    <!-- Statistics -->
+    <string name="statistics">Statistiche</string>
+    <string name="total_trips">Viaggi Totali</string>
+    <string name="trips_per_month">Viaggi per Mese</string>
+    <string name="average_speed">Velocità Media</string>
 
     <!-- Trip Types -->
-    <string name="trip_type_local">Locale</string>
-    <string name="trip_type_day">Giornaliero</string>
+    <string name="trip_type_city">City Trip</string>
     <string name="trip_type_multi_day">Multi-giorno</string>
+    <string name="trip_type_hiking">Hiking</string>
+    <string name="trip_type_beach">Beach</string>
+    <string name="trip_type_business">Business</string>
+    <string name="trip_type_other">Altro</string>
 
-    <!-- Common -->
+    <!-- Actions -->
+    <string name="create">Crea</string>
     <string name="save">Salva</string>
     <string name="cancel">Annulla</string>
     <string name="delete">Elimina</string>
     <string name="edit">Modifica</string>
-    <string name="start">Avvia</string>
-    <string name="stop">Ferma</string>
-    <string name="add">Add</string>
-
-    <!-- Trip Creation -->
-    <string name="create_trip">Crea Viaggio</string>
-    <string name="destination">Destinazione</string>
-    <string name="start_date">Data Inizio</string>
-    <string name="end_date">Data Fine</string>
-    <string name="trip_type">Tipo Viaggio</string>
-
-    <!-- Tracking -->
-    <string name="tracking_active">Registrazione in corso</string>
-    <string name="distance">Distanza</string>
-    <string name="duration">Durata</string>
-    <string name="current_speed">Velocità</string>
+    <string name="share">Condividi</string>
 
     <!-- Permissions -->
-    <string name="permission_location_rationale">L\'app necessita dell\'accesso alla posizione per tracciare i tuoi viaggi</string>
-    <string name="permission_camera_rationale">L\'app necessita dell\'accesso alla fotocamera per scattare foto</string>
+    <string name="permission_location">Permesso di posizione necessario</string>
+    <string name="permission_camera">Permesso fotocamera necessario</string>
+    <string name="permission_denied">Permessi negati</string>
+
+    <!-- Errors -->
+    <string name="error_loading_trips">Errore nel caricamento dei viaggi</string>
+    <string name="error_creating_trip">Errore nella creazione del viaggio</string>
+    <string name="error_tracking">Errore nel tracking</string>
+    <string name="error_camera">Errore nell\'apertura della fotocamera</string>
+
+    <!-- Notifications -->
+    <string name="notification_tracking_title">Registrazione Journey</string>
+    <string name="notification_tracking_message">Il tuo viaggio è in corso di registrazione</string>
 </resources>

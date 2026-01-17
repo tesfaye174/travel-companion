@@ -1,55 +1,47 @@
 package com.example.travelcompanion.ui.trips
 
 import androidx.lifecycle.*
+import com.example.travelcompanion.data.repository.TravelRepository
 import com.example.travelcompanion.domain.model.Trip
-import com.example.travelcompanion.domain.model.TripType
-import com.example.travelcompanion.domain.repository.TravelRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TripViewModel(private val repository: TravelRepository) : ViewModel() {
+class TripsViewModel(private val repository: TravelRepository) : ViewModel() {
 
-    private val _filterDestination = MutableStateFlow("")
-    val filterDestination: StateFlow<String> = _filterDestination
+    private val _selectedFilter = MutableLiveData(TripFilter.ALL)
+    val selectedFilter: LiveData<TripFilter> = _selectedFilter
 
-    private val _filterType = MutableStateFlow<TripType?>(null)
-    val filterType: StateFlow<TripType?> = _filterType
+    val trips: StateFlow<List<Trip>> = repository.getAllTrips()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val allTrips: LiveData<List<Trip>> = combine(
-        repository.getAllTrips(),
-        _filterDestination,
-        _filterType
-    ) { trips, destFilter, typeFilter ->
-        trips.filter { trip ->
-            (destFilter.isEmpty() || trip.destination.contains(destFilter, ignoreCase = true)) &&
-            (typeFilter == null || trip.type == typeFilter)
+    val upcomingTrips: StateFlow<List<Trip>> = repository.getUpcomingTrips()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val pastTrips: StateFlow<List<Trip>> = repository.getPastTrips()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun setFilter(filter: TripFilter) {
+        _selectedFilter.value = filter
+    }
+
+    fun deleteTrip(trip: Trip) {
+        viewModelScope.launch {
+            repository.deleteTrip(trip)
         }
-    }.asLiveData()
-
-    fun setFilterDestination(filter: String) {
-        _filterDestination.value = filter
-    }
-
-    fun setFilterType(type: TripType?) {
-        _filterType.value = type
-    }
-
-    fun insertTrip(trip: Trip) = viewModelScope.launch {
-        repository.insertTrip(trip)
-    }
-
-    fun deleteTrip(trip: Trip) = viewModelScope.launch {
-        repository.deleteTrip(trip)
     }
 }
 
-class TripViewModelFactory(private val repository: TravelRepository) : ViewModelProvider.Factory {
+enum class TripFilter {
+    ALL, UPCOMING, PAST, LOCAL, MULTI_DAY
+}
+
+class TripsViewModelFactory(private val repository: TravelRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TripViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(TripsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TripViewModel(repository) as T
+            return TripsViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
