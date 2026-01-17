@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema principale -->
+    <color name="colorPrimary">#6750A4</color>
+    <color name="colorPrimaryDark">#4F378B</color>
+    <color name="colorAccent">#FF9800</color>
+
+    <!-- Colori Material Design 3 -->
+    <!-- Tema Light -->
+    <color name="md_theme_light_primary">#6750A4</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#EADDFF</color>
+    <color name="md_theme_light_onPrimaryContainer">#21005D</color>
+
+    <color name="md_theme_light_secondary">#625B71</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#E8DEF8</color>
+    <color name="md_theme_light_onSecondaryContainer">#1D192B</color>
+
+    <color name="md_theme_light_tertiary">#7D5260</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFD8E4</color>
+    <color name="md_theme_light_onTertiaryContainer">#31111D</color>
+
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#F9DEDC</color>
+    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+
+    <color name="md_theme_light_background">#FFFBFE</color>
+    <color name="md_theme_light_onBackground">#1C1B1F</color>
+
+    <color name="md_theme_light_surface">#FFFBFE</color>
+    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <color name="md_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#49454F</color>
+
+    <color name="md_theme_light_outline">#79747E</color>
+    <color name="md_theme_light_outlineVariant">#CAC4D0</color>
+
+    <!-- Tema Dark -->
+    <color name="md_theme_dark_primary">#D0BCFF</color>
+    <color name="md_theme_dark_onPrimary">#371E73</color>
+    <color name="md_theme_dark_primaryContainer">#4F378B</color>
+    <color name="md_theme_dark_onPrimaryContainer">#EADDFF</color>
+
+    <color name="md_theme_dark_secondary">#CCC2DC</color>
+    <color name="md_theme_dark_onSecondary">#332D41</color>
+    <color name="md_theme_dark_secondaryContainer">#4A4458</color>
+    <color name="md_theme_dark_onSecondaryContainer">#E8DEF8</color>
+
+    <color name="md_theme_dark_tertiary">#EFB8C8</color>
+    <color name="md_theme_dark_onTertiary">#492532</color>
+    <color name="md_theme_dark_tertiaryContainer">#633B48</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFD8E4</color>
+
+    <color name="md_theme_dark_error">#F2B8B5</color>
+    <color name="md_theme_dark_onError">#601410</color>
+    <color name="md_theme_dark_errorContainer">#8C1D18</color>
+    <color name="md_theme_dark_onErrorContainer">#F9DEDC</color>
+
+    <color name="md_theme_dark_background">#1C1B1F</color>
+    <color name="md_theme_dark_onBackground">#E6E1E5</color>
+
+    <color name="md_theme_dark_surface">#1C1B1F</color>
+    <color name="md_theme_dark_onSurface">#E6E1E5</color>
+    <color name="md_theme_dark_surfaceVariant">#49454F</color>
+    <color name="md_theme_dark_onSurfaceVariant">#CAC4D0</color>
+
+    <color name="md_theme_dark_outline">#938F99</color>
+    <color name="md_theme_dark_outlineVariant">#49454F</color>
+
+    <!-- Colori personalizzati per l'app Travel Companion -->
+    <color name="travel_blue">#2196F3</color>
+    <color name="travel_green">#4CAF50</color>
+    <color name="travel_orange">#FF9800</color>
+    <color name="travel_red">#F44336</color>
+    <color name="travel_purple">#9C27B0</color>
+
+    <!-- Colori per stati -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Colori per background e card -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_background_dark">#2D2D2D</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="divider_dark">#424242</color>
+
+    <!-- Colori per testo -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#BDBDBD</color>
+
+    <!-- Colori per icone -->
+    <color name="icon_active">#6750A4</color>
+    <color name="icon_inactive">#9E9E9E</color>
+    <color name="icon_active_dark">#D0BCFF</color>
+
+    <!-- Gradienti per l'app (se necessario) -->
+    <color name="gradient_start">#2196F3</color>
+    <color name="gradient_end">#21CBF3</color>
+    <color name="gradient_dark_start">#0D47A1</color>
+    <color name="gradient_dark_end">#1976D2</color>
+
+    <!-- Colori per indicatori di stato viaggio -->
+    <color name="trip_planned">#FF9800</color>
+    <color name="trip_ongoing">#4CAF50</color>
+    <color name="trip_completed">#2196F3</color>
+    <color name="trip_cancelled">#F44336</color>
+
+    <!-- Colori per rating stars -->
+    <color name="star_empty">#E0E0E0</color>
+    <color name="star_filled">#FFC107</color>
+
+    <!-- Colori trasparenti -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+
+    <!-- Colori per componenti -->
+    <color name="switch_track">@android:color/transparent</color>
+    <color name="switch_thumb">@color/md_theme_light_onPrimary</color>
+    <color name="radio_button_tint">@color/md_theme_light_primary</color>
+    <color name="checkbox_tint">@color/md_theme_light_primary</color>
+    <color name="fab_ripple">#33FFFFFF</color>
+</resources>

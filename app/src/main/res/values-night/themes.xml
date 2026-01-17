@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema scuro per Travel Companion -->
+    <style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorPrimaryVariant">@color/md_theme_dark_primaryContainer</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
+
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
+        <item name="colorSecondaryVariant">@color/md_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
+
+        <!-- Tertiary brand color -->
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
+        <item name="colorTertiaryVariant">@color/md_theme_dark_tertiaryContainer</item>
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/md_theme_dark_background</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/md_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/md_theme_dark_error</item>
+        <item name="colorOnError">@color/md_theme_dark_onError</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+
+        <!-- Card background -->
+        <item name="android:colorBackgroundFloating">@color/card_background_dark</item>
+
+        <!-- Action bar / Toolbar -->
+        <item name="actionBarStyle">@style/Widget.TravelCompanion.ActionBar.Dark</item>
+
+        <!-- Card view -->
+        <item name="cardViewStyle">@style/Widget.TravelCompanion.CardView.Dark</item>
+
+        <!-- Divider -->
+        <item name="android:divider">@color/divider_dark</item>
+    </style>
+
+    <!-- Action Bar per tema scuro -->
+    <style name="Widget.TravelCompanion.ActionBar.Dark" parent="Widget.TravelCompanion.ActionBar">
+        <item name="background">@color/md_theme_dark_primary</item>
+        <item name="titleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Title.Dark</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Subtitle.Dark</item>
+    </style>
+
+    <!-- Card View per tema scuro -->
+    <style name="Widget.TravelCompanion.CardView.Dark" parent="Widget.TravelCompanion.CardView">
+        <item name="android:background">@color/card_background_dark</item>
+    </style>
+
+    <!-- Text appearance per action bar scuro -->
+    <style name="TextAppearance.TravelCompanion.ActionBar.Title.Dark" parent="TextAppearance.TravelCompanion.ActionBar.Title">
+        <item name="android:textColor">@color/md_theme_dark_onPrimary</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.ActionBar.Subtitle.Dark" parent="TextAppearance.TravelCompanion.ActionBar.Subtitle">
+        <item name="android:textColor">@color/md_theme_dark_onPrimary</item>
+    </style>
+
+    <!-- Theme overlay per tema scuro -->
+    <style name="ThemeOverlay.TravelCompanion" parent="ThemeOverlay.Material3.Light">
+        <!-- Overlay per tema chiaro in modalità scura -->
+    </style>
+</resources>

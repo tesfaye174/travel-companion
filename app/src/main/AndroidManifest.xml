@@ -1,53 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.travelcompanion">
 
+    <!-- Permessi -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permessi per Android 13+ (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.location" android:required="true" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Permessi per foto/camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
-        android:name=".TravelCompanionApplication"
+        android:name=".TravelCompanion"
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TravelCompanion">
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
-
-        <service
-            android:name=".utils.TrackingService"
-            android:foregroundServiceType="location"
-            android:exported="false" />
-
-        <receiver
-            android:name=".utils.GeofenceBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
-
+        android:theme="@style/Theme.TravelCompanion"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <!-- ATTIVITÀ PRINCIPALE -->
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.TrackingJourneyActivity" />
-        <activity android:name=".ui.StatisticsActivity" />
-        <activity android:name=".ui.MyTripsActivity" />
-        <activity android:name=".ui.NoTripsActivity" />
-    </application>
 
+        <!-- ATTIVITÀ PER LA MAPPA -->
+        <activity
+            android:name=".MapActivity"
+            android:exported="false"
+            android:label="@string/title_activity_map" />
+
+        <!-- ATTIVITÀ PER I DETTAGLI DEL VIAGGIO -->
+        <activity
+            android:name=".TripDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_trip_detail" />
+
+        <!-- ATTIVITÀ PER L'AGGIUNTA DI UN NUOVO VIAGGIO -->
+        <activity
+            android:name=".AddTripActivity"
+            android:exported="false"
+            android:label="@string/title_activity_add_trip"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- ATTIVITÀ PER IL PROFILO UTENTE -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_profile" />
+
+        <!-- ATTIVITÀ PER LE IMPOSTAZIONI -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+
+        <!-- SERVIZIO PER NOTIFICHE DI VIAGGIO -->
+        <service
+            android:name=".service.TripNotificationService"
+            android:exported="false" />
+
+        <!-- RECEIVER PER AVVIO ALL'ACCENSIONE -->
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- PROVIDER PER CONDIVISIONE FILE -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- METADATI PER GOOGLE MAPS -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <!-- METADATI PER NOTIFICHE -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <!-- METADATI PER APP COMPAT -->
+        <meta-data
+            android:name="androidx.appcompat.app.AppCompatActivity"
+            android:value="true" />
+
+    </application>
 </manifest>

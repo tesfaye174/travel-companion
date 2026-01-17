@@ -4,8 +4,8 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +13,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -22,47 +23,34 @@ public final class ItemTripBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
-  public final ImageView imageTripBg;
+  public final ImageButton buttonDelete;
 
   @NonNull
-  public final LinearLayout rowType;
+  public final ImageView imageTripCover;
 
   @NonNull
-  public final View separator;
+  public final TextView textTripDates;
 
   @NonNull
-  public final TextView textDate;
+  public final TextView textTripDestination;
 
   @NonNull
-  public final TextView textDestination;
+  public final TextView textTripTitle;
 
   @NonNull
-  public final TextView textDistance;
+  public final Chip textTripType;
 
-  @NonNull
-  public final TextView textLocation;
-
-  @NonNull
-  public final TextView textPhotosCount;
-
-  @NonNull
-  public final TextView textType;
-
-  private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull ImageView imageTripBg,
-      @NonNull LinearLayout rowType, @NonNull View separator, @NonNull TextView textDate,
-      @NonNull TextView textDestination, @NonNull TextView textDistance,
-      @NonNull TextView textLocation, @NonNull TextView textPhotosCount,
-      @NonNull TextView textType) {
+  private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull ImageButton buttonDelete,
+      @NonNull ImageView imageTripCover, @NonNull TextView textTripDates,
+      @NonNull TextView textTripDestination, @NonNull TextView textTripTitle,
+      @NonNull Chip textTripType) {
     this.rootView = rootView;
-    this.imageTripBg = imageTripBg;
-    this.rowType = rowType;
-    this.separator = separator;
-    this.textDate = textDate;
-    this.textDestination = textDestination;
-    this.textDistance = textDistance;
-    this.textLocation = textLocation;
-    this.textPhotosCount = textPhotosCount;
-    this.textType = textType;
+    this.buttonDelete = buttonDelete;
+    this.imageTripCover = imageTripCover;
+    this.textTripDates = textTripDates;
+    this.textTripDestination = textTripDestination;
+    this.textTripTitle = textTripTitle;
+    this.textTripType = textTripType;
   }
 
   @Override
@@ -92,62 +80,44 @@ public final class ItemTripBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.image_trip_bg;
-      ImageView imageTripBg = ViewBindings.findChildViewById(rootView, id);
-      if (imageTripBg == null) {
+      id = R.id.buttonDelete;
+      ImageButton buttonDelete = ViewBindings.findChildViewById(rootView, id);
+      if (buttonDelete == null) {
         break missingId;
       }
 
-      id = R.id.row_type;
-      LinearLayout rowType = ViewBindings.findChildViewById(rootView, id);
-      if (rowType == null) {
+      id = R.id.imageTripCover;
+      ImageView imageTripCover = ViewBindings.findChildViewById(rootView, id);
+      if (imageTripCover == null) {
         break missingId;
       }
 
-      id = R.id.separator;
-      View separator = ViewBindings.findChildViewById(rootView, id);
-      if (separator == null) {
+      id = R.id.textTripDates;
+      TextView textTripDates = ViewBindings.findChildViewById(rootView, id);
+      if (textTripDates == null) {
         break missingId;
       }
 
-      id = R.id.text_date;
-      TextView textDate = ViewBindings.findChildViewById(rootView, id);
-      if (textDate == null) {
+      id = R.id.textTripDestination;
+      TextView textTripDestination = ViewBindings.findChildViewById(rootView, id);
+      if (textTripDestination == null) {
         break missingId;
       }
 
-      id = R.id.text_destination;
-      TextView textDestination = ViewBindings.findChildViewById(rootView, id);
-      if (textDestination == null) {
+      id = R.id.textTripTitle;
+      TextView textTripTitle = ViewBindings.findChildViewById(rootView, id);
+      if (textTripTitle == null) {
         break missingId;
       }
 
-      id = R.id.text_distance;
-      TextView textDistance = ViewBindings.findChildViewById(rootView, id);
-      if (textDistance == null) {
+      id = R.id.textTripType;
+      Chip textTripType = ViewBindings.findChildViewById(rootView, id);
+      if (textTripType == null) {
         break missingId;
       }
 
-      id = R.id.text_location;
-      TextView textLocation = ViewBindings.findChildViewById(rootView, id);
-      if (textLocation == null) {
-        break missingId;
-      }
-
-      id = R.id.text_photos_count;
-      TextView textPhotosCount = ViewBindings.findChildViewById(rootView, id);
-      if (textPhotosCount == null) {
-        break missingId;
-      }
-
-      id = R.id.text_type;
-      TextView textType = ViewBindings.findChildViewById(rootView, id);
-      if (textType == null) {
-        break missingId;
-      }
-
-      return new ItemTripBinding((MaterialCardView) rootView, imageTripBg, rowType, separator,
-          textDate, textDestination, textDistance, textLocation, textPhotosCount, textType);
+      return new ItemTripBinding((MaterialCardView) rootView, buttonDelete, imageTripCover,
+          textTripDates, textTripDestination, textTripTitle, textTripType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

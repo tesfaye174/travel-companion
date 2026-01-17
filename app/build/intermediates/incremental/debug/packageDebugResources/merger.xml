@@ -1,90 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res"><file name="gradient_white_fade" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\gradient_white_fade.xml" qualifiers="" type="drawable"/><file name="ic_add" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\ic_add.xml" qualifiers="" type="drawable"/><file name="ic_no_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\ic_no_trips.xml" qualifiers="" type="drawable"/><file name="activity_main" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_main.xml" qualifiers="" type="layout"/><file name="activity_my_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_my_trips.xml" qualifiers="" type="layout"/><file name="activity_no_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_no_trips.xml" qualifiers="" type="layout"/><file name="activity_statistics" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_statistics.xml" qualifiers="" type="layout"/><file name="activity_tracking_journey" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_tracking_journey.xml" qualifiers="" type="layout"/><file name="fragment_add_trip" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_add_trip.xml" qualifiers="" type="layout"/><file name="fragment_journey" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_journey.xml" qualifiers="" type="layout"/><file name="fragment_settings" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_settings.xml" qualifiers="" type="layout"/><file name="fragment_statistics" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_statistics.xml" qualifiers="" type="layout"/><file name="fragment_stats" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_stats.xml" qualifiers="" type="layout"/><file name="fragment_tracking" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_tracking.xml" qualifiers="" type="layout"/><file name="fragment_trip_list" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_trip_list.xml" qualifiers="" type="layout"/><file name="item_trip" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\item_trip.xml" qualifiers="" type="layout"/><file name="bottom_nav_menu" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\menu\bottom_nav_menu.xml" qualifiers="" type="menu"/><file name="nav_graph" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\navigation\nav_graph.xml" qualifiers="" type="navigation"/><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\colors.xml" qualifiers=""><color name="md_theme_light_primary">#1976D2</color><color name="md_theme_light_onPrimary">#FFFFFF</color><color name="md_theme_light_primaryContainer">#D6E3FF</color><color name="md_theme_light_onPrimaryContainer">#001B3D</color><color name="md_theme_light_secondary">#555F71</color><color name="md_theme_light_onSecondary">#FFFFFF</color><color name="md_theme_light_secondaryContainer">#D9E3F9</color><color name="md_theme_light_onSecondaryContainer">#121C2B</color><color name="md_theme_light_tertiary">#705574</color><color name="md_theme_light_onTertiary">#FFFFFF</color><color name="md_theme_light_tertiaryContainer">#FAD8FD</color><color name="md_theme_light_onTertiaryContainer">#29132E</color><color name="md_theme_light_error">#BA1A1A</color><color name="md_theme_light_errorContainer">#FFDAD6</color><color name="md_theme_light_onError">#FFFFFF</color><color name="md_theme_light_onErrorContainer">#410002</color><color name="md_theme_light_background">#FDFBFF</color><color name="md_theme_light_onBackground">#1A1B1E</color><color name="md_theme_light_surface">#FDFBFF</color><color name="md_theme_light_onSurface">#1A1B1E</color><color name="md_theme_light_surfaceVariant">#E0E2EC</color><color name="md_theme_light_onSurfaceVariant">#43474E</color><color name="md_theme_light_outline">#74777F</color><color name="md_theme_light_inverseOnSurface">#F1F0F4</color><color name="md_theme_light_inverseSurface">#2F3033</color><color name="md_theme_light_inversePrimary">#A6C8FF</color><color name="md_theme_light_shadow">#000000</color><color name="md_theme_light_surfaceTint">#1976D2</color><color name="md_theme_light_outlineVariant">#C4C6D0</color><color name="md_theme_light_scrim">#000000</color><color name="seed">#1976D2</color><color name="white">#FFFFFF</color></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\strings.xml" qualifiers=""><string name="app_name">Travel Companion</string><string name="nav_trips">Viaggi</string><string name="nav_tracking">Traccia</string><string name="nav_gallery">Galleria</string><string name="nav_stats">Statistiche</string><string name="nav_settings">Impostazioni</string><string name="trip_type_local">Locale</string><string name="trip_type_day">Giornaliero</string><string name="trip_type_multi_day">Multi-giorno</string><string name="save">Salva</string><string name="cancel">Annulla</string><string name="delete">Elimina</string><string name="edit">Modifica</string><string name="start">Avvia</string><string name="stop">Ferma</string><string name="add">Add</string><string name="create_trip">Crea Viaggio</string><string name="destination">Destinazione</string><string name="start_date">Data Inizio</string><string name="end_date">Data Fine</string><string name="trip_type">Tipo Viaggio</string><string name="tracking_active">Registrazione in corso</string><string name="distance">Distanza</string><string name="duration">Durata</string><string name="current_speed">Velocità</string><string name="permission_location_rationale">L\'app necessita dell\'accesso alla posizione per tracciare i tuoi viaggi</string><string name="permission_camera_rationale">L\'app necessita dell\'accesso alla fotocamera per scattare foto</string></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\styles.xml" qualifiers=""><style name="TextAppearance.TravelCompanion" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textColor">@color/md_theme_light_onSurface</item>
-    </style><style name="TextAppearance.TravelCompanion.SectionTitle" parent="TextAppearance.TravelCompanion">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-    </style><style name="TextAppearance.TravelCompanion.Title" parent="TextAppearance.TravelCompanion">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style><style name="TextAppearance.TravelCompanion.Body1" parent="TextAppearance.TravelCompanion">
-        <item name="android:textSize">14sp</item>
-    </style><style name="TextAppearance.TravelCompanion.Body2" parent="TextAppearance.TravelCompanion">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/md_theme_light_onSurfaceVariant</item>
-    </style><style name="Widget.TravelCompanion.Card" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">4dp</item>
-        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
-    </style><style name="Widget.TravelCompanion.Card.Outlined" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">0dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/md_theme_light_outline</item>
-        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
-    </style><style name="Widget.TravelCompanion.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
-        <item name="backgroundTint">@color/md_theme_light_primary</item>
-        <item name="cornerRadius">8dp</item>
-    </style><style name="Widget.TravelCompanion.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textColor">@color/md_theme_light_primary</item>
-        <item name="strokeColor">@color/md_theme_light_primary</item>
-        <item name="cornerRadius">8dp</item>
-    </style><style name="Widget.TravelCompanion.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">8dp</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="boxCornerRadiusBottomStart">8dp</item>
-        <item name="boxCornerRadiusBottomEnd">8dp</item>
-        <item name="hintTextColor">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="boxStrokeColor">@color/md_theme_light_outline</item>
-    </style></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\themes.xml" qualifiers=""><style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
+<merger version="3" xmlns:ns1="http://schemas.android.com/tools"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res"><file name="bottom_nav_icon_tint" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\color\bottom_nav_icon_tint.xml" qualifiers="" type="color"/><file name="bottom_nav_text_tint" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\color\bottom_nav_text_tint.xml" qualifiers="" type="color"/><file name="color" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\color\color.xml" qualifiers="" type="color"/><file name="bg_date_selector" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\bg_date_selector.xml" qualifiers="" type="drawable"/><file name="gradient_white_fade" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\gradient_white_fade.xml" qualifiers="" type="drawable"/><file name="ic_add" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\ic_add.xml" qualifiers="" type="drawable"/><file name="ic_no_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\drawable\ic_no_trips.xml" qualifiers="" type="drawable"/><file name="activity_main" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_main.xml" qualifiers="" type="layout"/><file name="activity_my_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_my_trips.xml" qualifiers="" type="layout"/><file name="activity_no_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_no_trips.xml" qualifiers="" type="layout"/><file name="activity_statistics" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_statistics.xml" qualifiers="" type="layout"/><file name="activity_tracking_journey" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\activity_tracking_journey.xml" qualifiers="" type="layout"/><file name="fragment_add_trip" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_add_trip.xml" qualifiers="" type="layout"/><file name="fragment_journey" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_journey.xml" qualifiers="" type="layout"/><file name="fragment_map" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_map.xml" qualifiers="" type="layout"/><file name="fragment_new_trip" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_new_trip.xml" qualifiers="" type="layout"/><file name="fragment_settings" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_settings.xml" qualifiers="" type="layout"/><file name="fragment_statistics" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_statistics.xml" qualifiers="" type="layout"/><file name="fragment_stats" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_stats.xml" qualifiers="" type="layout"/><file name="fragment_tracking" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_tracking.xml" qualifiers="" type="layout"/><file name="fragment_trips" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_trips.xml" qualifiers="" type="layout"/><file name="fragment_trip_details" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_trip_details.xml" qualifiers="" type="layout"/><file name="fragment_trip_list" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\fragment_trip_list.xml" qualifiers="" type="layout"/><file name="item_note" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\item_note.xml" qualifiers="" type="layout"/><file name="item_photo" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\item_photo.xml" qualifiers="" type="layout"/><file name="item_trip" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\layout\item_trip.xml" qualifiers="" type="layout"/><file name="bottom_nav_menu" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\menu\bottom_nav_menu.xml" qualifiers="" type="menu"/><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\dimens.xml" qualifiers=""><dimen name="margin_small">8dp</dimen><dimen name="margin_medium">16dp</dimen><dimen name="margin_large">24dp</dimen><dimen name="padding_small">8dp</dimen><dimen name="padding_medium">16dp</dimen><dimen name="padding_large">24dp</dimen><dimen name="text_size_small">12sp</dimen><dimen name="text_size_medium">16sp</dimen><dimen name="text_size_large">20sp</dimen><dimen name="text_size_xlarge">24sp</dimen><dimen name="card_corner_radius">12dp</dimen><dimen name="card_elevation">4dp</dimen><dimen name="icon_size_small">24dp</dimen><dimen name="icon_size_medium">32dp</dimen><dimen name="icon_size_large">48dp</dimen></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\strings.xml" qualifiers=""><string name="app_name">Travel Companion</string><string name="nav_trips">Viaggi</string><string name="nav_map">Mappa</string><string name="nav_statistics">Statistiche</string><string name="my_trips">I Miei Viaggi</string><string name="new_trip">Nuovo Viaggio</string><string name="upcoming_trips">Prossimi</string><string name="past_trips">Passati</string><string name="all_trips">Tutti</string><string name="no_trips">Non ci sono viaggi</string><string name="no_trips_message">Clicca sul pulsante + per iniziare a pianificare il tuo primo viaggio</string><string name="trip_details">Dettaglio Viaggio</string><string name="destination">Destinazione</string><string name="trip_type">Tipo di Viaggio</string><string name="start_date">Data Inizio</string><string name="end_date">Data Fine</string><string name="total_days">Totale</string><string name="total_distance">Distanza</string><string name="total_duration">Durata</string><string name="trip_photos">Foto del Viaggio</string><string name="trip_notes">Note del Viaggio</string><string name="start_tracking">Ferma Tracking</string><string name="stop_tracking">Stop Tracking</string><string name="add_photo">Aggiungi Foto</string><string name="add_note">Aggiungi Nota</string><string name="tracking_active">Tracking Attivo</string><string name="ready_to_start">Pronto per Iniziare</string><string name="time_elapsed">Tempo Trascorso</string><string name="distance_traveled">Distanza</string><string name="take_photo">Scatta Foto</string><string name="recording">Registrazione...</string><string name="statistics">Statistiche</string><string name="total_trips">Viaggi Totali</string><string name="trips_per_month">Viaggi per Mese</string><string name="average_speed">Velocità Media</string><string name="trip_type_city">City Trip</string><string name="trip_type_multi_day">Multi-giorno</string><string name="trip_type_hiking">Hiking</string><string name="trip_type_beach">Beach</string><string name="trip_type_business">Business</string><string name="trip_type_other">Altro</string><string name="create">Crea</string><string name="save">Salva</string><string name="cancel">Annulla</string><string name="delete">Elimina</string><string name="edit">Modifica</string><string name="share">Condividi</string><string name="permission_location">Permesso di posizione necessario</string><string name="permission_camera">Permesso fotocamera necessario</string><string name="permission_denied">Permessi negati</string><string name="error_loading_trips">Errore nel caricamento dei viaggi</string><string name="error_creating_trip">Errore nella creazione del viaggio</string><string name="error_tracking">Errore nel tracking</string><string name="error_camera">Errore nell\'apertura della fotocamera</string><string name="notification_tracking_title">Registrazione Journey</string><string name="notification_tracking_message">Il tuo viaggio è in corso di registrazione</string></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values\Themes.xml" qualifiers=""><style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
         
         <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorPrimaryVariant">@color/md_theme_light_primaryContainer</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
 
         
         <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorSecondaryVariant">@color/md_theme_light_secondaryContainer</item>
         <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
 
         
         <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorTertiaryVariant">@color/md_theme_light_tertiaryContainer</item>
         <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
 
         
-        <item name="colorError">@color/md_theme_light_error</item>
-        <item name="colorOnError">@color/md_theme_light_onError</item>
-        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="android:statusBarColor" ns1:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">true</item>
 
         
         <item name="android:colorBackground">@color/md_theme_light_background</item>
         <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+
+        
         <item name="colorSurface">@color/md_theme_light_surface</item>
         <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_light_outline</item>
 
         
-        <item name="android:statusBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
 
         
-        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
 
         
-        <item name="bottomNavigationStyle">@style/Widget.TravelCompanion.BottomNavigation</item>
-    </style><style name="Widget.TravelCompanion.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemIconTint">@color/md_theme_light_primary</item>
-        <item name="itemTextColor">@color/md_theme_light_primary</item>
+        <item name="actionBarSize">56dp</item>
+        <item name="actionBarStyle">@style/Widget.TravelCompanion.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.TravelCompanion.PopupOverlay</item>
+
+        
+        <item name="cardViewStyle">@style/Widget.TravelCompanion.CardView</item>
+
+        
+        <item name="materialButtonStyle">@style/Widget.TravelCompanion.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.TravelCompanion.Button.Outlined</item>
+        <item name="materialButtonToggleGroupStyle">@style/Widget.TravelCompanion.Button.ToggleGroup</item>
+
+        
+        <item name="textInputStyle">@style/Widget.TravelCompanion.TextInputLayout</item>
+
+        
+        <item name="chipStyle">@style/Widget.TravelCompanion.Chip</item>
+
+        
+        <item name="progressBarStyle">@style/Widget.TravelCompanion.ProgressBar</item>
+
+        
+        <item name="switchStyle">@style/Widget.TravelCompanion.Switch</item>
+
+        
+        <item name="radioButtonStyle">@style/Widget.TravelCompanion.RadioButton</item>
+
+        
+        <item name="checkboxStyle">@style/Widget.TravelCompanion.CheckBox</item>
+
+        
+        <item name="bottomNavigationStyle">@style/Widget.TravelCompanion.BottomNavigationView</item>
+
+        
+        <item name="tabStyle">@style/Widget.TravelCompanion.TabLayout</item>
+
+        
+        <item name="floatingActionButtonStyle">@style/Widget.TravelCompanion.FloatingActionButton</item>
+
+        
+        <item name="appBarLayoutStyle">@style/Widget.TravelCompanion.AppBarLayout</item>
+
+        
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" ns1:targetApi="21">true</item>
+        <item name="android:windowTranslucentStatus" ns1:targetApi="19">false</item>
+        <item name="android:windowTranslucentNavigation" ns1:targetApi="19">false</item>
+
+        
+        <item name="android:enforceNavigationBarContrast" ns1:targetApi="29">true</item>
+        <item name="android:enforceStatusBarContrast" ns1:targetApi="29">true</item>
+
+        
+        <item name="android:windowAnimationStyle">@style/WindowAnimation.TravelCompanion</item>
+
+        
+        <item name="alertDialogTheme">@style/ThemeOverlay.TravelCompanion.Dialog.Alert</item>
+        <item name="dialogTheme">@style/ThemeOverlay.TravelCompanion.Dialog</item>
+
+        
+        <item name="materialThemeOverlay">@style/ThemeOverlay.TravelCompanion</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.TravelCompanion.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.TravelCompanion.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.TravelCompanion.LargeComponent</item>
+    </style><style name="Theme.TravelCompanion.Launcher" parent="Theme.TravelCompanion">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style><style name="Theme.TravelCompanion.Dialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style><style name="Widget.TravelCompanion.ActionBar" parent="Widget.Material3.ActionBar">
+        <item name="background">@color/md_theme_light_primary</item>
+        <item name="titleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Title</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Subtitle</item>
+        <item name="elevation">4dp</item>
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+    </style><style name="Widget.TravelCompanion.Button" parent="Widget.Material3.Button">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.TravelCompanion.Button</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+    </style><style name="Widget.TravelCompanion.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/md_theme_light_outline</item>
+        <item name="cornerRadius">8dp</item>
+    </style><style name="Widget.TravelCompanion.Button.ToggleGroup" parent="Widget.Material3.ButtonToggleGroup">
+        <item name="singleSelection">false</item>
+        <item name="checkedButton">@null</item>
+    </style><style name="Widget.TravelCompanion.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/md_theme_light_outline</item>
+        <item name="boxStrokeErrorColor">@color/md_theme_light_error</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="hintTextAppearance">@style/TextAppearance.TravelCompanion.Caption</item>
+        <item name="errorTextAppearance">@style/TextAppearance.TravelCompanion.Caption.Error</item>
+    </style><style name="Widget.TravelCompanion.CardView" parent="CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="contentPadding">16dp</item>
+        <item name="android:background">@color/card_background</item>
+    </style><style name="Widget.TravelCompanion.Chip" parent="Widget.Material3.Chip.Assist">
+        <item name="chipMinTouchTargetSize">0dp</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipBackgroundColor">@color/md_theme_light_primaryContainer</item>
+        <item name="chipSurfaceColor">@color/md_theme_light_surface</item>
+    </style><style name="Widget.TravelCompanion.ProgressBar" parent="Widget.Material3.ProgressIndicator">
+        <item name="trackColor">@color/md_theme_light_surfaceVariant</item>
+        <item name="indicatorColor">@color/md_theme_light_primary</item>
+    </style><style name="Widget.TravelCompanion.Switch" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="trackTint">@color/switch_track</item>
+        <item name="thumbTint">@color/switch_thumb</item>
+    </style><style name="Widget.TravelCompanion.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="buttonTint">@color/radio_button_tint</item>
+    </style><style name="Widget.TravelCompanion.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="buttonTint">@color/checkbox_tint</item>
+    </style><style name="Widget.TravelCompanion.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemBackground">?android:attr/selectableItemBackground</item>
+        <item name="itemIconTint">@color/bottom_nav_icon_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_text_tint</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.TravelCompanion.Caption</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.TravelCompanion.Caption.Bold</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">8dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style><style name="Widget.TravelCompanion.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">@color/md_theme_light_primary</item>
+        <item name="tabTextColor">@color/text_secondary</item>
+        <item name="tabSelectedTextColor">@color/md_theme_light_primary</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabIndicatorGravity">bottom</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+    </style><style name="Widget.TravelCompanion.FloatingActionButton" parent="Widget.Material3.FloatingActionButton">
+        <item name="backgroundTint">@color/md_theme_light_primary</item>
+        <item name="tint">@color/md_theme_light_onPrimary</item>
+        <item name="elevation">6dp</item>
+        <item name="hoveredFocusedTranslationZ">12dp</item>
+        <item name="pressedTranslationZ">6dp</item>
+        <item name="rippleColor">@color/fab_ripple</item>
+        <item name="fabSize">normal</item>
+    </style><style name="Widget.TravelCompanion.AppBarLayout" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/md_theme_light_surface</item>
-    </style><style name="Widget.TravelCompanion.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:backgroundTint">@color/md_theme_light_primary</item>
-        <item name="android:tint">@color/md_theme_light_onPrimary</item>
-    </style></file><file name="backup_rules" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\backup_rules.xml" qualifiers="" type="xml"/><file name="data_extraction_rules" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\data_extraction_rules.xml" qualifiers="" type="xml"/><file name="file_paths" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\file_paths.xml" qualifiers="" type="xml"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\build\generated\res\resValues\debug"/></dataSet><mergedItems/></merger>
+        <item name="android:elevation">4dp</item>
+        <item name="android:stateListAnimator">@animator/appbar_elevation</item>
+    </style><style name="TextAppearance.TravelCompanion.Display.Large" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">57sp</item>
+        <item name="android:letterSpacing">-0.25</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Display.Medium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:textSize">45sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Display.Small" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Headline.Large" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style><style name="TextAppearance.TravelCompanion.Headline.Medium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">28sp</item>
+    </style><style name="TextAppearance.TravelCompanion.Headline.Small" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">24sp</item>
+    </style><style name="TextAppearance.TravelCompanion.Title.Large" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Title.Medium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style><style name="TextAppearance.TravelCompanion.Title.Small" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Body.Large" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style><style name="TextAppearance.TravelCompanion.Body.Medium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style><style name="TextAppearance.TravelCompanion.Body.Small" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style><style name="TextAppearance.TravelCompanion.Label.Large" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Label.Medium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Label.Small" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style><style name="TextAppearance.TravelCompanion.Caption.Bold">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style><style name="TextAppearance.TravelCompanion.Caption.Error">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/md_theme_light_error</item>
+    </style><style name="TextAppearance.TravelCompanion.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0.5</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style><style name="TextAppearance.TravelCompanion.ActionBar.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
+    </style><style name="TextAppearance.TravelCompanion.ActionBar.Subtitle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
+        <item name="android:alpha">0.87</item>
+    </style><style name="ShapeAppearance.TravelCompanion.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style><style name="ShapeAppearance.TravelCompanion.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style><style name="ShapeAppearance.TravelCompanion.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style><style name="ThemeOverlay.TravelCompanion" parent="ThemeOverlay.Material3.Dark">
+        
+    </style><style name="ThemeOverlay.TravelCompanion.PopupOverlay" parent="ThemeOverlay.Material3.Dark.ActionBar">
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:background">@color/md_theme_dark_surface</item>
+    </style><style name="ThemeOverlay.TravelCompanion.Dialog" parent="ThemeOverlay.Material3.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style><style name="ThemeOverlay.TravelCompanion.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <item name="buttonBarButtonStyle">@style/Widget.TravelCompanion.Button</item>
+    </style><style name="WindowAnimation.TravelCompanion">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style><style name="Theme.TravelCompanion.Map" parent="Theme.TravelCompanion">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style></file><file path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\values-night\themes.xml" qualifiers="night-v8"><style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorPrimaryVariant">@color/md_theme_dark_primaryContainer</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
+
+        
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
+        <item name="colorSecondaryVariant">@color/md_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
+
+        
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
+        <item name="colorTertiaryVariant">@color/md_theme_dark_tertiaryContainer</item>
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>
+
+        
+        <item name="android:statusBarColor" ns1:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+
+        
+        <item name="android:colorBackground">@color/md_theme_dark_background</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
+
+        
+        <item name="colorSurface">@color/md_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
+
+        
+        <item name="colorError">@color/md_theme_dark_error</item>
+        <item name="colorOnError">@color/md_theme_dark_onError</item>
+
+        
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+
+        
+        <item name="android:colorBackgroundFloating">@color/card_background_dark</item>
+
+        
+        <item name="actionBarStyle">@style/Widget.TravelCompanion.ActionBar.Dark</item>
+
+        
+        <item name="cardViewStyle">@style/Widget.TravelCompanion.CardView.Dark</item>
+
+        
+        <item name="android:divider">@color/divider_dark</item>
+    </style><style name="Widget.TravelCompanion.ActionBar.Dark" parent="Widget.TravelCompanion.ActionBar">
+        <item name="background">@color/md_theme_dark_primary</item>
+        <item name="titleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Title.Dark</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.TravelCompanion.ActionBar.Subtitle.Dark</item>
+    </style><style name="Widget.TravelCompanion.CardView.Dark" parent="Widget.TravelCompanion.CardView">
+        <item name="android:background">@color/card_background_dark</item>
+    </style><style name="TextAppearance.TravelCompanion.ActionBar.Title.Dark" parent="TextAppearance.TravelCompanion.ActionBar.Title">
+        <item name="android:textColor">@color/md_theme_dark_onPrimary</item>
+    </style><style name="TextAppearance.TravelCompanion.ActionBar.Subtitle.Dark" parent="TextAppearance.TravelCompanion.ActionBar.Subtitle">
+        <item name="android:textColor">@color/md_theme_dark_onPrimary</item>
+    </style><style name="ThemeOverlay.TravelCompanion" parent="ThemeOverlay.Material3.Light">
+        
+    </style></file><file name="backup_rules" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\backup_rules.xml" qualifiers="" type="xml"/><file name="data_extraction_rules" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\data_extraction_rules.xml" qualifiers="" type="xml"/><file name="file_paths" path="C:\Users\tesfa\Desktop\travel-companion\app\src\main\res\xml\file_paths.xml" qualifiers="" type="xml"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="C:\Users\tesfa\Desktop\travel-companion\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\tesfa\Desktop\travel-companion\app\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="C:\Users\tesfa\Desktop\travel-companion\app\build\generated\res\resValues\debug"/></dataSet><mergedItems/></merger>

@@ -25,9 +25,6 @@ public final class FragmentJourneyBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
-  public final MaterialCardView bottomSheet;
-
-  @NonNull
   public final MaterialButton buttonStopTracking;
 
   @NonNull
@@ -43,10 +40,7 @@ public final class FragmentJourneyBinding implements ViewBinding {
   public final PreviewView previewView;
 
   @NonNull
-  public final TextView textPhotosCount;
-
-  @NonNull
-  public final TextView textSpeed;
+  public final TextView textDistance;
 
   @NonNull
   public final TextView textTimeElapsed;
@@ -55,26 +49,23 @@ public final class FragmentJourneyBinding implements ViewBinding {
   public final TextView textTripTitleTracking;
 
   @NonNull
-  public final MaterialCardView topInfoCard;
+  public final MaterialCardView trackingCard;
 
   private FragmentJourneyBinding(@NonNull ConstraintLayout rootView,
-      @NonNull MaterialCardView bottomSheet, @NonNull MaterialButton buttonStopTracking,
-      @NonNull MaterialButton buttonTakePhoto, @NonNull FrameLayout cameraLayout,
-      @NonNull MapView mapView, @NonNull PreviewView previewView, @NonNull TextView textPhotosCount,
-      @NonNull TextView textSpeed, @NonNull TextView textTimeElapsed,
-      @NonNull TextView textTripTitleTracking, @NonNull MaterialCardView topInfoCard) {
+      @NonNull MaterialButton buttonStopTracking, @NonNull MaterialButton buttonTakePhoto,
+      @NonNull FrameLayout cameraLayout, @NonNull MapView mapView, @NonNull PreviewView previewView,
+      @NonNull TextView textDistance, @NonNull TextView textTimeElapsed,
+      @NonNull TextView textTripTitleTracking, @NonNull MaterialCardView trackingCard) {
     this.rootView = rootView;
-    this.bottomSheet = bottomSheet;
     this.buttonStopTracking = buttonStopTracking;
     this.buttonTakePhoto = buttonTakePhoto;
     this.cameraLayout = cameraLayout;
     this.mapView = mapView;
     this.previewView = previewView;
-    this.textPhotosCount = textPhotosCount;
-    this.textSpeed = textSpeed;
+    this.textDistance = textDistance;
     this.textTimeElapsed = textTimeElapsed;
     this.textTripTitleTracking = textTripTitleTracking;
-    this.topInfoCard = topInfoCard;
+    this.trackingCard = trackingCard;
   }
 
   @Override
@@ -104,75 +95,63 @@ public final class FragmentJourneyBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.bottom_sheet;
-      MaterialCardView bottomSheet = ViewBindings.findChildViewById(rootView, id);
-      if (bottomSheet == null) {
-        break missingId;
-      }
-
-      id = R.id.button_stop_tracking;
+      id = R.id.buttonStopTracking;
       MaterialButton buttonStopTracking = ViewBindings.findChildViewById(rootView, id);
       if (buttonStopTracking == null) {
         break missingId;
       }
 
-      id = R.id.button_take_photo;
+      id = R.id.buttonTakePhoto;
       MaterialButton buttonTakePhoto = ViewBindings.findChildViewById(rootView, id);
       if (buttonTakePhoto == null) {
         break missingId;
       }
 
-      id = R.id.camera_layout;
+      id = R.id.cameraLayout;
       FrameLayout cameraLayout = ViewBindings.findChildViewById(rootView, id);
       if (cameraLayout == null) {
         break missingId;
       }
 
-      id = R.id.map_view;
+      id = R.id.mapView;
       MapView mapView = ViewBindings.findChildViewById(rootView, id);
       if (mapView == null) {
         break missingId;
       }
 
-      id = R.id.preview_view;
+      id = R.id.previewView;
       PreviewView previewView = ViewBindings.findChildViewById(rootView, id);
       if (previewView == null) {
         break missingId;
       }
 
-      id = R.id.text_photos_count;
-      TextView textPhotosCount = ViewBindings.findChildViewById(rootView, id);
-      if (textPhotosCount == null) {
+      id = R.id.textDistance;
+      TextView textDistance = ViewBindings.findChildViewById(rootView, id);
+      if (textDistance == null) {
         break missingId;
       }
 
-      id = R.id.text_speed;
-      TextView textSpeed = ViewBindings.findChildViewById(rootView, id);
-      if (textSpeed == null) {
-        break missingId;
-      }
-
-      id = R.id.text_time_elapsed;
+      id = R.id.textTimeElapsed;
       TextView textTimeElapsed = ViewBindings.findChildViewById(rootView, id);
       if (textTimeElapsed == null) {
         break missingId;
       }
 
-      id = R.id.text_trip_title_tracking;
+      id = R.id.textTripTitleTracking;
       TextView textTripTitleTracking = ViewBindings.findChildViewById(rootView, id);
       if (textTripTitleTracking == null) {
         break missingId;
       }
 
-      id = R.id.top_info_card;
-      MaterialCardView topInfoCard = ViewBindings.findChildViewById(rootView, id);
-      if (topInfoCard == null) {
+      id = R.id.trackingCard;
+      MaterialCardView trackingCard = ViewBindings.findChildViewById(rootView, id);
+      if (trackingCard == null) {
         break missingId;
       }
 
-      return new FragmentJourneyBinding((ConstraintLayout) rootView, bottomSheet,
-          buttonStopTracking, buttonTakePhoto, cameraLayout, mapView, previewView, textPhotosCount,
-          textSpeed, textTimeElapsed, textTripTitleTracking, topInfoCard);
+      return new FragmentJourneyBinding((ConstraintLayout) rootView, buttonStopTracking,
+          buttonTakePhoto, cameraLayout, mapView, previewView, textDistance, textTimeElapsed,
+          textTripTitleTracking, trackingCard);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
