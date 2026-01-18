@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    
     <!-- Features (optional) -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -24,17 +24,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TravelCompanion"
         tools:targetApi="31">
-
-        <!-- Google Maps API Key (commentato per ora) -->
+        
+        <!-- SE hai una API key di Google Maps, scommenta questa riga -->
         <!--
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="LA_TUA_API_KEY" />
         -->
 
         <!-- Main Activity -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.travelcompanion.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TravelCompanion.NoActionBar">
             <intent-filter>
@@ -42,23 +42,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Tracking Activity -->
+        
+        <!-- Tracking Activity (se esiste) -->
+        <!--
         <activity
-            android:name=".ui.tracking.TrackingActivity"
+            android:name="com.travelcompanion.ui.tracking.TrackingActivity"
             android:exported="false"
             android:theme="@style/Theme.TravelCompanion" />
-
-        <!-- Location Service -->
+        -->
+        
+        <!-- Location Service (se esiste) -->
+        <!--
         <service
-            android:name=".services.LocationService"
+            android:name="com.travelcompanion.services.LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
-
-        <!-- Notification Channel per Android 8.0+ -->
+        -->
+        
+        <!-- Notification Channel -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
+            android:value="travel_companion_channel" />
 
     </application>
 

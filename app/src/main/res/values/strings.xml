@@ -1,7 +1,7 @@
 <resources>
     <!-- App Name -->
     <string name="app_name">Travel Companion</string>
-
+    
     <!-- Titles -->
     <string name="title_home">Home</string>
     <string name="title_trips">Viaggi</string>
