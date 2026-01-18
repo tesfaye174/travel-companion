@@ -1,6 +1,6 @@
 package com.example.travelcompanion.utils
 
-import com.example.travelcompanion.ui.stats.MonthlyStat
+import com.example.travelcompanion.ui.statistics.MonthlyStat
 
 object PredictionEngine {
 

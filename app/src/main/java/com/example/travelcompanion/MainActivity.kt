@@ -1,11 +1,10 @@
-package com.example.travelcompanion
+package com.travelcompanion
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.travelcompanion.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.travelcompanion.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,11 +15,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        setupNavigation()
+    }
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav.setupWithNavController(navController)
+    private fun setupNavigation() {
+        val navView = binding.bottomNavigation
+        val navController = findNavController(R.id.fragment_container)
+
+        navView.setupWithNavController(navController)
     }
 }

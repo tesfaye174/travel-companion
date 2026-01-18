@@ -1,4 +1,4 @@
-package com.example.travelcompanion.ui.stats
+package com.example.travelcompanion.ui.statistics
 
 import android.os.Bundle
 import android.view.LayoutInflater

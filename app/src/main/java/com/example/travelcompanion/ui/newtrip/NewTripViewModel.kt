@@ -1,73 +1,72 @@
 package com.example.travelcompanion.ui.newtrip
 
-import androidx.lifecycle.*
-import com.example.travelcompanion.data.repository.TravelRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.travelcompanion.domain.model.Trip
 import com.example.travelcompanion.domain.model.TripType
+import com.example.travelcompanion.domain.repository.ITripRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Date
+import javax.inject.Inject
 
-class NewTripViewModel(private val repository: TravelRepository) : ViewModel() {
+@HiltViewModel
+class NewTripViewModel @Inject constructor(
+    private val repository: ITripRepository
+) : ViewModel() {
 
-    private val _destination = MutableLiveData("")
-    val destination: LiveData<String> = _destination
+    private val _isTracking = MutableLiveData(false)
+    val isTracking: LiveData<Boolean> = _isTracking
 
-    private val _tripType = MutableLiveData(TripType.MULTI_DAY)
-    val tripType: LiveData<TripType> = _tripType
+    private val _tripSaved = MutableLiveData<Boolean>()
+    val tripSaved: LiveData<Boolean> = _tripSaved
 
-    private val _startDate = MutableLiveData<Long>()
-    val startDate: LiveData<Long> = _startDate
+    private var currentTripId: Long = -1
 
-    private val _endDate = MutableLiveData<Long>()
-    val endDate: LiveData<Long> = _endDate
-
-    private val _notes = MutableLiveData("")
-    val notes: LiveData<String> = _notes
-
-    private val _tripCreated = MutableLiveData<Long?>()
-    val tripCreated: LiveData<Long?> = _tripCreated
-
-    fun setDestination(value: String) {
-        _destination.value = value
-    }
-
-    fun setTripType(type: TripType) {
-        _tripType.value = type
-    }
-
-    fun setStartDate(date: Long) {
-        _startDate.value = date
-    }
-
-    fun setEndDate(date: Long) {
-        _endDate.value = date
-    }
-
-    fun setNotes(value: String) {
-        _notes.value = value
-    }
-
-    fun createTrip(title: String) {
+    fun createTrip(
+        title: String,
+        destination: String,
+        tripType: TripType,
+        startDate: Date,
+        endDate: Date,
+        notes: String = ""
+    ) {
         viewModelScope.launch {
             val trip = Trip(
                 title = title,
-                destination = _destination.value ?: "",
-                tripType = _tripType.value ?: TripType.MULTI_DAY,
-                startDate = _startDate.value ?: System.currentTimeMillis(),
-                endDate = _endDate.value ?: System.currentTimeMillis(),
-                notes = _notes.value
+                destination = destination,
+                tripType = tripType,
+                startDate = startDate,
+                endDate = endDate,
+                notes = notes
             )
-            val tripId = repository.insertTrip(trip)
-            _tripCreated.value = tripId
+
+            currentTripId = repository.insertTrip(trip)
+            _tripSaved.value = true
         }
     }
-}
 
-class NewTripViewModelFactory(private val repository: TravelRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(NewTripViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return NewTripViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+    fun startTracking() {
+        _isTracking.value = true
+        // Here you would start the GPS tracking service
+    }
+
+    fun stopTracking() {
+        _isTracking.value = false
+        // Here you would stop the GPS tracking service
+    }
+
+    fun addPhoto() {
+        // Implement photo capture
+    }
+
+    fun addNote() {
+        // Implement note addition
+    }
+
+    fun resetSaveState() {
+        _tripSaved.value = false
     }
 }

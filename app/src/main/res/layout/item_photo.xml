@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="120dp"
-    android:layout_height="120dp"
-    android:layout_margin="4dp"
+    android:layout_height="140dp"
+    android:layout_marginEnd="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp">
 
-    <ImageView
-        android:id="@+id/imagePhoto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent">
 
-</com.google.android.material.card.MaterialCardView>
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_image"
+            android:contentDescription="@string/photo_description" />
+
+        <TextView
+            android:id="@+id/tv_photo_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_photo"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Foto al Colosseo"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

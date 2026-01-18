@@ -1,15 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/title_home" />
+
+    <item
         android:id="@+id/navigation_trips"
-        android:icon="@drawable/ic_trips"
-        android:title="Viaggi" />
+        android:icon="@drawable/ic_trip"
+        android:title="@string/title_trips" />
+
     <item
         android:id="@+id/navigation_map"
         android:icon="@drawable/ic_map"
-        android:title="Mappa" />
+        android:title="@string/title_map" />
+
     <item
         android:id="@+id/navigation_statistics"
-        android:icon="@drawable/ic_statistics"
-        android:title="Statistiche" />
+        android:icon="@drawable/ic_stats"
+        android:title="@string/title_statistics" />
 </menu>

@@ -1,79 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">Travel Companion</string>
 
-    <!-- Navigation -->
-    <string name="nav_trips">Viaggi</string>
-    <string name="nav_map">Mappa</string>
-    <string name="nav_statistics">Statistiche</string>
-
-    <!-- Trips -->
-    <string name="my_trips">I Miei Viaggi</string>
+    <!-- Titles -->
+    <string name="title_home">Home</string>
+    <string name="title_trips">Viaggi</string>
+    <string name="title_map">Mappa</string>
+    <string name="title_statistics">Statistiche</string>
+    <string name="settings">Impostazioni</string>
     <string name="new_trip">Nuovo Viaggio</string>
-    <string name="upcoming_trips">Prossimi</string>
-    <string name="past_trips">Passati</string>
-    <string name="all_trips">Tutti</string>
-    <string name="no_trips">Non ci sono viaggi</string>
-    <string name="no_trips_message">Clicca sul pulsante + per iniziare a pianificare il tuo primo viaggio</string>
+    <string name="trip_details">Dettagli Viaggio</string>
+    <string name="tracking_journey">Tracciamento</string>
+    <string name="my_trips">I Miei Viaggi</string>
+    <string name="journey_details">Dettagli Viaggio</string>
 
-    <!-- Trip Details -->
-    <string name="trip_details">Dettaglio Viaggio</string>
-    <string name="destination">Destinazione</string>
-    <string name="trip_type">Tipo di Viaggio</string>
-    <string name="start_date">Data Inizio</string>
-    <string name="end_date">Data Fine</string>
-    <string name="total_days">Totale</string>
-    <string name="total_distance">Distanza</string>
-    <string name="total_duration">Durata</string>
-    <string name="trip_photos">Foto del Viaggio</string>
-    <string name="trip_notes">Note del Viaggio</string>
-    <string name="start_tracking">Ferma Tracking</string>
-    <string name="stop_tracking">Stop Tracking</string>
-    <string name="add_photo">Aggiungi Foto</string>
-    <string name="add_note">Aggiungi Nota</string>
-
-    <!-- Journey Tracking -->
-    <string name="tracking_active">Tracking Attivo</string>
-    <string name="ready_to_start">Pronto per Iniziare</string>
-    <string name="time_elapsed">Tempo Trascorso</string>
-    <string name="distance_traveled">Distanza</string>
-    <string name="take_photo">Scatta Foto</string>
-    <string name="recording">Registrazione...</string>
-
-    <!-- Statistics -->
-    <string name="statistics">Statistiche</string>
-    <string name="total_trips">Viaggi Totali</string>
-    <string name="trips_per_month">Viaggi per Mese</string>
-    <string name="average_speed">Velocità Media</string>
-
-    <!-- Trip Types -->
-    <string name="trip_type_city">City Trip</string>
-    <string name="trip_type_multi_day">Multi-giorno</string>
-    <string name="trip_type_hiking">Hiking</string>
-    <string name="trip_type_beach">Beach</string>
-    <string name="trip_type_business">Business</string>
-    <string name="trip_type_other">Altro</string>
-
-    <!-- Actions -->
-    <string name="create">Crea</string>
+    <!-- Common Strings -->
     <string name="save">Salva</string>
     <string name="cancel">Annulla</string>
     <string name="delete">Elimina</string>
     <string name="edit">Modifica</string>
     <string name="share">Condividi</string>
+    <string name="back">Indietro</string>
+    <string name="next">Avanti</string>
+    <string name="done">Fatto</string>
 
-    <!-- Permissions -->
-    <string name="permission_location">Permesso di posizione necessario</string>
-    <string name="permission_camera">Permesso fotocamera necessario</string>
-    <string name="permission_denied">Permessi negati</string>
+    <!-- Trip Types -->
+    <string name="local">Locale</string>
+    <string name="day">Giornaliero</string>
+    <string name="multi_day">Multi-giorno</string>
+    <string name="all">Tutti</string>
+    <string name="local_trip">Viaggio Locale</string>
+    <string name="day_trip">Viaggio Giornaliero</string>
+    <string name="multi_day_trip">Viaggio Multi-giorno</string>
+    <string name="trip_type">Tipo di Viaggio</string>
 
-    <!-- Errors -->
-    <string name="error_loading_trips">Errore nel caricamento dei viaggi</string>
-    <string name="error_creating_trip">Errore nella creazione del viaggio</string>
-    <string name="error_tracking">Errore nel tracking</string>
-    <string name="error_camera">Errore nell\'apertura della fotocamera</string>
+    <!-- Form Fields -->
+    <string name="destination">Destinazione</string>
+    <string name="start_date">Data Inizio</string>
+    <string name="end_date">Data Fine</string>
+    <string name="select_date">Seleziona data</string>
+    <string name="select_start_date">Seleziona data inizio</string>
+    <string name="select_end_date">Seleziona data fine</string>
+    <string name="search_trips">Cerca viaggi...</string>
 
-    <!-- Notifications -->
-    <string name="notification_tracking_title">Registrazione Journey</string>
-    <string name="notification_tracking_message">Il tuo viaggio è in corso di registrazione</string>
+    <!-- Buttons -->
+    <string name="create_first_trip">Crea il tuo primo viaggio</string>
+    <string name="view_trips">Visualizza Viaggi</string>
+    <string name="view_map">Visualizza Mappa</string>
+    <string name="view_stats">Visualizza Statistiche</string>
+    <string name="start_trip">Inizia Viaggio</string>
+    <string name="stop_tracking">Ferma Tracciamento</string>
+    <string name="add_photo">Aggiungi Foto</string>
+    <string name="add_note">Aggiungi Nota</string>
+    <string name="save_trip">Salva Viaggio</string>
+
+    <!-- Messages -->
+    <string name="welcome_message">Benvenuto in Travel Companion! Pianifica e traccia i tuoi viaggi.</string>
+    <string name="no_trips_title">Nessun viaggio registrato</string>
+    <string name="no_trips_message">Inizia il tuo primo viaggio per vedere le statistiche e la mappa dei tuoi percorsi</string>
+    <string name="new_trip_instructions">Inserisci i dettagli del tuo nuovo viaggio</string>
+    <string name="tracking_active">Tracciamento Attivo</string>
+    <string name="quick_actions">Azioni Rapide</string>
+    <string name="recent_trips">Viaggi Recenti</string>
+    <string name="photos">Foto</string>
+    <string name="notes">Note</string>
+    <string name="route_map">Mappa Percorso</string>
+
+    <!-- Statistics -->
+    <string name="summary">Riepilogo</string>
+    <string name="total_trips">Viaggi Totali</string>
+    <string name="total_distance">Distanza Totale</string>
+    <string name="total_photos">Foto Totali</string>
+    <string name="trips_by_type">Viaggi per Tipo</string>
+    <string name="monthly_trips">Viaggi Mensili</string>
+
+    <!-- Settings -->
+    <string name="notifications">Notifiche</string>
+    <string name="notify_poi">Punti di Interesse</string>
+    <string name="notify_reminders">Promemoria</string>
+    <string name="auto_tracking">Tracciamento Automatico</string>
+    <string name="privacy">Privacy</string>
+    <string name="export_data">Esporta Dati</string>
+    <string name="delete_all_data">Elimina Tutti i Dati</string>
+    <string name="about">Informazioni</string>
+    <string name="app_version">Versione 1.0</string>
+    <string name="app_description">Travel Companion - Applicazione per pianificare e tracciare i tuoi viaggi</string>
+
+    <!-- Descriptions -->
+    <string name="no_trips_icon">Icona nessun viaggio</string>
+    <string name="photo_description">Foto del viaggio</string>
+
+    <!-- Map -->
+    <string name="map">Mappa</string>
+    <string name="heatmap">Mappa di Calore</string>
+    <string name="my_location">La mia posizione</string>
 </resources>

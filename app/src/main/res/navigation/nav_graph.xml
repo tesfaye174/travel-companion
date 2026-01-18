@@ -1,52 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_trips">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/navigation_trips"
-        android:name="com.example.travelcompanion.ui.trips.TripsFragment"
-        android:label="Viaggi">
+        android:id="@+id/homeFragment"
+        android:name="com.example.travelcompanion.ui.home.HomeFragment"
+        android:label="I Miei Viaggi"
+        tools:layout="@layout/fragment_home">
+
         <action
-            android:id="@+id/action_trips_to_newTrip"
+            android:id="@+id/action_homeFragment_to_newTripFragment"
             app:destination="@id/newTripFragment" />
+
         <action
-            android:id="@+id/action_trips_to_tripDetails"
-            app:destination="@id/tripDetailsFragment" />
+            android:id="@+id/action_homeFragment_to_tripDetailFragment"
+            app:destination="@id/tripDetailFragment">
+            <argument
+                android:name="tripId"
+                app:argType="long" />
+        </action>
+
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/newTripFragment"
         android:name="com.example.travelcompanion.ui.newtrip.NewTripFragment"
-        android:label="Nuovo Viaggio" />
+        android:label="Nuovo Viaggio"
+        tools:layout="@layout/fragment_new_trip">
 
-    <fragment
-        android:id="@+id/tripDetailsFragment"
-        android:name="com.example.travelcompanion.ui.tripdetails.TripDetailsFragment"
-        android:label="Dettaglio Viaggio">
-        <argument
-            android:name="tripId"
-            app:argType="long" />
         <action
-            android:id="@+id/action_tripDetails_to_journey"
-            app:destination="@id/journeyFragment" />
+            android:id="@+id/action_newTripFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/journeyFragment"
-        android:name="com.example.travelcompanion.ui.journey.JourneyFragment"
-        android:label="Tracking Journey" />
+        android:id="@+id/tripDetailFragment"
+        android:name="com.example.travelcompanion.ui.tripdetail.TripDetailFragment"
+        android:label="Dettaglio Viaggio"
+        tools:layout="@layout/fragment_trip_detail">
+
+        <argument
+            android:name="tripId"
+            app:argType="long" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_map"
+        android:id="@+id/mapFragment"
         android:name="com.example.travelcompanion.ui.map.MapFragment"
-        android:label="Mappa" />
+        android:label="Mappa"
+        tools:layout="@layout/fragment_map">
+
+        <action
+            android:id="@+id/action_mapFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_statistics"
+        android:id="@+id/statisticsFragment"
         android:name="com.example.travelcompanion.ui.statistics.StatisticsFragment"
-        android:label="Statistiche" />
+        android:label="Statistiche"
+        tools:layout="@layout/fragment_statistics">
 
+        <action
+            android:id="@+id/action_statisticsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

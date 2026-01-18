@@ -4,10 +4,10 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
@@ -24,14 +24,13 @@ public final class ActivityMainBinding implements ViewBinding {
   public final BottomNavigationView bottomNavigation;
 
   @NonNull
-  public final FragmentContainerView navHostFragment;
+  public final FrameLayout fragmentContainer;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView,
-      @NonNull BottomNavigationView bottomNavigation,
-      @NonNull FragmentContainerView navHostFragment) {
+      @NonNull BottomNavigationView bottomNavigation, @NonNull FrameLayout fragmentContainer) {
     this.rootView = rootView;
     this.bottomNavigation = bottomNavigation;
-    this.navHostFragment = navHostFragment;
+    this.fragmentContainer = fragmentContainer;
   }
 
   @Override
@@ -67,14 +66,14 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.nav_host_fragment;
-      FragmentContainerView navHostFragment = ViewBindings.findChildViewById(rootView, id);
-      if (navHostFragment == null) {
+      id = R.id.fragment_container;
+      FrameLayout fragmentContainer = ViewBindings.findChildViewById(rootView, id);
+      if (fragmentContainer == null) {
         break missingId;
       }
 
       return new ActivityMainBinding((ConstraintLayout) rootView, bottomNavigation,
-          navHostFragment);
+          fragmentContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

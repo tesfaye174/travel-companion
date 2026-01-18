@@ -4,29 +4,23 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentTripListBinding implements ViewBinding {
   @NonNull
-  private final ConstraintLayout rootView;
-
-  @NonNull
-  public final ImageButton btnSearch;
+  private final CoordinatorLayout rootView;
 
   @NonNull
   public final Chip chipAll;
@@ -35,47 +29,36 @@ public final class FragmentTripListBinding implements ViewBinding {
   public final Chip chipDay;
 
   @NonNull
-  public final ChipGroup chipGroupFilters;
+  public final ChipGroup chipGroupFilter;
 
   @NonNull
   public final Chip chipLocal;
 
   @NonNull
-  public final Chip chipMulti;
+  public final Chip chipMultiDay;
 
   @NonNull
-  public final FloatingActionButton fabAddTrip;
+  public final RecyclerView rvTrips;
 
   @NonNull
-  public final TextView headerTitle;
+  public final Toolbar toolbar;
 
-  @NonNull
-  public final LinearLayout layoutEmptyState;
-
-  @NonNull
-  public final RecyclerView recyclerViewTrips;
-
-  private FragmentTripListBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ImageButton btnSearch, @NonNull Chip chipAll, @NonNull Chip chipDay,
-      @NonNull ChipGroup chipGroupFilters, @NonNull Chip chipLocal, @NonNull Chip chipMulti,
-      @NonNull FloatingActionButton fabAddTrip, @NonNull TextView headerTitle,
-      @NonNull LinearLayout layoutEmptyState, @NonNull RecyclerView recyclerViewTrips) {
+  private FragmentTripListBinding(@NonNull CoordinatorLayout rootView, @NonNull Chip chipAll,
+      @NonNull Chip chipDay, @NonNull ChipGroup chipGroupFilter, @NonNull Chip chipLocal,
+      @NonNull Chip chipMultiDay, @NonNull RecyclerView rvTrips, @NonNull Toolbar toolbar) {
     this.rootView = rootView;
-    this.btnSearch = btnSearch;
     this.chipAll = chipAll;
     this.chipDay = chipDay;
-    this.chipGroupFilters = chipGroupFilters;
+    this.chipGroupFilter = chipGroupFilter;
     this.chipLocal = chipLocal;
-    this.chipMulti = chipMulti;
-    this.fabAddTrip = fabAddTrip;
-    this.headerTitle = headerTitle;
-    this.layoutEmptyState = layoutEmptyState;
-    this.recyclerViewTrips = recyclerViewTrips;
+    this.chipMultiDay = chipMultiDay;
+    this.rvTrips = rvTrips;
+    this.toolbar = toolbar;
   }
 
   @Override
   @NonNull
-  public ConstraintLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -100,12 +83,6 @@ public final class FragmentTripListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btn_search;
-      ImageButton btnSearch = ViewBindings.findChildViewById(rootView, id);
-      if (btnSearch == null) {
-        break missingId;
-      }
-
       id = R.id.chip_all;
       Chip chipAll = ViewBindings.findChildViewById(rootView, id);
       if (chipAll == null) {
@@ -118,9 +95,9 @@ public final class FragmentTripListBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip_group_filters;
-      ChipGroup chipGroupFilters = ViewBindings.findChildViewById(rootView, id);
-      if (chipGroupFilters == null) {
+      id = R.id.chip_group_filter;
+      ChipGroup chipGroupFilter = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupFilter == null) {
         break missingId;
       }
 
@@ -130,39 +107,26 @@ public final class FragmentTripListBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip_multi;
-      Chip chipMulti = ViewBindings.findChildViewById(rootView, id);
-      if (chipMulti == null) {
+      id = R.id.chip_multi_day;
+      Chip chipMultiDay = ViewBindings.findChildViewById(rootView, id);
+      if (chipMultiDay == null) {
         break missingId;
       }
 
-      id = R.id.fab_add_trip;
-      FloatingActionButton fabAddTrip = ViewBindings.findChildViewById(rootView, id);
-      if (fabAddTrip == null) {
+      id = R.id.rv_trips;
+      RecyclerView rvTrips = ViewBindings.findChildViewById(rootView, id);
+      if (rvTrips == null) {
         break missingId;
       }
 
-      id = R.id.header_title;
-      TextView headerTitle = ViewBindings.findChildViewById(rootView, id);
-      if (headerTitle == null) {
+      id = R.id.toolbar;
+      Toolbar toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
         break missingId;
       }
 
-      id = R.id.layout_empty_state;
-      LinearLayout layoutEmptyState = ViewBindings.findChildViewById(rootView, id);
-      if (layoutEmptyState == null) {
-        break missingId;
-      }
-
-      id = R.id.recycler_view_trips;
-      RecyclerView recyclerViewTrips = ViewBindings.findChildViewById(rootView, id);
-      if (recyclerViewTrips == null) {
-        break missingId;
-      }
-
-      return new FragmentTripListBinding((ConstraintLayout) rootView, btnSearch, chipAll, chipDay,
-          chipGroupFilters, chipLocal, chipMulti, fabAddTrip, headerTitle, layoutEmptyState,
-          recyclerViewTrips);
+      return new FragmentTripListBinding((CoordinatorLayout) rootView, chipAll, chipDay,
+          chipGroupFilter, chipLocal, chipMultiDay, rvTrips, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

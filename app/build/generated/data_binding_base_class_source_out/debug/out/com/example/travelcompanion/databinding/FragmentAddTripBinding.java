@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
@@ -20,42 +20,51 @@ import java.lang.String;
 
 public final class FragmentAddTripBinding implements ViewBinding {
   @NonNull
-  private final NestedScrollView rootView;
+  private final ScrollView rootView;
 
   @NonNull
-  public final MaterialButton buttonSave;
+  public final MaterialButton btnSaveTrip;
 
   @NonNull
-  public final TextInputEditText editDestination;
+  public final TextInputEditText etDestination;
 
   @NonNull
-  public final RadioButton radioDay;
+  public final TextInputEditText etEndDate;
 
   @NonNull
-  public final RadioGroup radioGroupType;
+  public final TextInputEditText etStartDate;
 
   @NonNull
-  public final RadioButton radioLocal;
+  public final RadioButton rbDayTrip;
 
   @NonNull
-  public final RadioButton radioMulti;
+  public final RadioButton rbLocal;
 
-  private FragmentAddTripBinding(@NonNull NestedScrollView rootView,
-      @NonNull MaterialButton buttonSave, @NonNull TextInputEditText editDestination,
-      @NonNull RadioButton radioDay, @NonNull RadioGroup radioGroupType,
-      @NonNull RadioButton radioLocal, @NonNull RadioButton radioMulti) {
+  @NonNull
+  public final RadioButton rbMultiDay;
+
+  @NonNull
+  public final RadioGroup rgTripType;
+
+  private FragmentAddTripBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnSaveTrip,
+      @NonNull TextInputEditText etDestination, @NonNull TextInputEditText etEndDate,
+      @NonNull TextInputEditText etStartDate, @NonNull RadioButton rbDayTrip,
+      @NonNull RadioButton rbLocal, @NonNull RadioButton rbMultiDay,
+      @NonNull RadioGroup rgTripType) {
     this.rootView = rootView;
-    this.buttonSave = buttonSave;
-    this.editDestination = editDestination;
-    this.radioDay = radioDay;
-    this.radioGroupType = radioGroupType;
-    this.radioLocal = radioLocal;
-    this.radioMulti = radioMulti;
+    this.btnSaveTrip = btnSaveTrip;
+    this.etDestination = etDestination;
+    this.etEndDate = etEndDate;
+    this.etStartDate = etStartDate;
+    this.rbDayTrip = rbDayTrip;
+    this.rbLocal = rbLocal;
+    this.rbMultiDay = rbMultiDay;
+    this.rgTripType = rgTripType;
   }
 
   @Override
   @NonNull
-  public NestedScrollView getRoot() {
+  public ScrollView getRoot() {
     return rootView;
   }
 
@@ -80,44 +89,56 @@ public final class FragmentAddTripBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.button_save;
-      MaterialButton buttonSave = ViewBindings.findChildViewById(rootView, id);
-      if (buttonSave == null) {
+      id = R.id.btn_save_trip;
+      MaterialButton btnSaveTrip = ViewBindings.findChildViewById(rootView, id);
+      if (btnSaveTrip == null) {
         break missingId;
       }
 
-      id = R.id.edit_destination;
-      TextInputEditText editDestination = ViewBindings.findChildViewById(rootView, id);
-      if (editDestination == null) {
+      id = R.id.et_destination;
+      TextInputEditText etDestination = ViewBindings.findChildViewById(rootView, id);
+      if (etDestination == null) {
         break missingId;
       }
 
-      id = R.id.radio_day;
-      RadioButton radioDay = ViewBindings.findChildViewById(rootView, id);
-      if (radioDay == null) {
+      id = R.id.et_end_date;
+      TextInputEditText etEndDate = ViewBindings.findChildViewById(rootView, id);
+      if (etEndDate == null) {
         break missingId;
       }
 
-      id = R.id.radio_group_type;
-      RadioGroup radioGroupType = ViewBindings.findChildViewById(rootView, id);
-      if (radioGroupType == null) {
+      id = R.id.et_start_date;
+      TextInputEditText etStartDate = ViewBindings.findChildViewById(rootView, id);
+      if (etStartDate == null) {
         break missingId;
       }
 
-      id = R.id.radio_local;
-      RadioButton radioLocal = ViewBindings.findChildViewById(rootView, id);
-      if (radioLocal == null) {
+      id = R.id.rb_day_trip;
+      RadioButton rbDayTrip = ViewBindings.findChildViewById(rootView, id);
+      if (rbDayTrip == null) {
         break missingId;
       }
 
-      id = R.id.radio_multi;
-      RadioButton radioMulti = ViewBindings.findChildViewById(rootView, id);
-      if (radioMulti == null) {
+      id = R.id.rb_local;
+      RadioButton rbLocal = ViewBindings.findChildViewById(rootView, id);
+      if (rbLocal == null) {
         break missingId;
       }
 
-      return new FragmentAddTripBinding((NestedScrollView) rootView, buttonSave, editDestination,
-          radioDay, radioGroupType, radioLocal, radioMulti);
+      id = R.id.rb_multi_day;
+      RadioButton rbMultiDay = ViewBindings.findChildViewById(rootView, id);
+      if (rbMultiDay == null) {
+        break missingId;
+      }
+
+      id = R.id.rg_trip_type;
+      RadioGroup rgTripType = ViewBindings.findChildViewById(rootView, id);
+      if (rgTripType == null) {
+        break missingId;
+      }
+
+      return new FragmentAddTripBinding((ScrollView) rootView, btnSaveTrip, etDestination,
+          etEndDate, etStartDate, rbDayTrip, rbLocal, rbMultiDay, rgTripType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

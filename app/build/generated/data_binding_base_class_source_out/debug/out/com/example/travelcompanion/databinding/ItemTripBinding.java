@@ -4,58 +4,65 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.chip.Chip;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class ItemTripBinding implements ViewBinding {
   @NonNull
-  private final MaterialCardView rootView;
+  private final CardView rootView;
 
   @NonNull
-  public final ImageButton buttonDelete;
+  public final ImageView ivTripType;
 
   @NonNull
-  public final ImageView imageTripCover;
+  public final LinearLayout layoutStats;
 
   @NonNull
-  public final TextView textTripDates;
+  public final TextView tvDates;
 
   @NonNull
-  public final TextView textTripDestination;
+  public final TextView tvDestination;
 
   @NonNull
-  public final TextView textTripTitle;
+  public final TextView tvDistance;
 
   @NonNull
-  public final Chip textTripType;
+  public final TextView tvDuration;
 
-  private ItemTripBinding(@NonNull MaterialCardView rootView, @NonNull ImageButton buttonDelete,
-      @NonNull ImageView imageTripCover, @NonNull TextView textTripDates,
-      @NonNull TextView textTripDestination, @NonNull TextView textTripTitle,
-      @NonNull Chip textTripType) {
+  @NonNull
+  public final TextView tvTripType;
+
+  @NonNull
+  public final View viewTripIndicator;
+
+  private ItemTripBinding(@NonNull CardView rootView, @NonNull ImageView ivTripType,
+      @NonNull LinearLayout layoutStats, @NonNull TextView tvDates, @NonNull TextView tvDestination,
+      @NonNull TextView tvDistance, @NonNull TextView tvDuration, @NonNull TextView tvTripType,
+      @NonNull View viewTripIndicator) {
     this.rootView = rootView;
-    this.buttonDelete = buttonDelete;
-    this.imageTripCover = imageTripCover;
-    this.textTripDates = textTripDates;
-    this.textTripDestination = textTripDestination;
-    this.textTripTitle = textTripTitle;
-    this.textTripType = textTripType;
+    this.ivTripType = ivTripType;
+    this.layoutStats = layoutStats;
+    this.tvDates = tvDates;
+    this.tvDestination = tvDestination;
+    this.tvDistance = tvDistance;
+    this.tvDuration = tvDuration;
+    this.tvTripType = tvTripType;
+    this.viewTripIndicator = viewTripIndicator;
   }
 
   @Override
   @NonNull
-  public MaterialCardView getRoot() {
+  public CardView getRoot() {
     return rootView;
   }
 
@@ -80,44 +87,56 @@ public final class ItemTripBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.buttonDelete;
-      ImageButton buttonDelete = ViewBindings.findChildViewById(rootView, id);
-      if (buttonDelete == null) {
+      id = R.id.iv_trip_type;
+      ImageView ivTripType = ViewBindings.findChildViewById(rootView, id);
+      if (ivTripType == null) {
         break missingId;
       }
 
-      id = R.id.imageTripCover;
-      ImageView imageTripCover = ViewBindings.findChildViewById(rootView, id);
-      if (imageTripCover == null) {
+      id = R.id.layout_stats;
+      LinearLayout layoutStats = ViewBindings.findChildViewById(rootView, id);
+      if (layoutStats == null) {
         break missingId;
       }
 
-      id = R.id.textTripDates;
-      TextView textTripDates = ViewBindings.findChildViewById(rootView, id);
-      if (textTripDates == null) {
+      id = R.id.tv_dates;
+      TextView tvDates = ViewBindings.findChildViewById(rootView, id);
+      if (tvDates == null) {
         break missingId;
       }
 
-      id = R.id.textTripDestination;
-      TextView textTripDestination = ViewBindings.findChildViewById(rootView, id);
-      if (textTripDestination == null) {
+      id = R.id.tv_destination;
+      TextView tvDestination = ViewBindings.findChildViewById(rootView, id);
+      if (tvDestination == null) {
         break missingId;
       }
 
-      id = R.id.textTripTitle;
-      TextView textTripTitle = ViewBindings.findChildViewById(rootView, id);
-      if (textTripTitle == null) {
+      id = R.id.tv_distance;
+      TextView tvDistance = ViewBindings.findChildViewById(rootView, id);
+      if (tvDistance == null) {
         break missingId;
       }
 
-      id = R.id.textTripType;
-      Chip textTripType = ViewBindings.findChildViewById(rootView, id);
-      if (textTripType == null) {
+      id = R.id.tv_duration;
+      TextView tvDuration = ViewBindings.findChildViewById(rootView, id);
+      if (tvDuration == null) {
         break missingId;
       }
 
-      return new ItemTripBinding((MaterialCardView) rootView, buttonDelete, imageTripCover,
-          textTripDates, textTripDestination, textTripTitle, textTripType);
+      id = R.id.tv_trip_type;
+      TextView tvTripType = ViewBindings.findChildViewById(rootView, id);
+      if (tvTripType == null) {
+        break missingId;
+      }
+
+      id = R.id.view_trip_indicator;
+      View viewTripIndicator = ViewBindings.findChildViewById(rootView, id);
+      if (viewTripIndicator == null) {
+        break missingId;
+      }
+
+      return new ItemTripBinding((CardView) rootView, ivTripType, layoutStats, tvDates,
+          tvDestination, tvDistance, tvDuration, tvTripType, viewTripIndicator);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

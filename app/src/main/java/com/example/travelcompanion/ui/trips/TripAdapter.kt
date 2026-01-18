@@ -1,50 +1,54 @@
-package com.example.travelcompanion.ui.trips
+package com.travelcompanion.ui.trips
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.travelcompanion.databinding.ItemTripBinding
-import com.example.travelcompanion.domain.model.Trip
-import java.text.SimpleDateFormat
-import java.util.*
+import com.travelcompanion.R
+import com.travelcompanion.databinding.ItemTripBinding
 
-class TripAdapter(private val onItemClick: (Trip) -> Unit) :
-    ListAdapter<Trip, TripAdapter.TripViewHolder>(TripDiffCallback()) {
+class TripAdapter : RecyclerView.Adapter<TripAdapter.TripViewHolder>() {
+
+    private var trips = listOf<TripItem>()
+
+    fun submitList(trips: List<TripItem>) {
+        this.trips = trips
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
-        val binding = ItemTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemTripBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return TripViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TripViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(trips[position])
     }
+
+    override fun getItemCount() = trips.size
 
     inner class TripViewHolder(private val binding: ItemTripBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-
-        fun bind(trip: Trip) {
-            binding.textDestination.text = trip.destination
-            binding.textDate.text = dateFormat.format(Date(trip.startDate))
-            binding.textType.text = trip.type.name.replace("_", "-")
-            binding.textDistance.text = String.format(Locale.getDefault(), "%.1f km", trip.totalDistance)
-            
-            // Premium UI fields
-            binding.textLocation.text = trip.destination // Could be city, country
-            binding.textPhotosCount.text = "0 photos" // Placeholder until photo count is in model
-            binding.imageTripBg.setImageResource(android.R.drawable.gallery_thumb) // Placeholder image
-            binding.imageTripBg.setColorFilter(0x88000000.toInt(), android.graphics.PorterDuff.Mode.SRC_ATOP) // Darken
-
-            binding.root.setOnClickListener { onItemClick(trip) }
+        fun bind(trip: TripItem) {
+            binding.tvDestination.text = trip.destination
+            binding.tvTripType.text = trip.type
+            binding.tvDates.text = trip.dates
+            binding.tvDistance.text = trip.distance
+            binding.tvDuration.text = trip.duration
         }
     }
 
-    class TripDiffCallback : DiffUtil.ItemCallback<Trip>() {
-        override fun areItemsTheSame(oldItem: Trip, newItem: Trip): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Trip, newItem: Trip): Boolean = oldItem == newItem
-    }
+    data class TripItem(
+        val destination: String,
+        val type: String,
+        val dates: String,
+        val distance: String,
+        val duration: String
+    )
 }

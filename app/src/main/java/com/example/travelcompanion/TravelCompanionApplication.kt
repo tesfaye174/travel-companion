@@ -1,20 +1,14 @@
 package com.example.travelcompanion
 
 import android.app.Application
-import com.example.travelcompanion.data.local.TravelDatabase
-import com.example.travelcompanion.data.repository.TravelRepository
+import com.example.travelcompanion.utils.NotificationUtils
 
 class TravelCompanionApplication : Application() {
 
-    private val database by lazy { TravelDatabase.getDatabase(this) }
+    override fun onCreate() {
+        super.onCreate()
 
-    val repository by lazy {
-        TravelRepository(
-            database.tripDao(),
-            database.journeyDao(),
-            database.locationPointDao(),
-            database.photoDao(),
-            database.noteDao()
-        )
+        // Create notification channel
+        NotificationUtils.createNotificationChannel(this)
     }
 }

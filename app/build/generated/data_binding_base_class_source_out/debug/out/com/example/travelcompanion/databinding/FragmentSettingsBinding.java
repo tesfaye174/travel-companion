@@ -4,43 +4,52 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentSettingsBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final ScrollView rootView;
 
   @NonNull
-  public final MaterialButton buttonExport;
+  public final MaterialButton btnDeleteData;
 
   @NonNull
-  public final SwitchMaterial switchGeofencing;
+  public final MaterialButton btnExportData;
 
   @NonNull
-  public final SwitchMaterial switchReminders;
+  public final SwitchCompat switchAutoTracking;
 
-  private FragmentSettingsBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton buttonExport, @NonNull SwitchMaterial switchGeofencing,
-      @NonNull SwitchMaterial switchReminders) {
+  @NonNull
+  public final SwitchCompat switchPoi;
+
+  @NonNull
+  public final SwitchCompat switchReminders;
+
+  private FragmentSettingsBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton btnDeleteData, @NonNull MaterialButton btnExportData,
+      @NonNull SwitchCompat switchAutoTracking, @NonNull SwitchCompat switchPoi,
+      @NonNull SwitchCompat switchReminders) {
     this.rootView = rootView;
-    this.buttonExport = buttonExport;
-    this.switchGeofencing = switchGeofencing;
+    this.btnDeleteData = btnDeleteData;
+    this.btnExportData = btnExportData;
+    this.switchAutoTracking = switchAutoTracking;
+    this.switchPoi = switchPoi;
     this.switchReminders = switchReminders;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public ScrollView getRoot() {
     return rootView;
   }
 
@@ -65,26 +74,38 @@ public final class FragmentSettingsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.button_export;
-      MaterialButton buttonExport = ViewBindings.findChildViewById(rootView, id);
-      if (buttonExport == null) {
+      id = R.id.btn_delete_data;
+      MaterialButton btnDeleteData = ViewBindings.findChildViewById(rootView, id);
+      if (btnDeleteData == null) {
         break missingId;
       }
 
-      id = R.id.switch_geofencing;
-      SwitchMaterial switchGeofencing = ViewBindings.findChildViewById(rootView, id);
-      if (switchGeofencing == null) {
+      id = R.id.btn_export_data;
+      MaterialButton btnExportData = ViewBindings.findChildViewById(rootView, id);
+      if (btnExportData == null) {
+        break missingId;
+      }
+
+      id = R.id.switch_auto_tracking;
+      SwitchCompat switchAutoTracking = ViewBindings.findChildViewById(rootView, id);
+      if (switchAutoTracking == null) {
+        break missingId;
+      }
+
+      id = R.id.switch_poi;
+      SwitchCompat switchPoi = ViewBindings.findChildViewById(rootView, id);
+      if (switchPoi == null) {
         break missingId;
       }
 
       id = R.id.switch_reminders;
-      SwitchMaterial switchReminders = ViewBindings.findChildViewById(rootView, id);
+      SwitchCompat switchReminders = ViewBindings.findChildViewById(rootView, id);
       if (switchReminders == null) {
         break missingId;
       }
 
-      return new FragmentSettingsBinding((LinearLayout) rootView, buttonExport, switchGeofencing,
-          switchReminders);
+      return new FragmentSettingsBinding((ScrollView) rootView, btnDeleteData, btnExportData,
+          switchAutoTracking, switchPoi, switchReminders);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

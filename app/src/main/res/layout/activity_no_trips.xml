@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" tools:context=".ui.NoTripsActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp">
 
-    <!-- Image -->
-    <ImageView android:id="@+id/image_no_trips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_no_trips" app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="32dp" android:contentDescription="No trips image" android:importantForAccessibility="yes" />
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_trip"
+        android:tint="?attr/colorPrimary"
+        android:contentDescription="@string/no_trips_icon" />
 
-    <!-- Message -->
-    <TextView android:id="@+id/message_no_trips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No trips yet" android:textSize="18sp" app:layout_constraintTop_toBottomOf="@id/image_no_trips" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp" android:contentDescription="Message: No trips yet" android:importantForAccessibility="yes" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/no_trips_title"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-    <!-- Sub-message -->
-    <TextView android:id="@+id/sub_message_no_trips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tap the '+' button to start planning your first journey." android:textSize="14sp" app:layout_constraintTop_toBottomOf="@id/message_no_trips" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:text="@string/no_trips_message"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="16sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_create_trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_first_trip"
+        app:icon="@drawable/ic_add"
+        app:iconGravity="start"
+        app:iconTint="@android:color/white" />
+
+</LinearLayout>

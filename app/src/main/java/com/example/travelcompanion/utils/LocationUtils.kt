@@ -1,57 +1,49 @@
 package com.example.travelcompanion.utils
 
-import com.example.travelcompanion.domain.model.LocationPoint
-import kotlin.math.*
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.CancellationTokenSource
 
 object LocationUtils {
 
-    fun calculateDistance(points: List<LocationPoint>): Double {
-        if (points.size < 2) return 0.0
+    fun hasLocationPermission(context: Context): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+    }
 
-        var totalDistance = 0.0
-        for (i in 0 until points.size - 1) {
-            totalDistance += haversineDistance(
-                points[i].latitude, points[i].longitude,
-                points[i + 1].latitude, points[i + 1].longitude
-            )
+    fun getCurrentLocation(
+        fusedLocationClient: FusedLocationProviderClient,
+        onSuccess: (Location) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        if (!hasLocationPermission(fusedLocationClient.applicationContext)) {
+            onFailure(Exception("Location permission not granted"))
+            return
         }
-        return totalDistance
+
+        val cancellationTokenSource = CancellationTokenSource()
+
+        fusedLocationClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            cancellationTokenSource.token
+        ).addOnSuccessListener { location ->
+            location?.let(onSuccess) ?: onFailure(Exception("Location is null"))
+        }.addOnFailureListener(onFailure)
     }
 
-    fun haversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val R = 6371.0 // Earth radius in km
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = sin(dLat / 2) * sin(dLat / 2) +
-                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return R * c
-    }
-
-    fun formatDistance(distanceKm: Double): String {
-        return if (distanceKm < 1.0) {
-            "${(distanceKm * 1000).toInt()} m"
-        } else {
-            "%.2f km".format(distanceKm)
-        }
-    }
-
-    fun formatDuration(durationMillis: Long): String {
-        val hours = durationMillis / 3600000
-        val minutes = (durationMillis % 3600000) / 60000
-        val seconds = (durationMillis % 60000) / 1000
-
-        return if (hours > 0) {
-            "%02d:%02d:%02d".format(hours, minutes, seconds)
-        } else {
-            "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    fun calculateSpeed(distanceKm: Double, durationMillis: Long): Double {
-        if (durationMillis == 0L) return 0.0
-        val hours = durationMillis / 3600000.0
-        return distanceKm / hours
+    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0] / 1000 // Convert to kilometers
     }
 }

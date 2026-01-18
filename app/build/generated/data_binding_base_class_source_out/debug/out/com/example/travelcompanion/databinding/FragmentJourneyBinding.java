@@ -4,73 +4,60 @@ package com.example.travelcompanion.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.camera.view.PreviewView;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.travelcompanion.R;
-import com.google.android.gms.maps.MapView;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentJourneyBinding implements ViewBinding {
   @NonNull
-  private final ConstraintLayout rootView;
+  private final CoordinatorLayout rootView;
 
   @NonNull
-  public final MaterialButton buttonStopTracking;
+  public final RecyclerView rvNotes;
 
   @NonNull
-  public final MaterialButton buttonTakePhoto;
+  public final RecyclerView rvPhotos;
 
   @NonNull
-  public final FrameLayout cameraLayout;
+  public final Toolbar toolbar;
 
   @NonNull
-  public final MapView mapView;
+  public final TextView tvDates;
 
   @NonNull
-  public final PreviewView previewView;
+  public final TextView tvDestination;
 
   @NonNull
-  public final TextView textDistance;
+  public final TextView tvDistance;
 
   @NonNull
-  public final TextView textTimeElapsed;
+  public final TextView tvDuration;
 
-  @NonNull
-  public final TextView textTripTitleTracking;
-
-  @NonNull
-  public final MaterialCardView trackingCard;
-
-  private FragmentJourneyBinding(@NonNull ConstraintLayout rootView,
-      @NonNull MaterialButton buttonStopTracking, @NonNull MaterialButton buttonTakePhoto,
-      @NonNull FrameLayout cameraLayout, @NonNull MapView mapView, @NonNull PreviewView previewView,
-      @NonNull TextView textDistance, @NonNull TextView textTimeElapsed,
-      @NonNull TextView textTripTitleTracking, @NonNull MaterialCardView trackingCard) {
+  private FragmentJourneyBinding(@NonNull CoordinatorLayout rootView, @NonNull RecyclerView rvNotes,
+      @NonNull RecyclerView rvPhotos, @NonNull Toolbar toolbar, @NonNull TextView tvDates,
+      @NonNull TextView tvDestination, @NonNull TextView tvDistance, @NonNull TextView tvDuration) {
     this.rootView = rootView;
-    this.buttonStopTracking = buttonStopTracking;
-    this.buttonTakePhoto = buttonTakePhoto;
-    this.cameraLayout = cameraLayout;
-    this.mapView = mapView;
-    this.previewView = previewView;
-    this.textDistance = textDistance;
-    this.textTimeElapsed = textTimeElapsed;
-    this.textTripTitleTracking = textTripTitleTracking;
-    this.trackingCard = trackingCard;
+    this.rvNotes = rvNotes;
+    this.rvPhotos = rvPhotos;
+    this.toolbar = toolbar;
+    this.tvDates = tvDates;
+    this.tvDestination = tvDestination;
+    this.tvDistance = tvDistance;
+    this.tvDuration = tvDuration;
   }
 
   @Override
   @NonNull
-  public ConstraintLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -95,63 +82,50 @@ public final class FragmentJourneyBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.buttonStopTracking;
-      MaterialButton buttonStopTracking = ViewBindings.findChildViewById(rootView, id);
-      if (buttonStopTracking == null) {
+      id = R.id.rv_notes;
+      RecyclerView rvNotes = ViewBindings.findChildViewById(rootView, id);
+      if (rvNotes == null) {
         break missingId;
       }
 
-      id = R.id.buttonTakePhoto;
-      MaterialButton buttonTakePhoto = ViewBindings.findChildViewById(rootView, id);
-      if (buttonTakePhoto == null) {
+      id = R.id.rv_photos;
+      RecyclerView rvPhotos = ViewBindings.findChildViewById(rootView, id);
+      if (rvPhotos == null) {
         break missingId;
       }
 
-      id = R.id.cameraLayout;
-      FrameLayout cameraLayout = ViewBindings.findChildViewById(rootView, id);
-      if (cameraLayout == null) {
+      id = R.id.toolbar;
+      Toolbar toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
         break missingId;
       }
 
-      id = R.id.mapView;
-      MapView mapView = ViewBindings.findChildViewById(rootView, id);
-      if (mapView == null) {
+      id = R.id.tv_dates;
+      TextView tvDates = ViewBindings.findChildViewById(rootView, id);
+      if (tvDates == null) {
         break missingId;
       }
 
-      id = R.id.previewView;
-      PreviewView previewView = ViewBindings.findChildViewById(rootView, id);
-      if (previewView == null) {
+      id = R.id.tv_destination;
+      TextView tvDestination = ViewBindings.findChildViewById(rootView, id);
+      if (tvDestination == null) {
         break missingId;
       }
 
-      id = R.id.textDistance;
-      TextView textDistance = ViewBindings.findChildViewById(rootView, id);
-      if (textDistance == null) {
+      id = R.id.tv_distance;
+      TextView tvDistance = ViewBindings.findChildViewById(rootView, id);
+      if (tvDistance == null) {
         break missingId;
       }
 
-      id = R.id.textTimeElapsed;
-      TextView textTimeElapsed = ViewBindings.findChildViewById(rootView, id);
-      if (textTimeElapsed == null) {
+      id = R.id.tv_duration;
+      TextView tvDuration = ViewBindings.findChildViewById(rootView, id);
+      if (tvDuration == null) {
         break missingId;
       }
 
-      id = R.id.textTripTitleTracking;
-      TextView textTripTitleTracking = ViewBindings.findChildViewById(rootView, id);
-      if (textTripTitleTracking == null) {
-        break missingId;
-      }
-
-      id = R.id.trackingCard;
-      MaterialCardView trackingCard = ViewBindings.findChildViewById(rootView, id);
-      if (trackingCard == null) {
-        break missingId;
-      }
-
-      return new FragmentJourneyBinding((ConstraintLayout) rootView, buttonStopTracking,
-          buttonTakePhoto, cameraLayout, mapView, previewView, textDistance, textTimeElapsed,
-          textTripTitleTracking, trackingCard);
+      return new FragmentJourneyBinding((CoordinatorLayout) rootView, rvNotes, rvPhotos, toolbar,
+          tvDates, tvDestination, tvDistance, tvDuration);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

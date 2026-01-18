@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,74 +14,23 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textNoteTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Colosseo visitato"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Colosseo visitato" />
-
-            <ImageButton
-                android:id="@+id/buttonDeleteNote"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_delete"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Elimina nota"
-                app:tint="@color/red" />
-
-        </LinearLayout>
-
-        <!-- Foto della nota (se presente) -->
-        <ImageView
-            android:id="@+id/imageNotePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:src="@drawable/placeholder_trip" />
-
         <TextView
-            android:id="@+id/textNoteContent"
+            android:id="@+id/tv_note_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Amazing lunch in Trastevere. Delicious!"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp"
-            tools:text="Amazing lunch in Trastevere. Delicious carbonara!" />
+            android:text="Nota di esempio per il viaggio a Roma..."
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/textNoteTimestamp"
+            android:id="@+id/tv_note_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15 Gen, 10:30"
-            android:textSize="12sp"
-            android:textColor="@color/gray"
-            android:layout_marginTop="8dp"
-            tools:text="15 Gen 2026, 10:30" />
-
-        <TextView
-            android:id="@+id/textNoteLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📍 41.870207°N, 12.446637°E"
-            android:textSize="12sp"
-            android:textColor="@color/blue"
             android:layout_marginTop="4dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="📍 41.8702°N, 12.4466°E" />
+            android:text="18 Gen 2026, 14:30"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>

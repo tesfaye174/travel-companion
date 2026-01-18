@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelcompanion.R
 import com.example.travelcompanion.data.TripsAdapter
-import com.example.travelcompanion.data.TripRepository
 
 class MyTripsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
