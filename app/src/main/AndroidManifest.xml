@@ -5,64 +5,47 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Media permissions: Android 13+ uses READ_MEDIA_*; older devices use READ_EXTERNAL_STORAGE -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
     <!-- Features (optional) -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.TravelCompanion"
-        tools:targetApi="31">
-        
-        <!-- SE hai una API key di Google Maps, scommenta questa riga -->
-        <!--
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="LA_TUA_API_KEY" />
-        -->
+    <application android:name="com.travelcompanion.TravelCompanionApplication" android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/Theme.TravelCompanion" tools:targetApi="31">
+
+        <!-- Google Maps API key (provided via manifestPlaceholders) -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${MAPS_API_KEY}" />
+
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- Main Activity -->
-        <activity
-            android:name="com.travelcompanion.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.TravelCompanion.NoActionBar">
+        <activity android:name="com.travelcompanion.MainActivity" android:exported="true" android:theme="@style/Theme.TravelCompanion.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <!-- Tracking Activity (se esiste) -->
-        <!--
-        <activity
-            android:name="com.travelcompanion.ui.tracking.TrackingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.TravelCompanion" />
-        -->
-        
-        <!-- Location Service (se esiste) -->
-        <!--
-        <service
-            android:name="com.travelcompanion.services.LocationService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-        -->
-        
-        <!-- Notification Channel -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="travel_companion_channel" />
+        <!-- Tracking Activity -->
+        <activity android:name="com.travelcompanion.ui.tracking.TrackingActivity" android:exported="false" android:theme="@style/Theme.TravelCompanion" />
+
+        <!-- Location Tracking Service -->
+        <service android:name="com.travelcompanion.ui.tracking.TrackingService" android:exported="false" android:foregroundServiceType="location" />
+
+        <!-- Geofence Broadcast Receiver -->
+        <receiver android:name="com.travelcompanion.utils.GeofenceBroadcastReceiver" android:exported="false" />
 
     </application>
 

@@ -1,56 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_home">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation" app:startDestination="@id/navigation_home">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.travelcompanion.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+    <fragment android:id="@+id/navigation_home" android:name="com.travelcompanion.ui.home.HomeFragment" android:label="@string/title_home" tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/navigation_trips"
-        android:name="com.travelcompanion.ui.trips.TripsFragment"
-        android:label="@string/title_trips"
-        tools:layout="@layout/fragment_trips" />
+    <fragment android:id="@+id/navigation_trips" android:name="com.travelcompanion.ui.trips.TripsFragment" android:label="@string/title_trips" tools:layout="@layout/fragment_trips" />
 
-    <fragment
-        android:id="@+id/navigation_map"
-        android:name="com.travelcompanion.ui.map.MapFragment"
-        android:label="@string/title_map"
-        tools:layout="@layout/fragment_map" />
+    <fragment android:id="@+id/navigation_map" android:name="com.travelcompanion.ui.map.MapFragment" android:label="@string/title_map" tools:layout="@layout/fragment_map" />
 
-    <fragment
-        android:id="@+id/navigation_statistics"
-        android:name="com.travelcompanion.ui.statistics.StatisticsFragment"
-        android:label="@string/title_statistics"
-        tools:layout="@layout/fragment_statistics" />
+    <fragment android:id="@+id/navigation_statistics" android:name="com.travelcompanion.ui.statistics.StatisticsFragment" android:label="@string/title_statistics" tools:layout="@layout/fragment_statistics" />
 
-    <fragment
-        android:id="@+id/navigation_new_trip"
-        android:name="com.travelcompanion.ui.newtrip.NewTripFragment"
-        android:label="@string/new_trip"
-        tools:layout="@layout/fragment_new_trip" />
+    <fragment android:id="@+id/navigation_new_trip" android:name="com.travelcompanion.ui.newtrip.NewTripFragment" android:label="@string/new_trip" tools:layout="@layout/fragment_new_trip" />
 
-    <fragment
-        android:id="@+id/navigation_trip_details"
-        android:name="com.travelcompanion.ui.tripdetails.TripDetailsFragment"
-        android:label="@string/trip_details"
-        tools:layout="@layout/fragment_trip_details" />
+    <fragment android:id="@+id/navigation_trip_details" android:name="com.travelcompanion.ui.tripdetails.TripDetailsFragment" android:label="@string/trip_details" tools:layout="@layout/fragment_trip_details">
 
-    <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.travelcompanion.ui.settings.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/fragment_settings" />
+        <argument android:name="tripId" app:argType="long" />
+    </fragment>
 
-    <activity
-        android:id="@+id/navigation_tracking"
-        android:name="com.travelcompanion.ui.tracking.TrackingActivity"
-        android:label="@string/tracking_journey"
-        tools:layout="@layout/activity_tracking_journey" />
+    <fragment android:id="@+id/navigation_settings" android:name="com.travelcompanion.ui.settings.SettingsFragment" android:label="@string/settings" tools:layout="@layout/fragment_settings" />
+
+    <activity android:id="@+id/navigation_tracking" android:name="com.travelcompanion.ui.tracking.TrackingActivity" android:label="@string/tracking_journey" tools:layout="@layout/activity_tracking_journey" />
 
 </navigation>

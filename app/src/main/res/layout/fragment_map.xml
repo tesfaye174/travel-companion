@@ -1,51 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/map" />
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:popupTheme="@style/ThemeOverlay.AppCompat.Light" app:title="@string/map" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Mappa Google (richiede API key)"
-        android:gravity="center"
-        android:textColor="@color/gray_600" />
+    <androidx.fragment.app.FragmentContainerView android:id="@+id/map_container" android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_my_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_location"
-        app:backgroundTint="?attr/colorPrimary"
-        app:tint="@android:color/white" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_my_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:src="@drawable/ic_location" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_heatmap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_heatmap"
-        app:backgroundTint="?attr/colorPrimary"
-        app:tint="@android:color/white" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_heatmap" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_marginBottom="80dp" android:layout_marginEnd="16dp" android:src="@drawable/ic_heatmap" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_geofence_events" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_marginEnd="16dp" android:layout_marginBottom="144dp" android:src="@drawable/ic_calendar" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

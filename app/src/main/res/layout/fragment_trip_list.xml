@@ -1,73 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/my_trips" />
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chip_group_filter" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.chip.Chip android:id="@+id/chip_all" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/all" app:checkedIconVisible="false" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <com.google.android.material.chip.Chip android:id="@+id/chip_local" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/local" app:checkedIconVisible="false" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            <com.google.android.material.chip.Chip android:id="@+id/chip_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" app:checkedIconVisible="false" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all"
-                app:checkedIconVisible="false" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_local"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/local"
-                app:checkedIconVisible="false" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/day"
-                app:checkedIconVisible="false" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_multi_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/multi_day"
-                app:checkedIconVisible="false" />
+            <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" app:checkedIconVisible="false" />
 
         </com.google.android.material.chip.ChipGroup>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_trips"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="16dp" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_trips" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="16dp" />
 
     </LinearLayout>
 

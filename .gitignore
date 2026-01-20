@@ -94,3 +94,11 @@ lint/tmp/
 
 # Windows
 Thumbs.db
+
+# Clean generated and large artifacts
+*.pdf
+*log*.txt
+build/
+app/build/
+android_project_proposal_2025.txt
+project_rules_and_specifications.txt
