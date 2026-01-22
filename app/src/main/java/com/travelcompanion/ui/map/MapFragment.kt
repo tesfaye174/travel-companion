@@ -9,7 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import android.util.Log
+import timber.log.Timber
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,9 +60,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         // Diagnostic logging: which fragment and which ViewModel provider factories are present
         try {
-            Log.d("MapFragmentDiag", "this=${this::class.java.name} defaultFactory=${defaultViewModelProviderFactory::class.java.name} activityFactory=${requireActivity().defaultViewModelProviderFactory::class.java.name}")
+            Timber.d("this=${this::class.java.name} defaultFactory=${defaultViewModelProviderFactory::class.java.name} activityFactory=${requireActivity().defaultViewModelProviderFactory::class.java.name}")
         } catch (t: Throwable) {
-            Log.d("MapFragmentDiag", "failed to read factories: ${t.message}")
+            Timber.d(t, "failed to read factories")
         }
 
         setupListeners()
@@ -199,6 +199,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         val fused = LocationServices.getFusedLocationProviderClient(requireActivity())
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         fused.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 map.isMyLocationEnabled = true

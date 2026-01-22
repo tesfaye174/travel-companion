@@ -208,7 +208,12 @@ class TrackingActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         try {
-            registerReceiver(locationUpdatesReceiver, IntentFilter(TrackingService.ACTION_LOCATION_UPDATE))
+            ContextCompat.registerReceiver(
+                this,
+                locationUpdatesReceiver,
+                IntentFilter(TrackingService.ACTION_LOCATION_UPDATE),
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         } catch (ex: SecurityException) {
             // On some platform versions strict export checks can throw; avoid crashing the activity.
         }

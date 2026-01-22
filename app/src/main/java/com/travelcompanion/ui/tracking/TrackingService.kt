@@ -5,17 +5,15 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.travelcompanion.R
 import com.google.android.gms.location.*
+import com.travelcompanion.R
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -152,10 +150,8 @@ class TrackingService : Service() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Tracking", NotificationManager.IMPORTANCE_LOW)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(channelId, "Tracking", NotificationManager.IMPORTANCE_LOW)
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun createTrackingNotification(): Notification {
@@ -166,7 +162,7 @@ class TrackingService : Service() {
          return NotificationCompat.Builder(this, channelId)
             .setContentTitle("Tracking")
             .setContentText(text)
-            .setSmallIcon(com.travelcompanion.R.drawable.ic_location) // Use valid icon
+            .setSmallIcon(R.drawable.ic_location)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
     }
@@ -191,6 +187,7 @@ class TrackingService : Service() {
 
     private fun sendLocationUpdate(location: Location, distance: Float) {
         val intent = Intent(ACTION_LOCATION_UPDATE)
+        intent.setPackage(packageName)
         intent.putExtra("lat", location.latitude)
         intent.putExtra("lon", location.longitude)
         intent.putExtra("dist", distance)
@@ -240,4 +237,3 @@ class TrackingService : Service() {
         const val ACTION_LOCATION_UPDATE = "com.travelcompanion.LOCATION_UPDATE"
     }
 }
-

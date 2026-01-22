@@ -3,13 +3,13 @@ package com.travelcompanion.utils
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import android.content.pm.PackageManager
+import timber.log.Timber
 
 object GeofencingUtils {
 
@@ -54,10 +54,10 @@ object GeofencingUtils {
 
         geofencingClient.addGeofences(geofencingRequest, pendingIntent)
             .addOnSuccessListener {
-                Log.d("Geofencing", "Geofences added successfully")
+                Timber.d("Geofences added successfully")
             }
             .addOnFailureListener { e ->
-                Log.e("Geofencing", "Failed to add geofences", e)
+                Timber.e(e, "Failed to add geofences")
             }
     }
 }

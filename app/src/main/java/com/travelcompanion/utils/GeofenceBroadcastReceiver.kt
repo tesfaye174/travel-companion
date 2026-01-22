@@ -60,10 +60,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val channelId = "geofence_channel"
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Location Alerts", NotificationManager.IMPORTANCE_HIGH)
-            manager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(channelId, "Location Alerts", NotificationManager.IMPORTANCE_HIGH)
+        manager.createNotificationChannel(channel)
 
         val action = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) "Entered" else "Exited"
         val notification = NotificationCompat.Builder(context, channelId)

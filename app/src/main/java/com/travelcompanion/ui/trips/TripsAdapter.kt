@@ -33,6 +33,25 @@ class TripsAdapter(
             binding.tvDistance.text = String.format("%.1f km", trip.totalDistance)
             binding.tvDuration.text = DateUtils.formatDuration(trip.totalDuration)
 
+            // Load thumbnail: prefer a sample resource named "colosseum" if present,
+            // otherwise fall back to the placeholder. Use rounded corners.
+            val radiusDp = 8
+            val density = binding.ivThumbnail.resources.displayMetrics.density
+            val radiusPx = (radiusDp * density).toInt()
+
+            val ctx = binding.ivThumbnail.context
+            val sampleRes = ctx.resources.getIdentifier("colosseum", "drawable", ctx.packageName)
+            val imageToLoad = if (sampleRes != 0) sampleRes else R.drawable.placeholder_image
+
+            Glide.with(ctx)
+                .load(imageToLoad)
+                .centerCrop()
+                .transform(com.bumptech.glide.load.resource.bitmap.RoundedCorners(radiusPx))
+                .into(binding.ivThumbnail)
+
+            // Show photo count if available
+            binding.tvPhotoCount.text = trip.photoCount.toString()
+
             binding.root.setOnClickListener { onTripClick(trip) }
         }
     }
