@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#6CDBAC</color>
+    <color name="primary_dark">#89F8C7</color>
+    <color name="primary_light">#003826</color>
+    <color name="accent">#A5CCDE</color>
+    <color name="background">#191C1A</color>
+    <color name="surface">#1F201E</color>
+    <color name="error">#FFB4AB</color>
+    <color name="success">#6CDBAC</color>
+    <color name="warning">#FFB951</color>
+    <color name="info">#A5CCDE</color>
+
+    <color name="text_primary">#E1E3DF</color>
+    <color name="text_secondary">#BFC9C2</color>
+    <color name="text_hint">#89938C</color>
+
+    <color name="active">#6CDBAC</color>
+    <color name="completed">#89938C</color>
+    <color name="stop_color">#FFB4AB</color>
+
+    <color name="chart_local">#6CDBAC</color>
+    <color name="chart_day">#FFB951</color>
+    <color name="chart_multi_day">#A5CCDE</color>
+
+    <color name="gray_50">#2E312E</color>
+    <color name="gray_100">#3A3D3A</color>
+    <color name="gray_200">#464946</color>
+    <color name="gray_300">#606360</color>
+    <color name="gray_400">#89938C</color>
+    <color name="gray_500">#9FA99F</color>
+    <color name="gray_600">#BFC9C2</color>
+    <color name="gray_700">#D5DED8</color>
+    <color name="gray_800">#E1E3DF</color>
+    <color name="gray_900">#FBFDF8</color>
+</resources>

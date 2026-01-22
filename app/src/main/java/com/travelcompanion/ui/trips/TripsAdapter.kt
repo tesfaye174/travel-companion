@@ -28,7 +28,7 @@ class TripsAdapter(
 
         fun bind(trip: Trip) {
             binding.tvDestination.text = trip.destination
-            binding.tvTripType.text = trip.tripType.name.replace("_", " ")
+            binding.chipTripType.text = trip.tripType.name.replace("_", " ")
             binding.tvDates.text = DateUtils.formatDateRange(trip.startDate, trip.endDate)
             binding.tvDistance.text = String.format("%.1f km", trip.totalDistance)
             binding.tvDuration.text = DateUtils.formatDuration(trip.totalDuration)

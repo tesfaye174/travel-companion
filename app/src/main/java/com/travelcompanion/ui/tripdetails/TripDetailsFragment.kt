@@ -45,13 +45,14 @@ class TripDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
         setupRecyclerViews()
         setupMap()
 
         val tripId = arguments?.getLong("tripId", -1L) ?: -1L
         if (tripId <= 0L) {
             binding.tvDestination.text = "Trip non valido"
-            binding.tvTripType.text = ""
+            binding.chipTripType.text = ""
             binding.tvDates.text = ""
             binding.tvDistance.text = ""
             binding.tvDuration.text = ""
@@ -60,6 +61,12 @@ class TripDetailsFragment : Fragment() {
         }
         viewModel.setTripId(tripId)
         observeViewModel()
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupMap() {
@@ -92,7 +99,7 @@ class TripDetailsFragment : Fragment() {
             if (trip == null) return@observe
 
             binding.tvDestination.text = trip.destination
-            binding.tvTripType.text = trip.tripType.name.replace('_', ' ').lowercase().replaceFirstChar { it.titlecase() }
+            binding.chipTripType.text = trip.tripType.name.replace('_', ' ').lowercase().replaceFirstChar { it.titlecase() }
 
             val end = trip.endDate
             binding.tvDates.text = if (end != null) {

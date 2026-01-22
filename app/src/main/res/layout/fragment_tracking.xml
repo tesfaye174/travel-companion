@@ -1,31 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/colorSurface">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <fragment android:id="@+id/map_tracking" android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_width="match_parent" android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" app:cardCornerRadius="8dp" app:cardElevation="4dp">
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" android:layout_gravity="top" style="@style/Widget.TravelCompanion.Card.Elevated">
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                <TextView android:id="@+id/tv_destination" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roma, Italia" android:textColor="?android:attr/textColorPrimary" android:textSize="20sp" android:textStyle="bold" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-                <TextView android:id="@+id/tv_tracking_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Tempo: 02:15:30" android:textColor="?android:attr/textColorSecondary" android:textSize="16sp" />
+                <View android:id="@+id/recording_indicator" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_recording_dot" />
 
-                <TextView android:id="@+id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Distanza: 15.2 km" android:textColor="?android:attr/textColorSecondary" android:textSize="16sp" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:text="@string/recording" android:textColor="@color/md_theme_light_error" style="@style/TextAppearance.TravelCompanion.Caption" />
+
+                <TextView android:id="@+id/tv_tracking_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="02:15:30" android:fontFamily="monospace" style="@style/TextAppearance.TravelCompanion.Headline6" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="Mappa Google (richiede API key)" android:gravity="center" android:textColor="@color/gray_600" />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_margin="16dp">
-
-            <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_photo" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="8dp" android:text="@string/add_photo" app:icon="@drawable/ic_camera" app:iconGravity="start" />
-
-            <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_note" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/add_note" app:icon="@drawable/ic_note" app:iconGravity="start" />
+            <TextView android:id="@+id/tv_destination" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="Roma, Italia" android:drawableStart="@drawable/ic_location" android:drawablePadding="8dp" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
 
         </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="bottom" android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="16dp" android:layout_marginBottom="8dp" style="@style/Widget.TravelCompanion.Card.Elevated">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+
+                    <TextView android:id="@+id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="15.2" style="@style/TextAppearance.TravelCompanion.Headline5" android:textColor="@color/stat_distance" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="km" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+                <View android:layout_width="1dp" android:layout_height="match_parent" android:layout_marginVertical="4dp" android:background="?attr/colorOutlineVariant" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+
+                    <TextView android:id="@+id/tv_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="45" style="@style/TextAppearance.TravelCompanion.Headline5" android:textColor="@color/stat_time" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="km/h" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+                <View android:layout_width="1dp" android:layout_height="match_parent" android:layout_marginVertical="4dp" android:background="?attr/colorOutlineVariant" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+
+                    <TextView android:id="@+id/tv_photo_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" style="@style/TextAppearance.TravelCompanion.Headline5" android:textColor="@color/stat_photos" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/photos" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="24dp" app:cardElevation="8dp" android:layout_marginHorizontal="16dp" android:layout_marginBottom="24dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="12dp" android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_photo" android:layout_width="56dp" android:layout_height="56dp" app:icon="@drawable/ic_camera" app:iconSize="24dp" app:iconGravity="textStart" app:iconPadding="0dp" app:cornerRadius="28dp" android:insetTop="0dp" android:insetBottom="0dp" style="@style/Widget.TravelCompanion.Button.Tonal" />
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_stop_tracking" android:layout_width="72dp" android:layout_height="72dp" android:layout_marginHorizontal="24dp" app:icon="@drawable/ic_stop" app:iconSize="32dp" app:iconGravity="textStart" app:iconPadding="0dp" app:cornerRadius="36dp" android:insetTop="0dp" android:insetBottom="0dp" android:backgroundTint="@color/md_theme_light_error" app:iconTint="@color/md_theme_light_onError" />
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_note" android:layout_width="56dp" android:layout_height="56dp" app:icon="@drawable/ic_note" app:iconSize="24dp" app:iconGravity="textStart" app:iconPadding="0dp" app:cornerRadius="28dp" android:insetTop="0dp" android:insetBottom="0dp" style="@style/Widget.TravelCompanion.Button.Tonal" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

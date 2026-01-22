@@ -1,27 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/colorSurface">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:text="@string/my_trips" android:textColor="?android:attr/textColorPrimary" android:textSize="24sp" android:textStyle="bold" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:endIconMode="dropdown_menu" app:hintEnabled="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" android:paddingBottom="8dp">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView android:id="@+id/et_search" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/search_trips" android:inputType="text" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/my_trips" android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineMedium" android:textColor="?attr/colorOnSurface" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-    <com.google.android.material.chip.ChipGroup android:id="@+id/chip_group_filter" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="16dp" android:layout_marginBottom="8dp" app:cardBackgroundColor="@color/surface_1" app:cardCornerRadius="28dp" app:cardElevation="0dp" app:strokeWidth="0dp">
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_all" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/all" app:checkedIconVisible="false" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_local" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/local" app:checkedIconVisible="false" />
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_search" app:tint="?attr/colorOnSurfaceVariant" android:contentDescription="@null" />
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" app:checkedIconVisible="false" />
+                <EditText android:id="@+id/et_search" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="12dp" android:layout_weight="1" android:background="@android:color/transparent" android:hint="@string/search_trips" android:inputType="text" android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" android:textColor="?attr/colorOnSurface" android:textColorHint="?attr/colorOnSurfaceVariant" android:importantForAutofill="no" />
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" app:checkedIconVisible="false" />
+                <ImageButton android:id="@+id/btn_filter" android:layout_width="40dp" android:layout_height="40dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_filter" app:tint="?attr/colorOnSurfaceVariant" android:contentDescription="@string/filter" />
 
-    </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_trips" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        </com.google.android.material.card.MaterialCardView>
 
-</LinearLayout>
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:clipToPadding="false" android:paddingHorizontal="16dp" android:paddingVertical="8dp" android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup android:id="@+id/chip_group_filter" android:layout_width="wrap_content" android:layout_height="wrap_content" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip android:id="@+id/chip_all" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/all" />
+
+                <com.google.android.material.chip.Chip android:id="@+id/chip_local" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/local" />
+
+                <com.google.android.material.chip.Chip android:id="@+id/chip_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" />
+
+                <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="20dp" android:paddingVertical="8dp">
+
+            <TextView android:id="@+id/tv_trip_count" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/trips_count" android:textAppearance="@style/TextAppearance.TravelCompanion.LabelLarge" android:textColor="?attr/colorOnSurfaceVariant" tools:text="12 trips" />
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/btn_sort" style="@style/Widget.TravelCompanion.Button.Text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort" android:textAllCaps="false" app:icon="@drawable/ic_sort" app:iconGravity="textStart" app:iconPadding="4dp" app:iconSize="18dp" />
+
+        </LinearLayout>
+
+        <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_trips" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:overScrollMode="never" android:paddingHorizontal="12dp" android:paddingBottom="88dp" tools:listitem="@layout/item_trip" />
+
+            <include android:id="@+id/layout_empty" layout="@layout/layout_empty_state" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone" />
+
+            <include android:id="@+id/layout_loading" layout="@layout/layout_loading_shimmer" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton android:id="@+id/fab_add_trip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:text="@string/new_trip" android:textAllCaps="false" app:icon="@drawable/ic_add" app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -47,7 +47,9 @@ class TripDetailsViewModel @Inject constructor(
     val totalDistanceKm = tripIdFlow
         .filter { it > 0 }
         .flatMapLatest { id -> repository.getJourneysByTripId(id) }
-        .map { list -> list.sumOf { it.distance.toDouble() } }
+        .map { list ->
+            // Summing up distances from the list to calculate the total distance.
+            list.sumOf { it.distance.toDouble() } }
         .asLiveData()
 
     val totalDurationMs = tripIdFlow

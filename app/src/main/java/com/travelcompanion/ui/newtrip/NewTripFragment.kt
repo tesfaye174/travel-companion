@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.databinding.FragmentNewTripBinding
 import com.travelcompanion.domain.model.TripType
@@ -40,9 +43,16 @@ class NewTripFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
         setupDatePickers()
         setupListeners()
         observeViewModel()
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setupDatePickers() {

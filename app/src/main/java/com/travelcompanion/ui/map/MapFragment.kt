@@ -136,6 +136,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val map = googleMap ?: return
         areas.forEach { area ->
             val center = LatLng(area.latitude, area.longitude)
+            // The radius is calculated in meters and converted to double for precision.
             map.addCircle(
                 CircleOptions()
                     .center(center)

@@ -138,6 +138,7 @@ class TrackingActivity : AppCompatActivity() {
         }
 
         @Suppress("DEPRECATION")
+        // This method is deprecated in AndroidX but retained for simplicity.
         startActivityForResult(intent, 4001)
     }
 

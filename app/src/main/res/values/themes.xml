@@ -1,20 +1,39 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.TravelCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/accent</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/background</item>
-        <!-- Use our card style for MaterialCardView -->
+
+    <style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="colorOutlineVariant">@color/md_theme_light_outlineVariant</item>
+        <item name="android:statusBarColor">@color/md_theme_light_surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:navigationBarColor">@color/md_theme_light_surface</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="materialCardViewStyle">@style/Widget.TravelCompanion.Card</item>
+        <item name="floatingActionButtonStyle">@style/Widget.TravelCompanion.FAB</item>
+        <item name="chipStyle">@style/Widget.TravelCompanion.Chip</item>
+        <item name="bottomNavigationStyle">@style/Widget.TravelCompanion.BottomNavigation</item>
+        <item name="textInputStyle">@style/Widget.TravelCompanion.TextInput</item>
     </style>
 
     <style name="Theme.TravelCompanion.NoActionBar">
@@ -22,23 +41,243 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.TravelCompanion.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.TravelCompanion.AppBarOverlay" parent="ThemeOverlay.Material3.Dark.ActionBar" />
+    <style name="Theme.TravelCompanion.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 
-    <style name="Theme.TravelCompanion.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <!-- Button Styles -->
-    <style name="Widget.TravelCompanion.Button" parent="Widget.MaterialComponents.Button">
-        <item name="cornerRadius">8dp</item>
+    <style name="Widget.TravelCompanion.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
-    <!-- Card Styles -->
-    <style name="Widget.TravelCompanion.Card" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">12dp</item>
+    <style name="Widget.TravelCompanion.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="strokeColor">@color/md_theme_light_outline</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="rippleColor">@color/md_theme_light_primaryContainer</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Button.Icon" parent="Widget.Material3.Button.IconButton">
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
+        <item name="iconSize">24dp</item>
+        <item name="rippleColor">@color/md_theme_light_primaryContainer</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
+        <item name="contentPadding">0dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="rippleColor">@color/md_theme_light_primaryContainer</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Card.Filled" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">@color/surface_1</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Card.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="strokeColor">@color/md_theme_light_outlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.TravelCompanion.LabelMedium</item>
+        <item name="chipBackgroundColor">@color/chip_background_color</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Chip.Input" parent="Widget.Material3.Chip.Input">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="closeIconVisible">true</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/md_theme_light_outlineVariant</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.FAB" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.TravelCompanion.FAB</item>
+        <item name="elevation">6dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.FAB.Extended" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.TravelCompanion.FAB</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.FAB.Small" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="fabSize">mini</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.TravelCompanion.FAB.Small</item>
+    </style>
+
+    <style name="ShapeAppearance.TravelCompanion.FAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ShapeAppearance.TravelCompanion.FAB.Small" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/md_theme_light_primary</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.TextInput.Filled" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">0dp</item>
+        <item name="boxCornerRadiusBottomEnd">0dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/md_theme_light_surface</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.TravelCompanion.BottomNavigation.Indicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="android:minHeight">80dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.BottomNavigation.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/md_theme_light_primaryContainer</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TextAppearance.TravelCompanion.Headline" parent="TextAppearance.TravelCompanion.HeadlineSmall" />
+    <style name="TextAppearance.TravelCompanion.Title" parent="TextAppearance.TravelCompanion.TitleMedium" />
+    <style name="TextAppearance.TravelCompanion.Body" parent="TextAppearance.TravelCompanion.BodyMedium" />
+
+    <!-- Legacy style aliases for compatibility -->
+    <style name="TextAppearance.TravelCompanion.Headline5" parent="TextAppearance.TravelCompanion.HeadlineSmall" />
+    <style name="TextAppearance.TravelCompanion.Headline6" parent="TextAppearance.TravelCompanion.TitleLarge" />
+    <style name="TextAppearance.TravelCompanion.Subtitle1" parent="TextAppearance.TravelCompanion.TitleMedium" />
+    <style name="TextAppearance.TravelCompanion.Body1" parent="TextAppearance.TravelCompanion.BodyLarge" />
+    <style name="TextAppearance.TravelCompanion.Body2" parent="TextAppearance.TravelCompanion.BodyMedium" />
+    <style name="TextAppearance.TravelCompanion.Caption" parent="TextAppearance.TravelCompanion.BodySmall" />
+
+    <style name="Widget.TravelCompanion.Card.Elevated" parent="Widget.TravelCompanion.Card">
         <item name="cardElevation">4dp</item>
     </style>
 
-    <!-- Chip Styles -->
-    <style name="Widget.TravelCompanion.Chip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipCornerRadius">16dp</item>
+    <style name="Widget.TravelCompanion.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.TravelCompanion.TitleLarge</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.TravelCompanion.BodyMedium</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
     </style>
+
+    <style name="Widget.TravelCompanion.CollapsingToolbar" parent="Widget.Material3.CollapsingToolbar">
+        <item name="expandedTitleTextAppearance">@style/TextAppearance.TravelCompanion.HeadlineMedium</item>
+        <item name="collapsedTitleTextAppearance">@style/TextAppearance.TravelCompanion.TitleLarge</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="thumbTint">@color/switch_thumb_color</item>
+        <item name="trackTint">@color/switch_track_color</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.Divider" parent="Widget.MaterialComponents.MaterialDivider">
+        <item name="dividerColor">@color/md_theme_light_outlineVariant</item>
+        <item name="dividerThickness">1dp</item>
+    </style>
+
 </resources>

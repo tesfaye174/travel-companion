@@ -25,7 +25,6 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupListeners()
-        loadSettings()
     }
 
     private fun setupListeners() {
@@ -36,10 +35,6 @@ class SettingsFragment : Fragment() {
         binding.btnDeleteData.setOnClickListener {
             // TODO: Show confirmation and delete data
         }
-    }
-
-    private fun loadSettings() {
-        // TODO: Load saved settings
     }
 
     override fun onDestroyView() {

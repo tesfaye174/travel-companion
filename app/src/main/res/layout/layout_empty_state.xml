@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" android:paddingHorizontal="32dp" android:paddingVertical="48dp">
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="140dp" android:layout_height="140dp" app:cardBackgroundColor="@color/md_theme_light_primaryContainer" app:cardCornerRadius="70dp" app:cardElevation="0dp">
+
+        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center">
+
+            <ImageView android:id="@+id/iv_empty_icon" android:layout_width="64dp" android:layout_height="64dp" android:layout_gravity="center" android:contentDescription="@string/no_trips_yet" android:src="@drawable/ic_empty_trips" app:tint="@color/md_theme_light_primary" />
+
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView android:id="@+id/tv_empty_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:gravity="center" android:text="@string/no_trips_yet" android:textAppearance="@style/TextAppearance.TravelCompanion.TitleLarge" android:textColor="?attr/colorOnSurface" tools:text="No trips yet" />
+
+    <TextView android:id="@+id/tv_empty_message" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:text="@string/no_trips_yet_message" android:textAppearance="@style/TextAppearance.TravelCompanion.BodyMedium" android:textColor="?attr/colorOnSurfaceVariant" android:lineSpacingMultiplier="1.3" tools:text="Start your adventure by creating your first trip" />
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/btn_empty_action" style="@style/Widget.TravelCompanion.Button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/create_trip" android:textAllCaps="false" app:cornerRadius="24dp" app:icon="@drawable/ic_add" app:iconGravity="textStart" app:iconPadding="8dp" />
+
+</LinearLayout>

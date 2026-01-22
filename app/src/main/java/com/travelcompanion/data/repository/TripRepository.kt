@@ -325,5 +325,13 @@ class TripRepository @Inject constructor(
             timestamp = timestamp
         )
     }
+
+    // Mapping entities to domain models for use in the application layer.
+    // The mapping functions convert database entities to domain models
+    // that are used throughout the application, ensuring a separation
+    // between the data layer and the rest of the app.
+    // Each mapping function is responsible for converting a single entity type.
+    // These functions are used in the repository implementation to transform
+    // data as it is read from or written to the database.
 }
 
