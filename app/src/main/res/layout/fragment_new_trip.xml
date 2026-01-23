@@ -34,17 +34,17 @@
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/start_date" android:textAppearance="@style/TextAppearance.TravelCompanion.TitleSmall" android:textColor="?attr/colorOnSurface" />
 
-            <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_start_date" style="@style/Widget.TravelCompanion.TextInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="20dp" android:hint="@string/select_date" app:endIconDrawable="@drawable/ic_calendar" app:endIconMode="custom" app:endIconTint="?attr/colorPrimary" app:startIconDrawable="@drawable/ic_calendar" app:startIconTint="?attr/colorPrimary">
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_start_date" style="@style/Widget.TravelCompanion.TextInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="20dp" android:hint="@string/select_date" android:clickable="true" android:focusable="true" app:endIconDrawable="@drawable/ic_calendar" app:endIconMode="custom" app:endIconTint="?attr/colorPrimary" app:startIconDrawable="@drawable/ic_calendar" app:startIconTint="?attr/colorPrimary">
 
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/et_start_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:clickable="true" android:focusable="false" android:inputType="none" />
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/et_start_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:clickable="true" android:cursorVisible="false" android:focusable="true" android:focusableInTouchMode="false" android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/end_date" android:textAppearance="@style/TextAppearance.TravelCompanion.TitleSmall" android:textColor="?attr/colorOnSurface" />
 
-            <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_end_date" style="@style/Widget.TravelCompanion.TextInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="32dp" android:hint="@string/select_date" app:endIconDrawable="@drawable/ic_calendar" app:endIconMode="custom" app:endIconTint="?attr/colorPrimary" app:startIconDrawable="@drawable/ic_calendar" app:startIconTint="?attr/colorPrimary">
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_end_date" style="@style/Widget.TravelCompanion.TextInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="32dp" android:hint="@string/select_date" android:clickable="true" android:focusable="true" app:endIconDrawable="@drawable/ic_calendar" app:endIconMode="custom" app:endIconTint="?attr/colorPrimary" app:startIconDrawable="@drawable/ic_calendar" app:startIconTint="?attr/colorPrimary">
 
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/et_end_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:clickable="true" android:focusable="false" android:inputType="none" />
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/et_end_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:clickable="true" android:cursorVisible="false" android:focusable="true" android:focusableInTouchMode="false" android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

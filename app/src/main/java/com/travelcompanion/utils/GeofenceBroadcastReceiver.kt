@@ -60,13 +60,17 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val channelId = "geofence_channel"
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channel = NotificationChannel(channelId, "Location Alerts", NotificationManager.IMPORTANCE_HIGH)
+        val channel = NotificationChannel(channelId, context.getString(R.string.location_alerts), NotificationManager.IMPORTANCE_HIGH)
         manager.createNotificationChannel(channel)
 
-        val action = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) "Entered" else "Exited"
+        val action = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            context.getString(R.string.geofence_entered, ids)
+        } else {
+            context.getString(R.string.geofence_exited, ids)
+        }
         val notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle("Location Alert")
-            .setContentText("$action: $ids")
+            .setContentTitle(context.getString(R.string.location_alert))
+            .setContentText(action)
             .setSmallIcon(R.drawable.ic_map)
             .build()
             

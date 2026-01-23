@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.travelcompanion.databinding.FragmentHomeBinding
 import com.travelcompanion.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +19,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
+    private lateinit var destinationsAdapter: DestinationsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,8 +33,27 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupDestinationsRecyclerView()
         setupClickListeners()
         observeViewModel()
+    }
+
+    private fun setupDestinationsRecyclerView() {
+        destinationsAdapter = DestinationsAdapter { destination ->
+            // Navigate to new trip with pre-filled destination
+            val bundle = Bundle().apply {
+                putString("destination", "${destination.city}, ${destination.country}")
+            }
+            findNavController().navigate(R.id.navigation_new_trip, bundle)
+        }
+
+        binding.rvDestinations.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = destinationsAdapter
+        }
+
+        // Load suggested destinations
+        destinationsAdapter.submitList(SuggestedDestinations.destinations)
     }
 
     private fun setupClickListeners() {
@@ -50,6 +71,10 @@ class HomeFragment : Fragment() {
 
         binding.btnViewStats.setOnClickListener {
             findNavController().navigate(R.id.navigation_statistics)
+        }
+
+        binding.fabAddTrip.setOnClickListener {
+            findNavController().navigate(R.id.navigation_new_trip)
         }
     }
 

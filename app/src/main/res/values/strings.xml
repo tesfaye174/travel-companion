@@ -9,6 +9,7 @@
     <string name="tracking">Tracking</string>
     <string name="map">Map</string>
 
+    <string name="explore_destinations">Explore Destinations</string>
     <string name="create_trip">Create Trip</string>
     <string name="edit_trip">Edit Trip</string>
     <string name="delete_trip">Delete Trip</string>
@@ -40,8 +41,6 @@
 
     <string name="tracking_notification_title">Recording Journey</string>
     <string name="tracking_notification_text">Your trip is being tracked</string>
-    <string name="geofence_entered">You entered the geofence area</string>
-    <string name="geofence_exited">You exited the geofence area</string>
 
     <string name="no_trips_icon">ic_trip</string>
     <string name="no_trips_title">No Trips Yet</string>
@@ -161,9 +160,19 @@
     <string name="share_trip">Share trip</string>
     <string name="trip_shared">Trip shared successfully</string>
     <string name="confirm_delete">Confirm Delete</string>
-    <string name="delete_trip_message">Are you sure you want to delete this trip? This action cannot be undone.</string>
+    <string name="delete_trip_title">Delete Trip?</string>
+    <string name="delete_trip_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
     <string name="trip_deleted">Trip deleted</string>
     <string name="undo">Undo</string>
+
+    <!-- Export/Delete data strings -->
+    <string name="export_data_success">Data exported successfully to Downloads folder</string>
+    <string name="export_data_error">Failed to export data</string>
+    <string name="delete_all_title">Delete All Data?</string>
+    <string name="delete_all_message">This will permanently delete all your trips, photos, notes, and journeys. This action cannot be undone.</string>
+    <string name="all_data_deleted">All data deleted</string>
+    <string name="settings_saved">Settings saved</string>
+
     <string name="getting_started">Getting Started</string>
     <string name="create_your_first_trip">Create Your First Trip</string>
     <string name="tap_to_create">Tap the + button to start</string>
@@ -171,5 +180,34 @@
     <string name="good_morning">Good morning!</string>
     <string name="good_afternoon">Good afternoon!</string>
     <string name="good_evening">Good evening!</string>
+
+    <!-- Map FAB content descriptions -->
+    <string name="my_location">My location</string>
+    <string name="map_layers">Map layers</string>
+    <string name="geofence_events">Geofence events</string>
+
+    <!-- Dialog strings -->
+    <string name="add_photo_title">Add Photo</string>
+    <string name="note_optional_hint">Note (optional)</string>
+    <string name="write_note_hint">Write a note</string>
+    <string name="new_note_title">New Note</string>
+
+    <!-- Accessibility -->
+    <string name="trip_thumbnail">Trip thumbnail</string>
+    <string name="date_icon">Date</string>
+    <string name="distance_icon">Distance</string>
+    <string name="view_details">View details</string>
+
+    <!-- Notifications -->
+    <string name="poi_nearby_title">Point of Interest Nearby</string>
+    <string name="poi_nearby_text">You are near %1$s</string>
+    <string name="time_to_travel_title">Time to Travel!</string>
+    <string name="time_to_travel_text">You haven\'t recorded a trip in a while. Ready for a new adventure?</string>
+
+    <!-- Geofence -->
+    <string name="location_alerts">Location Alerts</string>
+    <string name="location_alert">Location Alert</string>
+    <string name="geofence_entered">Entered %1$s</string>
+    <string name="geofence_exited">Exited %1$s</string>
 </resources>
 

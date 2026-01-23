@@ -17,6 +17,23 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsabile della gestione dello stato della schermata lista viaggi.
+ * 
+ * Questo ViewModel fornisce funzionalità per:
+ * - Caricamento e visualizzazione di tutti i viaggi
+ * - Filtro viaggi per tipo (auto, aereo, treno, ecc.)
+ * - Ricerca viaggi per titolo, destinazione o note
+ * - Operazioni CRUD sui viaggi
+ * 
+ * Utilizza Kotlin Flow per il data binding reattivo con aggiornamenti
+ * automatici della UI quando i dati sottostanti cambiano.
+ * 
+ * @property repository Il repository dei viaggi per le operazioni sui dati
+ * 
+ * @see ITripRepository
+ * @see TripsFragment
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TripViewModel @Inject constructor(
@@ -57,4 +74,21 @@ class TripViewModel @Inject constructor(
             repository.insertTrip(trip)
         }
     }
+
+    fun updateTrip(trip: Trip) {
+        viewModelScope.launch {
+            repository.updateTrip(trip)
+        }
+    }
+
+    fun deleteTrip(trip: Trip) {
+        viewModelScope.launch {
+            repository.deleteTrip(trip)
+        }
+    }
+
+    suspend fun getTripById(id: Long): Trip? {
+        return repository.getTripById(id)
+    }
 }
+

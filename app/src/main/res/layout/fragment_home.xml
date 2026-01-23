@@ -99,6 +99,11 @@
 
             </FrameLayout>
 
+            <!-- Suggested Destinations Section -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginTop="24dp" android:layout_marginBottom="12dp" android:text="@string/explore_destinations" android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium" android:textColor="?attr/colorOnSurface" />
+
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_destinations" android:layout_width="match_parent" android:layout_height="wrap_content" android:clipToPadding="false" android:orientation="horizontal" android:paddingEnd="16dp" android:overScrollMode="never" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -1,9 +1,11 @@
 package com.travelcompanion
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.content.Context
+import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -21,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         
         setupNavigation()
-        setupHapticFeedback()
     }
     
     private fun setupNavigation() {
@@ -32,18 +33,26 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navView.setupWithNavController(navController)
 
-        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getVibratorCompat()
         navView.setOnItemSelectedListener { item ->
-            if (vibrator.hasVibrator()) {
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator?.let {
+                if (it.hasVibrator()) {
+                    it.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                }
             }
             androidx.navigation.ui.NavigationUI.onNavDestinationSelected(item, navController)
             true
         }
     }
-
-    private fun setupHapticFeedback() {
-        // Handled in setupNavigation
+    
+    private fun getVibratorCompat(): Vibrator? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        }
     }
 }
 

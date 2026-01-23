@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="160dp" android:layout_height="200dp" android:layout_marginEnd="12dp" app:cardCornerRadius="16dp" app:cardElevation="4dp">
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+
+        <ImageView android:id="@+id/iv_destination" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:contentDescription="@string/destination" />
+
+        <!-- Gradient overlay -->
+        <View android:layout_width="match_parent" android:layout_height="80dp" android:layout_gravity="bottom" android:background="@drawable/bg_gradient_card" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="bottom" android:orientation="vertical" android:padding="12dp">
+
+            <TextView android:id="@+id/tv_destination_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="Paris" android:textAppearance="?attr/textAppearanceTitleMedium" android:textColor="@android:color/white" android:textStyle="bold" />
+
+            <TextView android:id="@+id/tv_destination_country" android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="France" android:textAppearance="?attr/textAppearanceBodySmall" android:textColor="@android:color/white" android:alpha="0.9" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

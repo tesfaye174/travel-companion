@@ -49,8 +49,8 @@ object NotificationUtils {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_location)
-            .setContentTitle("Punto di Interesse Vicino")
-            .setContentText("$poiName si trova a ${String.format(java.util.Locale.getDefault(), "%.1f", distance)} km da te")
+            .setContentTitle(context.getString(R.string.poi_nearby_title))
+            .setContentText(context.getString(R.string.poi_nearby_text, poiName))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -82,14 +82,14 @@ object NotificationUtils {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_location)
-            .setContentTitle("È tempo di viaggiare!")
-            .setContentText("Non hai registrato un viaggio da un po'. Iniziane uno nuovo?")
+            .setContentTitle(context.getString(R.string.time_to_travel_title))
+            .setContentText(context.getString(R.string.time_to_travel_text))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .addAction(
                 R.drawable.ic_add,
-                "Nuovo Viaggio",
+                context.getString(R.string.new_trip),
                 pendingIntent
             )
             .build()

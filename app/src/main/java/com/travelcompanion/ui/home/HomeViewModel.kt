@@ -12,14 +12,29 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel per la schermata Home (dashboard).
+ * 
+ * Fornisce i dati per la schermata principale inclusi:
+ * - Viaggi recenti (limitati a 3 per anteprima veloce)
+ * - Riepilogo statistiche rapide (viaggi totali, distanza totale)
+ * 
+ * Progettato per caricamento veloce e visualizzazione istantanea
+ * dei dati di viaggio più rilevanti a colpo d'occhio.
+ * 
+ * @property repository Il repository dei viaggi per le operazioni sui dati
+ * 
+ * @see HomeFragment
+ * @see QuickStats
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    // Recent trips for display on home screen
+    // Viaggi recenti da mostrare nella schermata home
     val recentTrips: LiveData<List<Trip>> = repository.getAllTrips()
-        .map { trips -> trips.take(3) } // Show only last 3 trips
+        .map { trips -> trips.take(3) } // Mostra solo gli ultimi 3 viaggi
         .asLiveData()
 
     private val _quickStats = MutableLiveData<QuickStats>()

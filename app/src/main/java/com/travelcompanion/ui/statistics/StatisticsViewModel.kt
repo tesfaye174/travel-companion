@@ -10,6 +10,25 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel per la schermata Statistiche che mostra le analitiche di viaggio.
+ * 
+ * Aggrega ed espone i dati di viaggio inclusi:
+ * - Conteggio totale viaggi
+ * - Distanza totale percorsa
+ * - Tempo totale di viaggio
+ * - Suddivisione mensile dei viaggi
+ * - Distribuzione viaggi per tipo (auto, aereo, treno, ecc.)
+ * 
+ * I dati vengono caricati automaticamente all'inizializzazione e possono
+ * essere aggiornati tramite [loadStatistics].
+ * 
+ * @property repository Il repository dei viaggi per accedere ai dati statistici
+ * 
+ * @see StatisticsFragment
+ * @see ITripRepository.MonthlyStat
+ * @see ITripRepository.TripTypeStat
+ */
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val repository: ITripRepository

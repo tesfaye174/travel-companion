@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.databinding.FragmentNewTripBinding
 import com.travelcompanion.domain.model.TripType
@@ -56,11 +54,24 @@ class NewTripFragment : Fragment() {
     }
 
     private fun setupDatePickers() {
+        // Set click listeners on both EditText and TextInputLayout for better touch handling
         binding.etStartDate.setOnClickListener {
+            showDatePicker(true)
+        }
+        binding.tilStartDate.setOnClickListener {
+            showDatePicker(true)
+        }
+        binding.tilStartDate.setEndIconOnClickListener {
             showDatePicker(true)
         }
 
         binding.etEndDate.setOnClickListener {
+            showDatePicker(false)
+        }
+        binding.tilEndDate.setOnClickListener {
+            showDatePicker(false)
+        }
+        binding.tilEndDate.setEndIconOnClickListener {
             showDatePicker(false)
         }
     }

@@ -10,10 +10,15 @@
 
     <androidx.fragment.app.FragmentContainerView android:id="@+id/map_container" android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_my_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:src="@drawable/ic_location" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
+    <!-- FAB container for better organization -->
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:orientation="vertical" android:gravity="center_horizontal">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_heatmap" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_marginBottom="80dp" android:layout_marginEnd="16dp" android:src="@drawable/ic_heatmap" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_geofence_events" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:src="@drawable/ic_notifications" android:contentDescription="@string/geofence_events" app:fabSize="mini" app:backgroundTint="?attr/colorSecondaryContainer" app:tint="?attr/colorOnSecondaryContainer" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_geofence_events" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_marginEnd="16dp" android:layout_marginBottom="144dp" android:src="@drawable/ic_calendar" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_heatmap" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:src="@drawable/ic_heatmap" android:contentDescription="@string/map_layers" app:fabSize="mini" app:backgroundTint="?attr/colorSecondaryContainer" app:tint="?attr/colorOnSecondaryContainer" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_my_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_my_location" android:contentDescription="@string/my_location" app:backgroundTint="?attr/colorPrimary" app:tint="@android:color/white" />
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

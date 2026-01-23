@@ -158,11 +158,11 @@ class TrackingActivity : AppCompatActivity() {
     }
 
     private fun promptAddPhotoNote(photoFile: File) {
-        val input = TextInputEditText(this).apply { hint = "Nota (opzionale)" }
+        val input = TextInputEditText(this).apply { hint = getString(R.string.note_optional_hint) }
         MaterialAlertDialogBuilder(this)
-            .setTitle("Aggiungi Foto")
+            .setTitle(R.string.add_photo_title)
             .setView(input)
-            .setPositiveButton("Salva") { _, _ ->
+            .setPositiveButton(R.string.save) { _, _ ->
                 val noteText = input.text?.toString().orEmpty()
                 val note = PhotoNote(
                     tripId = tripId,
@@ -178,17 +178,17 @@ class TrackingActivity : AppCompatActivity() {
                     repository.updateTrip(trip.copy(photoCount = trip.photoCount + 1))
                 }
             }
-            .setNegativeButton("Annulla", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
     private fun promptAddNote() {
         if (tripId <= 0) return
-        val input = TextInputEditText(this).apply { hint = "Scrivi una nota" }
+        val input = TextInputEditText(this).apply { hint = getString(R.string.write_note_hint) }
         MaterialAlertDialogBuilder(this)
-            .setTitle("Nuova Nota")
+            .setTitle(R.string.new_note_title)
             .setView(input)
-            .setPositiveButton("Salva") { _, _ ->
+            .setPositiveButton(R.string.save) { _, _ ->
                 val text = input.text?.toString()?.trim().orEmpty()
                 if (text.isEmpty()) return@setPositiveButton
                 val note = Note(
@@ -202,7 +202,7 @@ class TrackingActivity : AppCompatActivity() {
                     repository.insertNote(note)
                 }
             }
-            .setNegativeButton("Annulla", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

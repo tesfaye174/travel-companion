@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.travelcompanion.R
 import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.utils.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -40,8 +41,8 @@ class TrackingService : Service() {
     private var coordinates = mutableListOf<com.travelcompanion.domain.model.Coordinate>()
     private var startTime: Long = 0
 
-    private val notificationId = 1
-    private val channelId = "tracking_channel"
+    private val notificationId = AppConstants.Tracking.TRACKING_NOTIFICATION_ID
+    private val channelId = AppConstants.Tracking.TRACKING_CHANNEL_ID
 
     override fun onCreate() {
         super.onCreate()
@@ -68,10 +69,10 @@ class TrackingService : Service() {
     private fun startTracking() {
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
-            5000L
+            AppConstants.Tracking.LOCATION_UPDATE_INTERVAL_MS
         )
-            .setMinUpdateIntervalMillis(2000L)
-            .setMinUpdateDistanceMeters(10f)
+            .setMinUpdateIntervalMillis(AppConstants.Tracking.LOCATION_FASTEST_INTERVAL_MS)
+            .setMinUpdateDistanceMeters(AppConstants.Tracking.LOCATION_MIN_DISTANCE_METERS)
             .build()
 
         locationCallback = object : LocationCallback() {
@@ -136,13 +137,8 @@ class TrackingService : Service() {
             fusedLocationClient.removeLocationUpdates(it)
         }
         
-        // Save journey before stopping service
-        // Note: serviceScope is cancelled in onDestroy, but we need to run this.
-        // We should use a separate scope or runBlocking if needed, but runBlocking in main thread is bad.
-        // Since onDestroy cancels serviceScope, we might miss this.
-        // Better: launch in GlobalScope or specific Application scope for saving.
-        // For simplicity here, we'll try to use a new scope.
-        CoroutineScope(Dispatchers.IO).launch {
+        // Save journey before stopping service using NonCancellable to ensure completion
+        CoroutineScope(Dispatchers.IO + kotlinx.coroutines.NonCancellable).launch {
             saveCompleteJourney()
         }
 

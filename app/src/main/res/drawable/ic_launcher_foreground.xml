@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+
+    <!-- Airplane/Travel icon centered for adaptive icon -->
+    <group android:translateX="27" android:translateY="27">
+
+        <!-- Globe/Earth background circle -->
+        <path android:fillColor="#FFFFFF" android:pathData="M27,27m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
+
+        <!-- Globe lines - horizontal -->
+        <path android:strokeColor="#E3F2FD" android:strokeWidth="1.5" android:pathData="M3,27 L51,27" />
+        <path android:strokeColor="#E3F2FD" android:strokeWidth="1.5" android:pathData="M6,17 L48,17" />
+        <path android:strokeColor="#E3F2FD" android:strokeWidth="1.5" android:pathData="M6,37 L48,37" />
+
+        <!-- Globe lines - vertical curve -->
+        <path android:strokeColor="#E3F2FD" android:strokeWidth="1.5" android:pathData="M27,3 C20,15 20,39 27,51" />
+        <path android:strokeColor="#E3F2FD" android:strokeWidth="1.5" android:pathData="M27,3 C34,15 34,39 27,51" />
+
+        <!-- Airplane -->
+        <path android:fillColor="#1976D2" android:pathData="M38,14 L32,20 L32,26 L24,22 L20,26 L24,30 L20,34 L24,32 L32,28 L32,34 L38,40 L40,38 L36,27 L46,17 C47,16 47,14 46,13 C45,12 43,12 42,13 L32,23 L21,19 L23,17 Z" />
+
+        <!-- Location pin -->
+        <path android:fillColor="#F44336" android:pathData="M15,32 C15,28 18,25 22,25 C26,25 29,28 29,32 C29,38 22,45 22,45 C22,45 15,38 15,32 Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M22,29 m-2.5,0 a2.5,2.5 0,1 1,5 0 a2.5,2.5 0,1 1,-5 0" />
+
+    </group>
+</vector>

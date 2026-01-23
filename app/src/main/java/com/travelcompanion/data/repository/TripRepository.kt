@@ -24,6 +24,23 @@ import java.util.Date
 import com.travelcompanion.data.db.converters.Converters
 import javax.inject.Inject
 
+/**
+ * Implementazione concreta di [ITripRepository] che gestisce la persistenza dei dati.
+ * 
+ * Questa classe funge da singola fonte di verità per i dati relativi ai viaggi,
+ * coordinando tra i vari DAO di Room per fornire un layer di accesso dati unificato.
+ * 
+ * Responsabilità principali:
+ * - Mappatura Entity-to-Domain model
+ * - Coordinamento delle transazioni database
+ * - Fornitura di stream di dati reattivi tramite Flow
+ * 
+ * @property database L'istanza del database Room iniettata tramite Hilt
+ * @constructor Crea un repository con il database specificato
+ * 
+ * @see ITripRepository
+ * @see AppDatabase
+ */
 class TripRepository @Inject constructor(
     private val database: AppDatabase
 ) : ITripRepository {

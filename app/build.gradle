@@ -80,6 +80,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     
+    // DataStore (Preferences)
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    
     // Activity e Fragment KTX
     implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
