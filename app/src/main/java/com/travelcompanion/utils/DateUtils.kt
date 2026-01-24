@@ -3,8 +3,16 @@ package com.travelcompanion.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Date formatting utilities.
+ * 
+ * Note: SimpleDateFormat isn't thread-safe but should be fine here
+ * since we're only using it on main thread mostly.
+ * Could switch to java.time API later (requires API 26+ or desugaring)
+ */
 object DateUtils {
 
+    // keep formatters as instance vars for reuse
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())

@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+// Fragment for creating new trips
 @AndroidEntryPoint
 class NewTripFragment : Fragment() {
 
@@ -27,6 +28,7 @@ class NewTripFragment : Fragment() {
 
     private val viewModel: NewTripViewModel by viewModels()
 
+    // TODO: maybe move date format to DateUtils for consistency?
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreateView(

@@ -19,6 +19,10 @@ import com.travelcompanion.data.db.entities.NoteEntity
 import com.travelcompanion.data.db.entities.PhotoNoteEntity
 import com.travelcompanion.data.db.entities.TripEntity
 
+/**
+ * Room database with all DAOs.
+ * Using Hilt for injection - see AppModule.
+ */
 @Database(
     entities = [
         TripEntity::class,
@@ -44,6 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        // For non-Hilt components like Workers and BroadcastReceivers
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(

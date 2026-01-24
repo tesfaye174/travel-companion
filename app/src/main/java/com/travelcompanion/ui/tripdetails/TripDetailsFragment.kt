@@ -93,12 +93,12 @@ class TripDetailsFragment : Fragment() {
 
         val tripId = arguments?.getLong("tripId", -1L) ?: -1L
         if (tripId <= 0L) {
-            binding.tvDestination.text = "Trip non valido"
+            binding.tvDestination.text = "Invalid trip"
             binding.chipTripType.text = ""
             binding.tvDates.text = ""
             binding.tvDistance.text = ""
             binding.tvDuration.text = ""
-            Snackbar.make(binding.root, "TripId mancante: apri un viaggio dalla lista", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Missing tripId - open a trip from the list", Snackbar.LENGTH_LONG).show()
             return
         }
         viewModel.setTripId(tripId)

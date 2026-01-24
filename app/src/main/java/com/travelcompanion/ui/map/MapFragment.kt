@@ -165,7 +165,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val context = context ?: return
         val events = viewModel.geofenceEvents.value.orEmpty()
         if (events.isEmpty()) {
-            Snackbar.make(binding.root, "Nessun evento geofence registrato", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, "No geofence events recorded", Snackbar.LENGTH_SHORT).show()
             return
         }
 
@@ -179,7 +179,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }.toTypedArray()
 
         MaterialAlertDialogBuilder(context)
-            .setTitle("Eventi Geofence")
+            .setTitle("Geofence Events")
             .setItems(items, null)
             .setPositiveButton("OK", null)
             .show()
@@ -190,7 +190,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val context = context ?: return
 
         if (!PermissionUtils.hasLocationPermissions(context)) {
-            Snackbar.make(binding.root, "Concedi i permessi di localizzazione per centrare la mappa", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Grant location permissions to center the map", Snackbar.LENGTH_LONG).show()
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
@@ -229,13 +229,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun promptAddGeofence(latLng: LatLng) {
         val context = context ?: return
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Snackbar.make(binding.root, "Serve ACCESS_FINE_LOCATION per creare un geofence", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Fine location permission required to create geofence", Snackbar.LENGTH_LONG).show()
             return
         }
 
-        val nameInput = TextInputEditText(context).apply { hint = "Nome area" }
+        val nameInput = TextInputEditText(context).apply { hint = "Area name" }
         val radiusInput = TextInputEditText(context).apply {
-            hint = "Raggio (metri)"
+            hint = "Radius (meters)"
             setText("150")
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
         }
@@ -247,9 +247,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         MaterialAlertDialogBuilder(context)
-            .setTitle("Crea Geofence")
+            .setTitle("Create Geofence")
             .setView(container)
-            .setPositiveButton("Crea") { _, _ ->
+            .setPositiveButton("Create") { _, _ ->
                 val name = nameInput.text?.toString()?.takeIf { it.isNotBlank() } ?: "Area"
                 val radius = radiusInput.text?.toString()?.toFloatOrNull() ?: 150f
                 val id = "geo_${UUID.randomUUID()}"
@@ -259,12 +259,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     GeofenceHelper(requireContext()).addGeofence(
                         GeofenceHelper(requireContext()).createGeofence(id, latLng.latitude, latLng.longitude, radius)
                     )
-                    Snackbar.make(binding.root, "Geofence creato: $name", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "Geofence created: $name", Snackbar.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Snackbar.make(binding.root, "Errore creazione geofence", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "Failed to create geofence", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Annulla", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

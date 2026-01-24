@@ -1,4 +1,4 @@
-# 🌍 Travel Companion
+# Travel Companion
 
 [![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![Kotlin](https://img.shields.io/badge/Language-Kotlin-blue.svg)](https://kotlinlang.org)
@@ -7,39 +7,39 @@
 
 A modern Android application for tracking, organizing, and reliving your travel memories. Built with Clean Architecture, MVVM pattern, and Jetpack libraries.
 
-## 📱 Screenshots
+## Screenshots
 
 | Home | Trips | Map | Statistics |
 | ---- | ----- | --- | ---------- |
 | ![Home](docs/screenshots/home.png) | ![Trips](docs/screenshots/trips.png) | ![Map](docs/screenshots/map.png) | ![Stats](docs/screenshots/stats.png) |
 
-## ✨ Features
+## Features
 
 ### Core Features
 
-- 📍 **GPS Tracking** - Real-time location tracking with foreground service
-- 🗺️ **Google Maps Integration** - View routes with polylines and markers
-- 📸 **Photo Capture** - Take geotagged photos during trips using CameraX
-- 📝 **Notes** - Add text notes to document your journey
-- 📊 **Statistics** - Visualize travel data with charts (MPAndroidChart)
-- 🔔 **Geofencing** - Get notified when entering/exiting saved locations
+- **GPS Tracking** - Real-time location tracking with foreground service
+- **Google Maps Integration** - View routes with polylines and markers
+- **Photo Capture** - Take geotagged photos during trips using CameraX
+- **Notes** - Add text notes to document your journey
+- **Statistics** - Visualize travel data with charts (MPAndroidChart)
+- **Geofencing** - Get notified when entering/exiting saved locations
 
 ### Trip Management
 
-- ✅ Create, edit, and delete trips
-- 🔍 Search and filter trips by type
-- 👆 Swipe-to-delete with undo
-- 📤 Export data to JSON
-- 🗑️ Delete all data option
+- Create, edit, and delete trips
+- Search and filter trips by type
+- Swipe-to-delete with undo
+- Export data to JSON
+- Delete all data option
 
 ### User Experience
 
-- 🌙 Dark/Light theme support (Material You)
-- ⚙️ Persistent settings with DataStore
-- 🎨 Modern Material Design 3 UI
-- ♿ Accessibility support
+- Dark/Light theme support (Material You)
+- Persistent settings with DataStore
+- Modern Material Design 3 UI
+- Accessibility support
 
-## 🏗️ Architecture
+## Architecture
 
 This project follows **Clean Architecture** principles with **MVVM** pattern:
 
@@ -98,7 +98,7 @@ app/src/main/java/com/travelcompanion/
 └── utils/                 # Utility classes
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Libraries |
 | -------- | --------- |
@@ -119,7 +119,7 @@ app/src/main/java/com/travelcompanion/
 | **Images** | Glide 4.15.1 |
 | **Logging** | Timber 5.0.1 |
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -169,7 +169,7 @@ app/src/main/java/com/travelcompanion/
 ./gradlew connectedAndroidTest
 ```
 
-## 📦 Database Schema
+## Database Schema
 
 The app uses Room database with 6 tables:
 
@@ -182,7 +182,7 @@ The app uses Room database with 6 tables:
 | `geofence_areas` | Saved geofence locations |
 | `geofence_events` | Geofence enter/exit events |
 
-## 🔐 Permissions
+## Permissions
 
 | Permission | Usage |
 | ---------- | ----- |
@@ -192,7 +192,7 @@ The app uses Room database with 6 tables:
 | `POST_NOTIFICATIONS` | Tracking & geofence alerts |
 | `FOREGROUND_SERVICE_LOCATION` | Background tracking |
 
-## 🧪 Testing
+## Testing
 
 The project includes:
 
@@ -200,17 +200,17 @@ The project includes:
 - **Instrumented Tests**: Room database tests
 - **Test Utilities**: Custom dispatchers for coroutine testing
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👤 Author
+## Author
 
 ### Tesfaye
 
 - GitHub: [@tesfaye174](https://github.com/tesfaye174)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Google Maps Platform](https://developers.google.com/maps)
 - [Material Design](https://material.io)

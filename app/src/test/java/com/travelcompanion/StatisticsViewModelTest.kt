@@ -1,10 +1,12 @@
 package com.travelcompanion.ui.statistics
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.domain.repository.ITripRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -18,10 +20,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import java.util.Date
 
 /**
- * Unit tests for StatisticsViewModel.
- * Tests statistics calculation and LiveData emissions.
+ * Unit tests for StatisticsViewModel
  */
 @ExperimentalCoroutinesApi
 class StatisticsViewModelTest {
@@ -56,14 +58,15 @@ class StatisticsViewModelTest {
         `when`(mockRepository.getTripCount()).thenReturn(0)
         `when`(mockRepository.getMonthlyStats()).thenReturn(emptyList())
         `when`(mockRepository.getTripTypeStats()).thenReturn(emptyList())
+        `when`(mockRepository.getAllTrips()).thenReturn(flowOf(emptyList()))
 
         // When
         viewModel = StatisticsViewModel(mockRepository)
 
         // Then
-        val stats = viewModel.statistics.value
-        assertNotNull(stats)
-        assertEquals(expectedDistance, stats?.totalDistance ?: 0f, 0.01f)
+        val totalDist = viewModel.totalDistance.value
+        assertNotNull(totalDist)
+        assertEquals(expectedDistance, totalDist ?: 0f, 0.01f)
     }
 
     @Test
@@ -75,36 +78,39 @@ class StatisticsViewModelTest {
         `when`(mockRepository.getTripCount()).thenReturn(expectedCount)
         `when`(mockRepository.getMonthlyStats()).thenReturn(emptyList())
         `when`(mockRepository.getTripTypeStats()).thenReturn(emptyList())
+        `when`(mockRepository.getAllTrips()).thenReturn(flowOf(emptyList()))
 
         // When
         viewModel = StatisticsViewModel(mockRepository)
 
         // Then
-        val stats = viewModel.statistics.value
-        assertNotNull(stats)
-        assertEquals(expectedCount, stats?.tripCount ?: 0)
+        val totalTrips = viewModel.totalTrips.value
+        assertNotNull(totalTrips)
+        assertEquals(expectedCount, totalTrips ?: 0)
     }
 
     @Test
     fun `monthly stats are correctly loaded`() = runTest {
         // Given
         val monthlyStats = listOf(
-            ITripRepository.MonthlyStat("2026-01", 5, 250.0f, 36000000L),
-            ITripRepository.MonthlyStat("2025-12", 3, 180.0f, 21600000L)
+            ITripRepository.MonthlyStat("01", 5, 250.0f, 36000000L),
+            ITripRepository.MonthlyStat("12", 3, 180.0f, 21600000L)
         )
         `when`(mockRepository.getTotalDistance()).thenReturn(430f)
         `when`(mockRepository.getTotalDuration()).thenReturn(57600000L)
         `when`(mockRepository.getTripCount()).thenReturn(8)
         `when`(mockRepository.getMonthlyStats()).thenReturn(monthlyStats)
         `when`(mockRepository.getTripTypeStats()).thenReturn(emptyList())
+        `when`(mockRepository.getAllTrips()).thenReturn(flowOf(emptyList()))
 
         // When
         viewModel = StatisticsViewModel(mockRepository)
 
         // Then
-        val stats = viewModel.statistics.value
-        assertNotNull(stats)
-        assertEquals(2, stats?.monthlyStats?.size ?: 0)
+        val loadedMonthlyStats = viewModel.monthlyStats.value
+        assertNotNull(loadedMonthlyStats)
+        // Should have 12 months (filled with zeros for missing)
+        assertEquals(12, loadedMonthlyStats?.size ?: 0)
     }
 
     @Test
@@ -120,16 +126,18 @@ class StatisticsViewModelTest {
         `when`(mockRepository.getTripCount()).thenReturn(10)
         `when`(mockRepository.getMonthlyStats()).thenReturn(emptyList())
         `when`(mockRepository.getTripTypeStats()).thenReturn(tripTypeStats)
+        `when`(mockRepository.getAllTrips()).thenReturn(flowOf(emptyList()))
 
         // When
         viewModel = StatisticsViewModel(mockRepository)
 
         // Then
-        val stats = viewModel.statistics.value
-        assertNotNull(stats)
-        assertEquals(3, stats?.tripTypeStats?.size ?: 0)
+        val loadedTypeStats = viewModel.tripTypeStats.value
+        assertNotNull(loadedTypeStats)
+        assertEquals(3, loadedTypeStats?.size ?: 0)
         
-        val localStat = stats?.tripTypeStats?.find { it.type == TripType.LOCAL }
+        val localStat = loadedTypeStats?.find { it.type == TripType.LOCAL }
+        assertNotNull(localStat)
         assertEquals(50f, localStat?.percentage ?: 0f, 0.01f)
     }
 
@@ -141,14 +149,17 @@ class StatisticsViewModelTest {
         `when`(mockRepository.getTripCount()).thenReturn(0)
         `when`(mockRepository.getMonthlyStats()).thenReturn(emptyList())
         `when`(mockRepository.getTripTypeStats()).thenReturn(emptyList())
+        `when`(mockRepository.getAllTrips()).thenReturn(flowOf(emptyList()))
 
         // When
         viewModel = StatisticsViewModel(mockRepository)
 
         // Then
-        val stats = viewModel.statistics.value
-        assertNotNull(stats)
-        assertEquals(0f, stats?.totalDistance ?: -1f, 0.01f)
-        assertEquals(0, stats?.tripCount ?: -1)
+        val totalDist = viewModel.totalDistance.value
+        val totalTrips = viewModel.totalTrips.value
+        assertNotNull(totalDist)
+        assertNotNull(totalTrips)
+        assertEquals(0f, totalDist ?: -1f, 0.01f)
+        assertEquals(0, totalTrips ?: -1)
     }
 }

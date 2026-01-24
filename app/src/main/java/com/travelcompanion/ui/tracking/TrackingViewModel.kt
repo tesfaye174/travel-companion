@@ -18,16 +18,13 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-/**
- * ViewModel per il tracciamento GPS durante un viaggio.
- * Gestisce lo stato del tracciamento, tempo trascorso, distanza, velocità e aggiornamenti posizione.
- */
+// ViewModel for GPS tracking - handles tracking state, elapsed time, distance, speed
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    // Stato del tracciamento
+    // Tracking state
     sealed class TrackingState {
         object Idle : TrackingState()
         data class Tracking(val tripId: Long) : TrackingState()
@@ -37,27 +34,27 @@ class TrackingViewModel @Inject constructor(
     private val _trackingState = MutableStateFlow<TrackingState>(TrackingState.Idle)
     val trackingState: StateFlow<TrackingState> = _trackingState.asStateFlow()
 
-    // Dati del viaggio
+    // Trip data
     private val _currentTrip = MutableLiveData<Trip?>()
     val currentTrip: LiveData<Trip?> = _currentTrip
 
-    // Tempo trascorso in secondi
+    // Elapsed time in seconds
     private val _elapsedTimeSeconds = MutableStateFlow(0L)
     val elapsedTimeSeconds: StateFlow<Long> = _elapsedTimeSeconds.asStateFlow()
 
-    // Distanza in metri
+    // Distance in meters
     private val _distanceMeters = MutableStateFlow(0f)
     val distanceMeters: StateFlow<Float> = _distanceMeters.asStateFlow()
 
-    // Velocità attuale in m/s
+    // Current speed in m/s
     private val _currentSpeedMps = MutableStateFlow(0f)
     val currentSpeedMps: StateFlow<Float> = _currentSpeedMps.asStateFlow()
 
-    // Conteggio foto
+    // Photo count
     private val _photoCount = MutableStateFlow(0)
     val photoCount: StateFlow<Int> = _photoCount.asStateFlow()
 
-    // Posizione attuale
+    // Current location
     private val _currentLocation = MutableStateFlow<Location?>(null)
     val currentLocation: StateFlow<Location?> = _currentLocation.asStateFlow()
 

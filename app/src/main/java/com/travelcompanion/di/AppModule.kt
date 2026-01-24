@@ -19,6 +19,10 @@ import javax.inject.Qualifier
 
 import android.app.NotificationManager
 
+/**
+ * Main Hilt module for dependency injection.
+ * Provides database, repository, and dispatchers.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -66,7 +70,7 @@ object AppModule {
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }
 
-// Qualifiers per diversi dispatcher
+// dispatcher qualifiers for injection
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class IoDispatcher

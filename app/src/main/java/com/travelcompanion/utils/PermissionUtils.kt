@@ -143,21 +143,20 @@ object PermissionUtils {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("OK") { _, _ -> onConfirm() }
-            .setNegativeButton("Annulla") { _, _ -> onCancel() }
+            .setNegativeButton("Cancel") { _, _ -> onCancel() }
             .setCancelable(false)
             .show()
     }
 
-    // Show settings dialog
+    // Show settings dialog when permissions were denied
     fun showSettingsDialog(context: Context) {
         MaterialAlertDialogBuilder(context)
-            .setTitle("Permessi Necessari")
-            .setMessage("Per utilizzare tutte le funzionalità dell'app, " +
-                    "è necessario concedere i permessi nelle impostazioni.")
-            .setPositiveButton("Impostazioni") { _, _ ->
+            .setTitle("Permissions Required")
+            .setMessage("To use all app features, please grant permissions in settings.")
+            .setPositiveButton("Settings") { _, _ ->
                 openAppSettings(context)
             }
-            .setNegativeButton("Annulla", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

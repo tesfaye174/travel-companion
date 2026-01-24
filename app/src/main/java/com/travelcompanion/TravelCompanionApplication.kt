@@ -12,25 +12,28 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+/**
+ * Application class - entry point for Hilt DI.
+ * Sets up Timber logging and schedules daily reminder worker.
+ */
 @HiltAndroidApp
 class TravelCompanionApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize Timber for logging
+        // setup Timber for debug builds only
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
         if (isDebuggable) {
             Timber.plant(Timber.DebugTree())
         }
 
-        // Create notification channel
         NotificationUtils.createNotificationChannel(this)
-
         schedulePeriodicReminder()
     }
 
     private fun schedulePeriodicReminder() {
+        // runs once a day to check if user wants trip reminders
         val constraints = Constraints.Builder().build()
 
         val work = PeriodicWorkRequestBuilder<ReminderWorker>(1, TimeUnit.DAYS)

@@ -7,6 +7,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 
+// Helper class to manage geofences - wraps the Google Play Services geofencing API
 class GeofenceHelper(val context: Context) {
 
     private val geofencingClient = LocationServices.getGeofencingClient(context)

@@ -5,22 +5,12 @@ import com.travelcompanion.domain.repository.ITripRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-/**
- * Use case per recuperare i percorsi associati a un viaggio specifico.
- * 
- * Un journey rappresenta un segmento tracciato del viaggio,
- * contenente coordinate GPS, distanza e dati sulla durata.
- */
+// UseCase to get journey segments for a trip
 class GetJourneysByTripUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
-    /**
-     * Esegue il use case per ottenere tutti i percorsi di un viaggio.
-     * @param tripId L'ID del viaggio
-     * @return Flow che emette la lista dei percorsi per il viaggio specificato
-     */
     operator fun invoke(tripId: Long): Flow<List<Journey>> {
-        require(tripId > 0) { "L'ID del viaggio deve essere positivo" }
+        require(tripId > 0) { "Trip ID must be positive" }
         return repository.getJourneysByTripId(tripId)
     }
 }

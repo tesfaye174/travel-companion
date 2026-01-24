@@ -18,25 +18,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-/**
- * ViewModel per la schermata Dettagli Viaggio.
- * 
- * Gestisce ed espone tutti i dati relativi a un singolo viaggio inclusi:
- * - Informazioni del viaggio (titolo, destinazione, date, tipo)
- * - Dati del percorso con coordinate GPS
- * - Foto con note e geolocalizzazione
- * - Note testuali allegate al viaggio
- * 
- * Supporta operazioni CRUD per la modifica del viaggio, aggiunta foto,
- * e allegare note a momenti o luoghi specifici.
- * 
- * @property repository Il repository dei viaggi per le operazioni sui dati
- * 
- * @see TripDetailsFragment
- * @see Trip
- * @see PhotoNote
- * @see Note
- */
+// ViewModel for trip details screen - handles trip data, journeys, photos, notes
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class TripDetailsViewModel @Inject constructor(

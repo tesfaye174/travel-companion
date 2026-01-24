@@ -23,11 +23,12 @@ import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import dagger.hilt.android.AndroidEntryPoint
 
+/**\n * Fragment showing list of all trips with search and filter.\n * Swipe left to delete (with undo).\n */
 @AndroidEntryPoint
 class TripsFragment : Fragment() {
 
     private var _binding: FragmentTripsBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding!!  // safe to use after onCreateView
     private val viewModel: TripViewModel by viewModels()
     private lateinit var tripAdapter: TripsAdapter
 

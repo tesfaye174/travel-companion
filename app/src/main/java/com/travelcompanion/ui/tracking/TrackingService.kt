@@ -34,7 +34,7 @@ class TrackingService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var locationCallback: LocationCallback? = null
 
-    // ✅ CORRETTO: Coroutine scope con lifecycle del service
+    // coroutine scope tied to service lifecycle
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var currentTripId: Long = -1
@@ -78,7 +78,6 @@ class TrackingService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
-                    // ✅ CORRETTO: Usare serviceScope invece di GlobalScope
                     serviceScope.launch {
                         saveLocation(location)
                     }
