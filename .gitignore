@@ -1,6 +1,7 @@
 # Gradle and build outputs
 .gradle/
-**/build/
+build/
+app/build/
 
 # Android Studio / JetBrains artifacts
 .idea/
@@ -20,3 +21,10 @@ captures/
 # Misc
 .DS_Store
 Thumbs.db
+*.tmp
+*.bak
+*.swp
+output.json
+__TO_DELETE__/
+*.apk
+*.ap_

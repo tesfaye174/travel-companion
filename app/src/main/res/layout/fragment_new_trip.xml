@@ -24,11 +24,11 @@
 
             <com.google.android.material.chip.ChipGroup android:id="@+id/chip_group_type" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" app:selectionRequired="true" app:singleSelection="true">
 
-                <com.google.android.material.chip.Chip android:id="@+id/chip_local" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/local" app:chipIcon="@drawable/ic_location" app:chipIconTint="@color/chip_icon_color" app:chipIconVisible="true" />
+                <com.google.android.material.chip.Chip android:id="@+id/chip_local" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/local" app:chipIcon="@drawable/ic_location" app:chipIconTint="@color/md_theme_light_onPrimaryContainer" app:chipIconVisible="true" />
 
-                <com.google.android.material.chip.Chip android:id="@+id/chip_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" app:chipIcon="@drawable/ic_calendar" app:chipIconTint="@color/chip_icon_color" app:chipIconVisible="true" />
+                <com.google.android.material.chip.Chip android:id="@+id/chip_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" app:chipIcon="@drawable/ic_calendar" app:chipIconTint="@color/md_theme_light_onPrimaryContainer" app:chipIconVisible="true" />
 
-                <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" app:chipIcon="@drawable/ic_trip" app:chipIconTint="@color/chip_icon_color" app:chipIconVisible="true" />
+                <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" style="@style/Widget.TravelCompanion.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" app:chipIcon="@drawable/ic_trip" app:chipIconTint="@color/md_theme_light_onPrimaryContainer" app:chipIconVisible="true" />
 
             </com.google.android.material.chip.ChipGroup>
 

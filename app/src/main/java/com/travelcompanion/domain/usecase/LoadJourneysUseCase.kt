@@ -5,8 +5,8 @@ import com.travelcompanion.domain.repository.ITripRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-// UseCase to get journey segments for a trip
-class GetJourneysByTripUseCase @Inject constructor(
+// loads journey segments for a trip
+class LoadJourneysUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
     operator fun invoke(tripId: Long): Flow<List<Journey>> {

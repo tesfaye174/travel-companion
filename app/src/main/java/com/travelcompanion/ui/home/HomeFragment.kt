@@ -57,22 +57,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.btnNewTrip.setOnClickListener {
-            findNavController().navigate(R.id.navigation_new_trip)
-        }
-
-        binding.btnViewTrips.setOnClickListener {
-            findNavController().navigate(R.id.navigation_trips)
-        }
-
-        binding.btnViewMap.setOnClickListener {
-            findNavController().navigate(R.id.navigation_map)
-        }
-
-        binding.btnViewStats.setOnClickListener {
-            findNavController().navigate(R.id.navigation_statistics)
-        }
-
         binding.fabAddTrip.setOnClickListener {
             findNavController().navigate(R.id.navigation_new_trip)
         }

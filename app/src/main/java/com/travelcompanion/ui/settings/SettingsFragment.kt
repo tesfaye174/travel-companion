@@ -110,10 +110,48 @@ class SettingsFragment : Fragment() {
             }
         }
 
+        // Theme mode button
+        binding.btnThemeMode.setOnClickListener {
+            showThemeDialog()
+        }
         // Export data button
         binding.btnExportData.setOnClickListener {
             exportData()
         }
+    private fun showThemeDialog() {
+        val themeOptions = arrayOf(
+            getString(R.string.theme_light),
+            getString(R.string.theme_dark),
+            getString(R.string.theme_system)
+        )
+        val themeValues = arrayOf("light", "dark", "system")
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val currentTheme = settingsDataStore.settingsFlow.first().themeMode
+            val checkedItem = themeValues.indexOf(currentTheme)
+
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.choose_theme)
+                .setSingleChoiceItems(themeOptions, checkedItem) { dialog, which ->
+                    val selected = themeValues[which]
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        settingsDataStore.setThemeMode(selected)
+                        applyTheme(selected)
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
+    }
+
+    private fun applyTheme(mode: String) {
+        when (mode) {
+            "light" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
+            "dark" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES)
+            else -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
 
         // Delete all data button
         binding.btnDeleteData.setOnClickListener {

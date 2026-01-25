@@ -3,8 +3,8 @@ package com.travelcompanion.domain.usecase
 import com.travelcompanion.domain.repository.ITripRepository
 import javax.inject.Inject
 
-// UseCase to calculate travel statistics
-class GetTravelStatisticsUseCase @Inject constructor(
+// calculates trip statistics
+class TripStatsUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
     suspend operator fun invoke(): TravelStatistics {

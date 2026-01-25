@@ -86,7 +86,7 @@
 
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" style="@style/Widget.TravelCompanion.Card.Elevated">
 
-                <fragment android:id="@+id/map_details" android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_width="match_parent" android:layout_height="200dp" />
+                <androidx.fragment.app.FragmentContainerView android:id="@+id/map_details" android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_width="match_parent" android:layout_height="200dp" />
 
             </com.google.android.material.card.MaterialCardView>
 

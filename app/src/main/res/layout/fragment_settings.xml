@@ -12,6 +12,7 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
+
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
@@ -20,130 +21,150 @@
 
                         <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_primaryContainer">
 
-                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_notifications" app:tint="@color/md_theme_light_onPrimaryContainer" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_theme" app:tint="@color/md_theme_light_onPrimaryContainer" />
 
                         </FrameLayout>
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/notifications" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/theme" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
 
                     </LinearLayout>
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
-
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notify_poi" style="@style/TextAppearance.TravelCompanion.Body1" />
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/notify_poi_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
-
-                        </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_poi" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
-
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:alpha="0.5" />
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
-
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notify_reminders" style="@style/TextAppearance.TravelCompanion.Body1" />
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/notify_reminders_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
-
-                        </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_reminders" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
-
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:alpha="0.5" />
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
-
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/auto_tracking" style="@style/TextAppearance.TravelCompanion.Body1" />
-
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/auto_tracking_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
-
-                        </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_auto_tracking" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
-
-                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_theme_mode" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/change_theme" style="@style/Widget.TravelCompanion.Button.Outlined" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
+                    <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_primaryContainer">
 
-                        <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_secondaryContainer">
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_notifications" app:tint="@color/md_theme_light_onPrimaryContainer" />
 
-                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_privacy" app:tint="@color/md_theme_light_onSecondaryContainer" />
+                    </FrameLayout>
 
-                        </FrameLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/notifications" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/privacy" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notify_poi" style="@style/TextAppearance.TravelCompanion.Body1" />
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/notify_poi_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
 
                     </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_export_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/export_data" app:icon="@drawable/ic_export" app:iconGravity="start" style="@style/Widget.TravelCompanion.Button.Outlined" />
-
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_delete_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/delete_all_data" android:textColor="@color/md_theme_light_error" app:icon="@drawable/ic_delete" app:iconGravity="start" app:iconTint="@color/md_theme_light_error" app:strokeColor="@color/md_theme_light_error" style="@style/Widget.TravelCompanion.Button.Outlined" />
+                    <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_poi" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:alpha="0.5" />
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notify_reminders" style="@style/TextAppearance.TravelCompanion.Body1" />
 
-                        <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_tertiaryContainer">
-
-                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_info" app:tint="@color/md_theme_light_onTertiaryContainer" />
-
-                        </FrameLayout>
-
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/about" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/notify_reminders_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
 
                     </LinearLayout>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/app_name" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
-
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/app_version" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
-
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/app_description" style="@style/TextAppearance.TravelCompanion.Body2" android:textColor="?attr/colorOnSurfaceVariant" android:lineSpacingExtra="4dp" />
+                    <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_reminders" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:alpha="0.5" />
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Card.Outlined">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingVertical="12dp">
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/need_help" style="@style/TextAppearance.TravelCompanion.Body1" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/auto_tracking" style="@style/TextAppearance.TravelCompanion.Body1" />
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/help_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/auto_tracking_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
 
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_contact_support" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/contact_support" style="@style/Widget.TravelCompanion.Button.Text" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switch_auto_tracking" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Switch" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
+
+                    <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_secondaryContainer">
+
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_privacy" app:tint="@color/md_theme_light_onSecondaryContainer" />
+
+                    </FrameLayout>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/privacy" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_export_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/export_data" app:icon="@drawable/ic_export" app:iconGravity="start" style="@style/Widget.TravelCompanion.Button.Outlined" />
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_delete_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/delete_all_data" android:textColor="@color/md_theme_light_error" app:icon="@drawable/ic_delete" app:iconGravity="start" app:iconTint="@color/md_theme_light_error" app:strokeColor="@color/md_theme_light_error" style="@style/Widget.TravelCompanion.Button.Outlined" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+
+                    <FrameLayout android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/md_theme_light_tertiaryContainer">
+
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_info" app:tint="@color/md_theme_light_onTertiaryContainer" />
+
+                    </FrameLayout>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="@string/about" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+
+                </LinearLayout>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/app_name" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/app_version" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/app_description" style="@style/TextAppearance.TravelCompanion.Body2" android:textColor="?attr/colorOnSurfaceVariant" android:lineSpacingExtra="4dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.TravelCompanion.Card.Outlined">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/need_help" style="@style/TextAppearance.TravelCompanion.Body1" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/help_description" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/btn_contact_support" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/contact_support" style="@style/Widget.TravelCompanion.Button.Text" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

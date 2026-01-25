@@ -14,15 +14,31 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+        @javax.inject.Inject
+        lateinit var settingsDataStore: com.travelcompanion.data.preferences.SettingsDataStore
     
     private lateinit var binding: ActivityMainBinding
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Applica il tema scelto dall'utente prima di setContentView
+        applySavedTheme()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
         setupNavigation()
+        private fun applySavedTheme() {
+            // Applica il tema salvato in DataStore
+            val job = kotlinx.coroutines.GlobalScope.launch {
+                val mode = settingsDataStore.settingsFlow.first().themeMode
+                when (mode) {
+                    "light" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
+                    "dark" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES)
+                    else -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            }
+            runBlocking { job.join() }
+        }
     }
     
     private fun setupNavigation() {

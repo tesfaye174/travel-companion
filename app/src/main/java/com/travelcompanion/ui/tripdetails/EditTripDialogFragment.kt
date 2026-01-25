@@ -54,7 +54,7 @@ class EditTripDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogEditTripBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = DialogEditTripBinding.inflate(layoutInflater)
 
         arguments?.let { args ->
             trip = Trip(

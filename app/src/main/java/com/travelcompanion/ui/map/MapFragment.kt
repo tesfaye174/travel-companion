@@ -32,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
 import java.util.Date
 import java.util.UUID
+import com.travelcompanion.utils.PaletteUtils
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -114,12 +115,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     PolylineOptions()
                         .addAll(points)
                         .width(8f)
+                        .color(PaletteUtils.greenLight(requireContext()))
                 )
                 polylines.add(polyline)
 
                 if (showRoutePoints) {
                     points.forEach { p ->
-                        map.addMarker(MarkerOptions().position(p).title("Trip ${journey.tripId}"))
+                        map.addMarker(
+                            MarkerOptions()
+                                .position(p)
+                                .title("Trip ${journey.tripId}")
+                                .icon(null) // Usa il default, oppure personalizza con BitmapDescriptorFactory.defaultMarker(HUE_GREEN)
+                        )
                     }
                 }
             }

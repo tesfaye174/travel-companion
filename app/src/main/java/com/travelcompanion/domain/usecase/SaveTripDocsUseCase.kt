@@ -5,8 +5,8 @@ import com.travelcompanion.domain.model.PhotoNote
 import com.travelcompanion.domain.repository.ITripRepository
 import javax.inject.Inject
 
-// UseCase to add notes and photos to a trip
-class AddTripDocumentationUseCase @Inject constructor(
+// saves notes and photos to a trip
+class SaveTripDocsUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
     suspend fun addNote(note: Note): Long {

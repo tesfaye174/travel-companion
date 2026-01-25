@@ -25,7 +25,7 @@ class AddNoteDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogAddNoteBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = DialogAddNoteBinding.inflate(layoutInflater)
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.new_note_title)

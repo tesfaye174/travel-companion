@@ -39,11 +39,10 @@ class TripsAdapter(
             val density = binding.ivThumbnail.resources.displayMetrics.density
             val radiusPx = (radiusDp * density).toInt()
 
-            val ctx = binding.ivThumbnail.context
-            val sampleRes = ctx.resources.getIdentifier("colosseum", "drawable", ctx.packageName)
-            val imageToLoad = if (sampleRes != 0) sampleRes else R.drawable.placeholder_image
 
-            Glide.with(ctx)
+            val imageToLoad = R.drawable.colosseum
+
+            Glide.with(binding.root.context)
                 .load(imageToLoad)
                 .centerCrop()
                 .transform(com.bumptech.glide.load.resource.bitmap.RoundedCorners(radiusPx))

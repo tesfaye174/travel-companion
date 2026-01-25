@@ -105,7 +105,7 @@
         <item name="chipCornerRadius">20dp</item>
         <item name="chipMinHeight">36dp</item>
         <item name="android:textAppearance">@style/TextAppearance.TravelCompanion.LabelMedium</item>
-        <item name="chipBackgroundColor">@color/chip_background_color</item>
+        <item name="chipBackgroundColor">@color/md_theme_light_primaryContainer</item>
     </style>
 
     <style name="Widget.TravelCompanion.Chip.Input" parent="Widget.Material3.Chip.Input">
@@ -164,8 +164,8 @@
         <item name="backgroundTint">@color/md_theme_light_surface</item>
         <item name="itemActiveIndicatorStyle">@style/Widget.TravelCompanion.BottomNavigation.Indicator</item>
         <item name="labelVisibilityMode">labeled</item>
-        <item name="itemIconTint">@color/bottom_nav_color</item>
-        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="itemIconTint">@color/md_theme_light_primary</item>
+        <item name="itemTextColor">@color/md_theme_light_primary</item>
         <item name="android:minHeight">80dp</item>
         <item name="elevation">0dp</item>
     </style>
@@ -271,8 +271,8 @@
     </style>
 
     <style name="Widget.TravelCompanion.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
-        <item name="thumbTint">@color/switch_thumb_color</item>
-        <item name="trackTint">@color/switch_track_color</item>
+        <item name="thumbTint">@color/md_theme_light_onPrimary</item>
+        <item name="trackTint">@color/md_theme_light_outline</item>
     </style>
 
     <style name="Widget.TravelCompanion.Divider" parent="Widget.MaterialComponents.MaterialDivider">
