@@ -1,4 +1,6 @@
+
 package com.travelcompanion.ui.settings
+import java.io.IOException
 
 import android.content.ContentValues
 import android.os.Build
@@ -118,6 +120,12 @@ class SettingsFragment : Fragment() {
         binding.btnExportData.setOnClickListener {
             exportData()
         }
+        // Delete all data button
+        binding.btnDeleteData.setOnClickListener {
+            showDeleteConfirmation()
+        }
+    }
+
     private fun showThemeDialog() {
         val themeOptions = arrayOf(
             getString(R.string.theme_light),
@@ -153,12 +161,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-        // Delete all data button
-        binding.btnDeleteData.setOnClickListener {
-            showDeleteConfirmation()
-        }
-    }
-
     private fun exportData() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -170,8 +172,14 @@ class SettingsFragment : Fragment() {
                 saveToDownloads(jsonContent)
 
                 Toast.makeText(requireContext(), R.string.export_data_success, Toast.LENGTH_LONG).show()
+            } catch (e: IOException) {
+                Timber.e(e)
+                Toast.makeText(requireContext(), R.string.export_data_error, Toast.LENGTH_SHORT).show()
+            } catch (e: SecurityException) {
+                Timber.e(e)
+                Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Timber.e(e, "Failed to export data")
+                Timber.e(e)
                 Toast.makeText(requireContext(), R.string.export_data_error, Toast.LENGTH_SHORT).show()
             }
         }
@@ -254,8 +262,12 @@ class SettingsFragment : Fragment() {
                 }
 
                 Toast.makeText(requireContext(), R.string.all_data_deleted, Toast.LENGTH_SHORT).show()
+            } catch (e: IOException) {
+                Timber.e(e)
+            } catch (e: SecurityException) {
+                Timber.e(e)
             } catch (e: Exception) {
-                Timber.e(e, "Failed to delete data")
+                Timber.e(e)
             }
         }
     }
@@ -274,5 +286,4 @@ class SettingsFragment : Fragment() {
         val settings: Map<String, Any>
     )
 }
-
 

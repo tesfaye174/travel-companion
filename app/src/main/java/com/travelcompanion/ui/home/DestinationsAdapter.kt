@@ -2,17 +2,22 @@ package com.travelcompanion.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.travelcompanion.R
 import com.travelcompanion.databinding.ItemDestinationBinding
+import com.travelcompanion.utils.GenericDiffCallback
 
 class DestinationsAdapter(
     private val onDestinationClick: (Destination) -> Unit
-) : ListAdapter<Destination, DestinationsAdapter.ViewHolder>(DiffCallback()) {
+) : ListAdapter<Destination, DestinationsAdapter.ViewHolder>(
+    GenericDiffCallback(
+        areItemsTheSame = { old, new -> old.id == new.id },
+        areContentsTheSame = { old, new -> old == new }
+    )
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemDestinationBinding.inflate(
@@ -50,16 +55,6 @@ class DestinationsAdapter(
                 .placeholder(R.drawable.placeholder_image)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.ivDestination)
-        }
-    }
-
-    private class DiffCallback : DiffUtil.ItemCallback<Destination>() {
-        override fun areItemsTheSame(oldItem: Destination, newItem: Destination): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Destination, newItem: Destination): Boolean {
-            return oldItem == newItem
         }
     }
 }

@@ -69,6 +69,13 @@ object AppConstants {
         const val THEME_MODE = "theme_mode"
     }
 
+    // Platform geofence action for non-Play-Services provider
+    object PlatformIntents {
+        const val ACTION_PLATFORM_GEOFENCE = "com.travelcompanion.PLATFORM_GEOFENCE_EVENT"
+        const val EXTRA_GEOFENCE_ID = "extra_geofence_id"
+        const val EXTRA_TRANSITION = "extra_geofence_transition"
+    }
+
     // WorkManager
     object WorkManager {
         const val REMINDER_WORK_NAME = "trip_reminder_work"

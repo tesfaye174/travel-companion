@@ -3,6 +3,8 @@ package com.travelcompanion.data.db.dao
 import androidx.room.*
 import com.travelcompanion.data.db.entities.TripEntity
 import com.travelcompanion.domain.model.TripType
+import com.travelcompanion.domain.model.MonthlyStat
+import com.travelcompanion.domain.model.TripTypeStat
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -52,23 +54,23 @@ interface TripDao {
 
     // Statistics with caching
     @Query("""
-        SELECT 
+        SELECT
             COUNT(*) as total,
             SUM(total_distance) as totalDistance,
             AVG(total_duration) as avgDuration
-        FROM trips 
+        FROM trips
         WHERE strftime('%Y', datetime(start_date / 1000, 'unixepoch')) = :year
     """)
     fun getYearlyStats(year: String): Flow<YearlyStats>
 
     // Search with FTS (Full Text Search)
     @Query("""
-        SELECT * FROM trips 
-        WHERE title LIKE '%' || :query || '%' 
+        SELECT * FROM trips
+        WHERE title LIKE '%' || :query || '%'
            OR destination LIKE '%' || :query || '%'
            OR notes LIKE '%' || :query || '%'
-        ORDER BY 
-            CASE 
+        ORDER BY
+            CASE
                 WHEN title LIKE :query || '%' THEN 1
                 WHEN destination LIKE :query || '%' THEN 2
                 ELSE 3
@@ -118,13 +120,6 @@ interface TripDao {
     @Query("SELECT COUNT(*) FROM trips")
     fun getTripCount(): Int
 
-    data class MonthlyStat(
-        val month: String,
-        val tripCount: Int,
-        val totalDistance: Float?,
-        val totalDuration: Long?
-    )
-
     @Query("""
         SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
                COUNT(*) as tripCount,
@@ -136,12 +131,6 @@ interface TripDao {
     """)
     fun getMonthlyStats(): List<MonthlyStat>
 
-    data class TripTypeStat(
-        val type: String,
-        val count: Int,
-        val percentage: Double?
-    )
-
     @Query("""
         SELECT trip_type as type,
                COUNT(*) as count,
@@ -151,4 +140,3 @@ interface TripDao {
     """)
     fun getTripTypeStats(): List<TripTypeStat>
 }
-

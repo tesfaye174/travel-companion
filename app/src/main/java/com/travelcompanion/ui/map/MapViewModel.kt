@@ -9,7 +9,7 @@ import com.travelcompanion.domain.model.GeofenceEvent
 import com.travelcompanion.domain.model.Journey
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
-import com.google.android.gms.maps.model.LatLng
+import org.osmdroid.util.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +22,8 @@ class MapViewModel @Inject constructor(
     private val _trips = MutableLiveData<List<Trip>>()
     val trips: LiveData<List<Trip>> = _trips
 
-    private val _currentLocation = MutableLiveData<LatLng?>()
-    val currentLocation: LiveData<LatLng?> = _currentLocation
+    private val _currentLocation = MutableLiveData<GeoPoint?>()
+    val currentLocation: LiveData<GeoPoint?> = _currentLocation
 
     private val _journeys = MutableLiveData<List<Journey>>()
     val journeys: LiveData<List<Journey>> = _journeys
@@ -72,8 +72,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun setCurrentLocation(latLng: LatLng) {
+    fun setCurrentLocation(latLng: GeoPoint) {
         _currentLocation.value = latLng
     }
 }
-

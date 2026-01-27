@@ -12,6 +12,7 @@ import com.travelcompanion.data.db.AppDatabase
 import com.travelcompanion.data.db.entities.GeofenceEventEntity
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
+import com.travelcompanion.utils.AppConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +20,16 @@ import kotlinx.coroutines.launch
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+        // Support both Play Services geofencing intents and platform geofence broadcasts
+        if (intent.action == AppConstants.PlatformIntents.ACTION_PLATFORM_GEOFENCE) {
+            val id = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_GEOFENCE_ID) ?: return
+            val transitionStr = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_TRANSITION) ?: return
+            val transition = if (transitionStr == "ENTER") Geofence.GEOFENCE_TRANSITION_ENTER else Geofence.GEOFENCE_TRANSITION_EXIT
+            persistEvents(context, transition, listOf(id))
+            showNotification(context, transition, id)
+            return
+        }
+
         val event = GeofencingEvent.fromIntent(intent) ?: return
         if (event.hasError()) return
 
@@ -51,7 +62,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     )
                 }
             } catch (_: Exception) {
-                // Best-effort persistence; notification still provides user feedback.
+                // Catch generico: la persistenza è best-effort, la notifica utente è già stata inviata.
             }
         }
     }

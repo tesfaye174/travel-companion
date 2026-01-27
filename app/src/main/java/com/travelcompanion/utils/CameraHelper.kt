@@ -40,7 +40,14 @@ class CameraHelper(private val context: Context) {
                     preview,
                     imageCapture
                 )
+            } catch (e: IllegalStateException) {
+                // CameraX binding error, likely already bound
+                e.printStackTrace()
+            } catch (e: SecurityException) {
+                // Camera permission denied
+                e.printStackTrace()
             } catch (e: Exception) {
+                // Catch generico come fallback, da monitorare
                 e.printStackTrace()
             }
         }, ContextCompat.getMainExecutor(context))

@@ -18,6 +18,13 @@ import javax.inject.Singleton
 import javax.inject.Qualifier
 
 import android.app.NotificationManager
+import com.travelcompanion.location.GeofenceProvider
+import com.travelcompanion.location.LocationProvider
+import com.travelcompanion.location.PlayServicesGeofenceProvider
+import com.travelcompanion.location.PlayServicesLocationProvider
+import com.travelcompanion.location.PlatformGeofenceProvider
+import com.travelcompanion.location.PlatformLocationProvider
+import com.travelcompanion.BuildConfig
 
 /**
  * Main Hilt module for dependency injection.
@@ -41,7 +48,7 @@ object AppModule {
             AppDatabase::class.java,
             "travel_companion_db"
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 
@@ -68,6 +75,24 @@ object AppModule {
     @Provides
     @DefaultDispatcher
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    fun provideLocationProvider(@ApplicationContext context: Context): LocationProvider {
+        return if (BuildConfig.USE_PLAY_SERVICES_LOCATION) {
+            PlayServicesLocationProvider(context)
+        } else {
+            PlatformLocationProvider(context)
+        }
+    }
+
+    @Provides
+    fun provideGeofenceProvider(@ApplicationContext context: Context, database: AppDatabase): GeofenceProvider {
+        return if (BuildConfig.USE_PLAY_SERVICES_LOCATION) {
+            PlayServicesGeofenceProvider(context)
+        } else {
+            PlatformGeofenceProvider(context, database)
+        }
+    }
 }
 
 // dispatcher qualifiers for injection

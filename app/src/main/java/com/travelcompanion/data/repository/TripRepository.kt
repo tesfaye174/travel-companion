@@ -30,9 +30,14 @@ import javax.inject.Inject
  * 
  * TODO: maybe add caching layer later for performance?
  */
+
 class TripRepository @Inject constructor(
     private val database: AppDatabase
 ) : ITripRepository {
+
+    // Semplice cache in memoria per getAllTrips
+    private var cachedTrips: List<Trip>? = null
+    private var cacheValid: Boolean = false
 
     private val tripDao: TripDao = database.tripDao()
     private val journeyDao: JourneyDao = database.journeyDao()
@@ -43,15 +48,19 @@ class TripRepository @Inject constructor(
 
     override suspend fun insertTrip(trip: Trip): Long {
         val entity = trip.toEntity()
-        return tripDao.insertTrip(entity)
+        val result = tripDao.insertTrip(entity)
+        cacheValid = false
+        return result
     }
 
     override suspend fun updateTrip(trip: Trip) {
         tripDao.updateTrip(trip.toEntity())
+        cacheValid = false
     }
 
     override suspend fun deleteTrip(trip: Trip) {
         tripDao.deleteTrip(trip.toEntity())
+        cacheValid = false
     }
 
     override suspend fun getTripById(id: Long): Trip? {
@@ -61,7 +70,14 @@ class TripRepository @Inject constructor(
 
     override fun getAllTrips(): Flow<List<Trip>> {
         return tripDao.getAllTripsFlow().map { entities ->
-            entities.map { it.toDomain() }
+            if (cacheValid && cachedTrips != null) {
+                cachedTrips!!
+            } else {
+                val trips = entities.map { it.toDomain() }
+                cachedTrips = trips
+                cacheValid = true
+                trips
+            }
         }
     }
 
@@ -179,10 +195,10 @@ class TripRepository @Inject constructor(
         }
     }
 
-    override suspend fun getMonthlyStats(): List<ITripRepository.MonthlyStat> {
+    override suspend fun getMonthlyStats(): List<com.travelcompanion.domain.model.MonthlyStat> {
         return withContext(Dispatchers.IO) {
             tripDao.getMonthlyStats().map { stat ->
-                ITripRepository.MonthlyStat(
+                com.travelcompanion.domain.model.MonthlyStat(
                     month = stat.month,
                     tripCount = stat.tripCount,
                     totalDistance = stat.totalDistance ?: 0f,
@@ -192,7 +208,7 @@ class TripRepository @Inject constructor(
         }
     }
 
-    override suspend fun getTripTypeStats(): List<ITripRepository.TripTypeStat> {
+    override suspend fun getTripTypeStats(): List<com.travelcompanion.domain.model.TripTypeStat> {
         return withContext(Dispatchers.IO) {
             tripDao.getTripTypeStats().map { stat ->
                 val tt = try {
@@ -200,8 +216,8 @@ class TripRepository @Inject constructor(
                 } catch (ex: Exception) {
                     com.travelcompanion.domain.model.TripType.LOCAL
                 }
-                ITripRepository.TripTypeStat(
-                    type = tt,
+                com.travelcompanion.domain.model.TripTypeStat(
+                    type = tt.name,
                     count = stat.count,
                     percentage = (stat.percentage ?: 0.0).toFloat()
                 )

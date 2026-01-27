@@ -28,3 +28,12 @@ output.json
 __TO_DELETE__/
 *.apk
 *.ap_
+
+# Ignore accidental Gradle distributions and JVM crash/logs
+gradle-*/
+*.log
+hs_err_pid*.log
+local.properties
+
+# Ignore log files
+*.log

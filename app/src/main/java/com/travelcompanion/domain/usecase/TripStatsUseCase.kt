@@ -26,14 +26,14 @@ class TripStatsUseCase @Inject constructor(
     }
 
     // aggregated stats data
-    data class TravelStatistics(
+        data class TravelStatistics(
         val totalDistanceKm: Float,
         val totalDurationMs: Long,
         val totalTrips: Int,
         val averageDistancePerTrip: Float,
         val averageDurationPerTrip: Long,
-        val monthlyStats: List<ITripRepository.MonthlyStat>,
-        val tripTypeStats: List<ITripRepository.TripTypeStat>
+            val monthlyStats: List<com.travelcompanion.domain.model.MonthlyStat>,
+            val tripTypeStats: List<com.travelcompanion.domain.model.TripTypeStat>
     ) {
         val totalDurationHours: Float
             get() = totalDurationMs / (1000f * 60f * 60f)

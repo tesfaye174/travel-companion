@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include database -->
+    <include domain="database" path="travel_companion.db" />
+
+    <!-- Include shared preferences -->
+    <include domain="sharedpref" path="travel_companion_preferences.xml" />
+    <include domain="sharedpref" path="settings_data_store.xml" />
+
+    <!-- Exclude cache and temp files -->
+    <exclude domain="external" path="Android/data/com.travelcompanion/cache/" />
+    <exclude domain="external" path="Android/data/com.travelcompanion/files/temp/" />
+</full-backup-content>

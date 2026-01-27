@@ -34,6 +34,7 @@ class ReminderWorker(
 
                 Result.success()
             } catch (e: Exception) {
+                // Restituisci il dettaglio dell'errore
                 Result.failure()
             }
         }

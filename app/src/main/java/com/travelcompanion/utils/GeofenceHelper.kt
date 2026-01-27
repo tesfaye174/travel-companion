@@ -1,46 +1,22 @@
 package com.travelcompanion.utils
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import com.google.android.gms.location.Geofence
-import com.google.android.gms.location.GeofencingRequest
-import com.google.android.gms.location.LocationServices
+import android.app.PendingIntent
+import com.travelcompanion.location.GeofenceProvider
 
-// Helper class to manage geofences - wraps the Google Play Services geofencing API
-class GeofenceHelper(val context: Context) {
+/**
+ * Geofence helper that delegates to a pluggable GeofenceProvider.
+ */
+class GeofenceHelper(private val context: Context, private val provider: GeofenceProvider) {
 
-    private val geofencingClient = LocationServices.getGeofencingClient(context)
+    fun getGeofencePendingIntent(): PendingIntent = provider.getGeofencePendingIntent()
 
-    fun createGeofencingRequest(geofence: Geofence): GeofencingRequest {
-        return GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofence(geofence)
-            .build()
+    fun addGeofence(id: String, lat: Double, lng: Double, radius: Float) {
+        provider.addGeofence(id, lat, lng, radius)
     }
 
-    fun createGeofence(id: String, lat: Double, lng: Double, radius: Float): Geofence {
-        return Geofence.Builder()
-            .setRequestId(id)
-            .setCircularRegion(lat, lng, radius)
-            .setExpirationDuration(Geofence.NEVER_EXPIRE)
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-            .build()
-    }
-
-    fun getGeofencePendingIntent(): PendingIntent {
-        val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
-        return PendingIntent.getBroadcast(
-            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
-    fun addGeofence(geofence: Geofence) {
-        try {
-            geofencingClient.addGeofences(createGeofencingRequest(geofence), getGeofencePendingIntent())
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        }
+    fun removeGeofence(id: String) {
+        provider.removeGeofence(id)
     }
 }
 

@@ -31,8 +31,8 @@ class TrackingService : Service() {
     @Inject
     lateinit var repository: ITripRepository
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var locationCallback: LocationCallback? = null
+    @Inject
+    lateinit var locationProvider: com.travelcompanion.location.LocationProvider
 
     // coroutine scope tied to service lifecycle
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -46,7 +46,7 @@ class TrackingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        // locationProvider is provided by Hilt (Play Services or Platform implementation)
         createNotificationChannel()
     }
 
@@ -67,43 +67,19 @@ class TrackingService : Service() {
     }
 
     private fun startTracking() {
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            AppConstants.Tracking.LOCATION_UPDATE_INTERVAL_MS
-        )
-            .setMinUpdateIntervalMillis(AppConstants.Tracking.LOCATION_FASTEST_INTERVAL_MS)
-            .setMinUpdateDistanceMeters(AppConstants.Tracking.LOCATION_MIN_DISTANCE_METERS)
-            .build()
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    serviceScope.launch {
-                        saveLocation(location)
-                    }
-                }
-            }
-
-            override fun onLocationAvailability(availability: LocationAvailability) {
-                if (!availability.isLocationAvailable) {
-                    Timber.w("Location services unavailable")
-                }
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        // Delegate to LocationProvider implementation
+        if (!locationProvider.hasLocationPermission(this)) {
             stopSelf()
             return
         }
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback as LocationCallback,
-            Looper.getMainLooper()
+        locationProvider.startLocationUpdates(
+            onLocation = { location ->
+                serviceScope.launch { saveLocation(location) }
+            },
+            onAvailabilityChanged = { available ->
+                if (!available) Timber.w("Location services unavailable")
+            }
         )
     }
 
@@ -132,9 +108,7 @@ class TrackingService : Service() {
     }
 
     private fun stopTracking() {
-        locationCallback?.let {
-            fusedLocationClient.removeLocationUpdates(it)
-        }
+        locationProvider.stopLocationUpdates()
         
         // Save journey before stopping service using NonCancellable to ensure completion
         CoroutineScope(Dispatchers.IO + kotlinx.coroutines.NonCancellable).launch {
@@ -202,6 +176,10 @@ class TrackingService : Service() {
         try {
             repository.insertJourney(journey)
             recalculateAndPersistTripTotals(currentTripId)
+        } catch (e: SecurityException) {
+            Timber.e(e, "Permessi mancanti per il salvataggio del journey")
+        } catch (e: IllegalStateException) {
+            Timber.e(e, "Stato non valido durante il salvataggio del journey")
         } catch (e: Exception) {
             Timber.e(e, "Error saving journey")
         }

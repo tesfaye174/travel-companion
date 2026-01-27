@@ -19,6 +19,7 @@ A modern Android application for tracking, organizing, and reliving your travel 
 
 - **GPS Tracking** - Real-time location tracking with foreground service
 - **Google Maps Integration** - View routes with polylines and markers
+- **Map Integration (OSM)** - View routes with polylines and markers using offline OSM and OSMDroid
 - **Photo Capture** - Take geotagged photos during trips using CameraX
 - **Notes** - Add text notes to document your journey
 - **Statistics** - Visualize travel data with charts (MPAndroidChart)
@@ -34,7 +35,8 @@ A modern Android application for tracking, organizing, and reliving your travel 
 
 ### User Experience
 
-- Dark/Light theme support (Material You)
+│   ├── map/               # Map UI (OSMDroid / offline OSM)
+
 - Persistent settings with DataStore
 - Modern Material Design 3 UI
 - Accessibility support
@@ -111,7 +113,7 @@ app/src/main/java/com/travelcompanion/
 | **Preferences** | DataStore 1.0.0 |
 | **Async** | Coroutines + Flow |
 | **Navigation** | Navigation Component 2.7.6 |
-| **Maps** | Google Maps SDK 18.2.0 |
+| **Maps** | OSMDroid (offline OSM files) |
 | **Location** | Fused Location Provider 21.1.0 |
 | **Camera** | CameraX 1.3.1 |
 | **Background** | WorkManager 2.9.0 |
@@ -126,7 +128,6 @@ app/src/main/java/com/travelcompanion/
 - Android Studio Hedgehog (2023.1.1) or newer
 - JDK 17
 - Android SDK 34
-- Google Maps API Key
 
 ### Setup
 
@@ -137,15 +138,9 @@ app/src/main/java/com/travelcompanion/
    cd travel-companion
    ```
 
-2. **Configure Google Maps API Key**
+2. **Provide offline OSM data**
 
-   Create or edit `gradle.properties` in the project root:
-
-   ```properties
-   MAPS_API_KEY=your_google_maps_api_key_here
-   ```
-
-   > ⚠️ Never commit API keys to version control!
+   Place your OSM XML file in `app/src/main/assets/map.osm`. The app's map UI (OSMDroid) will load `assets/map.osm` at runtime. Replace this file with your provided OSM export.
 
 3. **Build the project**
 
@@ -170,6 +165,33 @@ app/src/main/java/com/travelcompanion/
 ```
 
 ## Database Schema
+
+## Platform vs Play Services (location & geofencing)
+
+This project supports two interchangeable implementations for location and geofencing:
+
+- **Play Services (default)**: uses Google Play Services `FusedLocationProviderClient` and the Play Services Geofencing API. This provides more accurate location fixes and a robust geofencing service.
+- **Platform (fallback)**: uses Android `LocationManager` for location and a polling-based geofence detector implemented by the app. This mode is intended for environments without Google Play Services, but has limitations (see below).
+
+How to switch:
+
+- The app exposes a build-time flag in `app/build.gradle` called `USE_PLAY_SERVICES_LOCATION` (default: `true`). To use platform providers, set it to `false` and rebuild.
+
+Limitations of Platform mode:
+
+- Geofencing is implemented via periodic location updates and distance checks (battery- and accuracy-sensitive).
+- Platform geofencing does not persist across device reboots and may miss fast enter/exit transitions.
+- For production-level geofencing (reliable background delivery, device restarts), prefer the Play Services implementation.
+
+Files of interest:
+
+- `app/src/main/java/com/travelcompanion/location/PlayServicesLocationProvider.kt`
+- `app/src/main/java/com/travelcompanion/location/PlatformLocationProvider.kt`
+- `app/src/main/java/com/travelcompanion/location/PlayServicesGeofenceProvider.kt`
+- `app/src/main/java/com/travelcompanion/location/PlatformGeofenceProvider.kt`
+- `app/src/main/java/com/travelcompanion/utils/GeofenceBroadcastReceiver.kt`
+
+If you want, I can extend the platform provider to persist geofences across reboots and add battery optimizations.
 
 The app uses Room database with 6 tables:
 
@@ -212,7 +234,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [Google Maps Platform](https://developers.google.com/maps)
+- [OSMDroid](https://github.com/osmdroid/osmdroid)
 - [Material Design](https://material.io)
 - [Android Jetpack](https://developer.android.com/jetpack)
 - [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)

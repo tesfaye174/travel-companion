@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -16,14 +15,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
 import com.travelcompanion.R
 import com.travelcompanion.databinding.FragmentTrackingBinding
+import com.travelcompanion.ui.map.MapManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,14 +27,13 @@ import timber.log.Timber
  * Shows a map with the current location, route polyline, and tracking statistics.
  */
 @AndroidEntryPoint
-class TrackingFragment : Fragment(), OnMapReadyCallback {
+class TrackingFragment : Fragment() {
 
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: TrackingViewModel by viewModels()
 
-    private var googleMap: GoogleMap? = null
     private var tripId: Long = -1
 
     // Broadcast receiver for location updates from TrackingService
@@ -88,20 +81,18 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setupMap() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_tracking) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
-    }
+        // Configure osmdroid
+        org.osmdroid.config.Configuration.getInstance().load(requireContext(), androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        org.osmdroid.config.Configuration.getInstance().userAgentValue = requireContext().packageName
+        val mapView = binding.mapTracking
+        mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
+        mapView.setMultiTouchControls(true)
 
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-
-        try {
-            map.isMyLocationEnabled = true
-            map.uiSettings.isMyLocationButtonEnabled = true
-            map.uiSettings.isZoomControlsEnabled = true
-        } catch (e: SecurityException) {
-            Timber.e(e, "Location permission not granted")
-        }
+        // Enable user location overlay
+        val userLocationOverlay = org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay(org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider(requireContext()), mapView)
+        userLocationOverlay.enableMyLocation()
+        userLocationOverlay.enableFollowLocation()
+        mapView.overlays.add(userLocationOverlay)
     }
 
     private fun setupListeners() {
@@ -182,35 +173,36 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateMapLocation(location: Location) {
-        val latLng = LatLng(location.latitude, location.longitude)
-        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+        val mapView = binding.mapTracking
+        val geoPoint = org.osmdroid.util.GeoPoint(location.latitude, location.longitude)
+        MapManager.centerMap(mapView, geoPoint, 16.0)
     }
 
     private fun drawRoutePolyline(locations: List<Location>) {
+        val mapView = binding.mapTracking
+        MapManager.clearPolylines(mapView)
         if (locations.size < 2) return
-
-        googleMap?.clear()
-
-        val polylineOptions = PolylineOptions()
-            .width(8f)
-            .color(Color.parseColor("#4285F4")) // Google blue
-            .geodesic(true)
-
-        locations.forEach { location ->
-            polylineOptions.add(LatLng(location.latitude, location.longitude))
-        }
-
-        googleMap?.addPolyline(polylineOptions)
+        val geoPoints = locations.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) }
+        MapManager.drawPolyline(mapView, geoPoints, android.graphics.Color.parseColor("#4285F4"), 8f)
+        mapView.invalidate()
     }
 
     override fun onResume() {
         super.onResume()
+        binding.mapTracking.onResume()
         registerLocationReceiver()
     }
 
     override fun onPause() {
         super.onPause()
+        binding.mapTracking.onPause()
         unregisterLocationReceiver()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.mapTracking.onDetach()
+        _binding = null
     }
 
     private fun registerLocationReceiver() {
@@ -226,14 +218,11 @@ class TrackingFragment : Fragment(), OnMapReadyCallback {
     private fun unregisterLocationReceiver() {
         try {
             requireContext().unregisterReceiver(locationUpdateReceiver)
+        } catch (e: IllegalArgumentException) {
+            Timber.w("Receiver non registrato, nessuna azione necessaria")
         } catch (e: Exception) {
-            Timber.w(e, "Receiver not registered")
+            Timber.w(e, "Errore sconosciuto durante l'unregister del receiver")
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

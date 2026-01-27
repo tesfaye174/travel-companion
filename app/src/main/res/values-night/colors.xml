@@ -23,4 +23,10 @@
     <color name="md_theme_dark_onTertiary">#212121</color>
     <color name="md_theme_dark_tertiaryContainer">#333300</color>
     <color name="md_theme_dark_onTertiaryContainer">#FFD54F</color>
+    <color name="md_theme_light_primaryContainer">#E0F2F1</color>
+    <color name="md_theme_light_onPrimaryContainer">#F8F8F8</color>
+    <color name="md_theme_light_secondaryContainer">#F1F8E9</color>
+    <color name="md_theme_light_onSecondaryContainer">#33691E</color>
+    <color name="md_theme_light_error">#B00020</color>
+    <color name="md_theme_light_errorContainer">#93000A</color>
 </resources>

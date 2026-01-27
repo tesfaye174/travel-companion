@@ -1,6 +1,7 @@
 package com.travelcompanion.domain.usecase
 
 import com.travelcompanion.domain.model.Trip
+import com.travelcompanion.domain.model.TripValidationUtils
 import com.travelcompanion.domain.repository.ITripRepository
 import javax.inject.Inject
 
@@ -9,13 +10,7 @@ class UpdateTripUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
     suspend operator fun invoke(trip: Trip) {
-        validateTrip(trip)
+        TripValidationUtils.validateForUpdate(trip)
         repository.updateTrip(trip)
-    }
-
-    private fun validateTrip(trip: Trip) {
-        require(trip.id > 0) { "Trip must have valid ID for update" }
-        require(trip.title.isNotBlank()) { "Title cannot be empty" }
-        require(trip.destination.isNotBlank()) { "Destination cannot be empty" }
     }
 }

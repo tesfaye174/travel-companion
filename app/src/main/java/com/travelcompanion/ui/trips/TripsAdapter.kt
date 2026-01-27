@@ -10,6 +10,7 @@ import com.travelcompanion.R
 import com.travelcompanion.databinding.ItemTripBinding
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.utils.DateUtils
+import java.util.Locale
 
 class TripsAdapter(
     private val onTripClick: (Trip) -> Unit
@@ -30,7 +31,7 @@ class TripsAdapter(
             binding.tvDestination.text = trip.destination
             binding.chipTripType.text = trip.tripType.name.replace("_", " ")
             binding.tvDates.text = DateUtils.formatDateRange(trip.startDate, trip.endDate)
-            binding.tvDistance.text = String.format("%.1f km", trip.totalDistance)
+                binding.tvDistance.text = String.format(Locale.getDefault(), "%.1f km", trip.totalDistance)
             binding.tvDuration.text = DateUtils.formatDuration(trip.totalDuration)
 
             // Load thumbnail: prefer a sample resource named "colosseum" if present,

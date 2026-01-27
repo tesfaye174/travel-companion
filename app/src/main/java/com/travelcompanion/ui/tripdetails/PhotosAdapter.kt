@@ -2,20 +2,19 @@ package com.travelcompanion.ui.tripdetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.travelcompanion.databinding.ItemPhotoBinding
+import com.travelcompanion.utils.GenericDiffCallback
 import java.io.File
 
-class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
-
-    private var photos = listOf<PhotoItem>()
-
-    fun submitList(photos: List<PhotoItem>) {
-        this.photos = photos
-        notifyDataSetChanged()
-    }
-
+class PhotoAdapter : ListAdapter<PhotoItem, PhotoAdapter.PhotoViewHolder>(
+    GenericDiffCallback<PhotoItem>(
+        areItemsTheSame = { old, new -> old.imageUrl == new.imageUrl && old.caption == new.caption },
+        areContentsTheSame = { old, new -> old == new }
+    )
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val binding = ItemPhotoBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -26,14 +25,10 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        holder.bind(photos[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = photos.size
-
-    inner class PhotoViewHolder(private val binding: ItemPhotoBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
+    class PhotoViewHolder(private val binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(photo: PhotoItem) {
             binding.tvPhotoCaption.text = photo.caption
             val model: Any = if (photo.imageUrl.startsWith("content://") || photo.imageUrl.startsWith("file://")) {
@@ -47,10 +42,9 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
                 .into(binding.ivPhoto)
         }
     }
-
-    data class PhotoItem(
-        val imageUrl: String,
-        val caption: String
-    )
 }
 
+data class PhotoItem(
+    val imageUrl: String,
+    val caption: String
+)

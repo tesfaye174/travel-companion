@@ -13,7 +13,7 @@ import java.util.*
 object DateUtils {
 
     // keep formatters as instance vars for reuse
-    private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
 

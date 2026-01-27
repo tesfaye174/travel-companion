@@ -1,4 +1,5 @@
 package com.travelcompanion.ui.tripdetails
+import java.io.IOException
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -15,18 +16,17 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
+import com.travelcompanion.location.LocationProvider
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Polyline
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
 import com.travelcompanion.databinding.FragmentTripDetailsBinding
 import com.travelcompanion.domain.model.Trip
+import com.travelcompanion.ui.map.MapManager
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
@@ -43,14 +43,15 @@ class TripDetailsFragment : Fragment() {
     private lateinit var noteAdapter: NoteAdapter
 
     private val viewModel: TripDetailsViewModel by viewModels()
-    private var googleMap: GoogleMap? = null
+    private var mapViewRef: MapView? = null
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
 
     private var currentPhotoUri: Uri? = null
     private var currentPhotoPath: String? = null
     private var currentTrip: Trip? = null
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    @javax.inject.Inject
+    lateinit var locationProvider: LocationProvider
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -84,7 +85,7 @@ class TripDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        // locationProvider is injected by Hilt (Play Services or Platform)
 
         setupToolbar()
         setupRecyclerViews()
@@ -154,8 +155,14 @@ class TripDetailsFragment : Fragment() {
                 photoFile
             )
             takePictureLauncher.launch(currentPhotoUri)
+        } catch (e: SecurityException) {
+            Timber.e(e)
+            Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Timber.e(e)
+            Toast.makeText(requireContext(), R.string.error_saving_trip, Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Timber.e(e, "Error launching camera")
+            Timber.e(e)
             Toast.makeText(requireContext(), R.string.error_saving_trip, Toast.LENGTH_SHORT).show()
         }
     }
@@ -168,23 +175,19 @@ class TripDetailsFragment : Fragment() {
 
     private fun savePhoto(imagePath: String) {
         // Get current location if available
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationProvider.getCurrentLocation({ location ->
                 viewModel.addPhotoNote(
                     imagePath = imagePath,
                     note = "",
-                    latitude = location?.latitude,
-                    longitude = location?.longitude
+                    latitude = location.latitude,
+                    longitude = location.longitude
                 )
                 Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
-            }.addOnFailureListener {
+            }, { _ ->
                 viewModel.addPhotoNote(imagePath, "", null, null)
                 Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
-            }
+            })
         } else {
             viewModel.addPhotoNote(imagePath, "", null, null)
             Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
@@ -198,14 +201,13 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun setupMap() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_details) as? SupportMapFragment
-        mapFragment?.getMapAsync(object : OnMapReadyCallback {
-            override fun onMapReady(map: GoogleMap) {
-                googleMap = map
-                map.uiSettings.isZoomControlsEnabled = true
-                renderRoute(viewModel.journeys.value.orEmpty())
-            }
-        })
+        // Configure osmdroid
+        Configuration.getInstance().load(requireContext(), androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        Configuration.getInstance().userAgentValue = requireContext().packageName
+        val mapView = binding.mapDetails
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.setMultiTouchControls(true)
+        mapViewRef = mapView
     }
 
     private fun setupRecyclerViews() {
@@ -250,20 +252,20 @@ class TripDetailsFragment : Fragment() {
         viewModel.photoNotes.observe(viewLifecycleOwner) { photos ->
             val photoList = photos.orEmpty()
             val items = photoList.map {
-                PhotoAdapter.PhotoItem(
+                PhotoItem(
                     imageUrl = it.imagePath,
                     caption = it.note.ifBlank { "Foto" }
                 )
             }
             photoAdapter.submitList(items)
-            
+
             // Update photo count
             binding.tvPhotoCount.text = photoList.size.toString()
         }
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
             val items = notes.orEmpty().map {
-                NoteAdapter.NoteItem(
+                NoteItem(
                     content = it.content,
                     date = dateTimeFormat.format(it.timestamp)
                 )
@@ -277,25 +279,30 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun renderRoute(journeys: List<com.travelcompanion.domain.model.Journey>) {
-        val map = googleMap ?: return
-        map.clear()
-
-        val allPoints = journeys.flatMap { j -> j.coordinates.map { LatLng(it.latitude, it.longitude) } }
+        val map = mapViewRef ?: return
+        MapManager.clearPolylines(map)
+        val allPoints = journeys.flatMap { j -> j.coordinates.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) } }
         if (allPoints.size >= 2) {
-            map.addPolyline(
-                PolylineOptions()
-                    .addAll(allPoints)
-                    .width(8f)
-            )
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(allPoints.first(), 12f))
+            MapManager.drawPolyline(map, allPoints, android.graphics.Color.BLUE, 8f)
+            MapManager.centerMap(map, allPoints.first(), 12.0)
         } else if (allPoints.size == 1) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(allPoints.first(), 14f))
+            MapManager.centerMap(map, allPoints.first(), 14.0)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapViewRef?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapViewRef?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapViewRef?.onDetach()
         _binding = null
     }
 }
-

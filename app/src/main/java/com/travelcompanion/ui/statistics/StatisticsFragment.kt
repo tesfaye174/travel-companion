@@ -13,6 +13,8 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.data.*
+import com.travelcompanion.domain.model.MonthlyStat
+import com.travelcompanion.domain.model.TripTypeStat
 import com.travelcompanion.databinding.FragmentStatisticsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -104,7 +106,7 @@ class StatisticsFragment : Fragment() {
         }
     }
 
-    private fun updateBarChart(stats: List<com.travelcompanion.domain.repository.ITripRepository.MonthlyStat>) {
+    private fun updateBarChart(stats: List<MonthlyStat>) {
         val entries = stats.mapIndexed { index, s ->
             BarEntry(index.toFloat(), s.tripCount.toFloat())
         }
@@ -119,7 +121,7 @@ class StatisticsFragment : Fragment() {
         }
 
         val labels = stats.map { monthNumberToLabel(it.month) }
-        binding.chartBar.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        binding.chartBar.xAxis.valueFormatter = IndexAxisValueFormatter(labels.toTypedArray())
         binding.chartBar.xAxis.position = XAxis.XAxisPosition.BOTTOM
         binding.chartBar.xAxis.granularity = 1f
         binding.chartBar.xAxis.setDrawGridLines(false)
@@ -129,11 +131,11 @@ class StatisticsFragment : Fragment() {
         binding.chartBar.invalidate()
     }
 
-    private fun updatePieChart(stats: List<com.travelcompanion.domain.repository.ITripRepository.TripTypeStat>) {
+    private fun updatePieChart(stats: List<TripTypeStat>) {
         val entries = stats
             .filter { it.count > 0 }
             .map { s ->
-                PieEntry(s.count.toFloat(), s.type.name.replace('_', ' '))
+                PieEntry(s.count.toFloat(), s.type.replace('_', ' '))
             }
 
         val dataSet = PieDataSet(entries, "Trip types").apply {
@@ -151,21 +153,21 @@ class StatisticsFragment : Fragment() {
         binding.chartPie.invalidate()
     }
 
-    private fun monthNumberToLabel(month: String): String {
-        return when (month.padStart(2, '0')) {
-            "01" -> "Jan"
-            "02" -> "Feb"
-            "03" -> "Mar"
-            "04" -> "Apr"
-            "05" -> "May"
-            "06" -> "Jun"
-            "07" -> "Jul"
-            "08" -> "Aug"
-            "09" -> "Sep"
-            "10" -> "Oct"
-            "11" -> "Nov"
-            "12" -> "Dec"
-            else -> month
+    private fun monthNumberToLabel(month: Int): String {
+        return when (month) {
+            1 -> "Jan"
+            2 -> "Feb"
+            3 -> "Mar"
+            4 -> "Apr"
+            5 -> "May"
+            6 -> "Jun"
+            7 -> "Jul"
+            8 -> "Aug"
+            9 -> "Sep"
+            10 -> "Oct"
+            11 -> "Nov"
+            12 -> "Dec"
+            else -> month.toString()
         }
     }
 

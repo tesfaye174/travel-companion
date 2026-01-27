@@ -2,17 +2,24 @@ package com.travelcompanion.ui.tripdetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.travelcompanion.databinding.ItemNoteBinding
+import com.travelcompanion.utils.GenericDiffCallback
 
-class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+data class NoteItem(
+    val content: String,
+    val date: String
+)
 
-    private var notes = listOf<NoteItem>()
+class NoteAdapter : ListAdapter<NoteItem, NoteAdapter.NoteViewHolder>(
+    GenericDiffCallback<NoteItem>(
+        areItemsTheSame = { old, new -> old.content == new.content && old.date == new.date },
+        areContentsTheSame = { old, new -> old == new }
+    )
+) {
 
-    fun submitList(notes: List<NoteItem>) {
-        this.notes = notes
-        notifyDataSetChanged()
-    }
+    // Use inherited submitList from ListAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = ItemNoteBinding.inflate(
@@ -24,10 +31,10 @@ class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.bind(notes[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = notes.size
+    override fun getItemCount() = currentList.size
 
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -37,10 +44,4 @@ class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
             binding.tvNoteDate.text = note.date
         }
     }
-
-    data class NoteItem(
-        val content: String,
-        val date: String
-    )
 }
-

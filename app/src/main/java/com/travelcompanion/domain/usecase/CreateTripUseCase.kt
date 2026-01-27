@@ -1,6 +1,7 @@
 package com.travelcompanion.domain.usecase
 
 import com.travelcompanion.domain.model.Trip
+import com.travelcompanion.domain.model.TripValidationUtils
 import com.travelcompanion.domain.repository.ITripRepository
 import javax.inject.Inject
 
@@ -12,15 +13,7 @@ class CreateTripUseCase @Inject constructor(
     private val repository: ITripRepository
 ) {
     suspend operator fun invoke(trip: Trip): Long {
-        validateTrip(trip)
+        TripValidationUtils.validateForCreate(trip)
         return repository.insertTrip(trip)
-    }
-
-    private fun validateTrip(trip: Trip) {
-        require(trip.title.isNotBlank()) { "Trip title cannot be empty" }
-        require(trip.destination.isNotBlank()) { "Destination cannot be empty" }
-        trip.endDate?.let { endDate ->
-            require(endDate >= trip.startDate) { "End date must be after start date" }
-        }
     }
 }

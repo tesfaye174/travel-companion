@@ -28,8 +28,7 @@ class NewTripFragment : Fragment() {
 
     private val viewModel: NewTripViewModel by viewModels()
 
-    // TODO: maybe move date format to DateUtils for consistency?
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    // Usa DateUtils per la formattazione delle date per coerenza
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,17 +82,17 @@ class NewTripFragment : Fragment() {
             requireContext(),
             { _, year, month, day ->
                 calendar.set(year, month, day)
+                val formatted = com.travelcompanion.utils.DateUtils.formatDate(calendar.time)
                 if (isStartDate) {
-                    binding.etStartDate.setText(dateFormat.format(calendar.time))
+                    binding.etStartDate.setText(formatted)
                 } else {
-                    binding.etEndDate.setText(dateFormat.format(calendar.time))
+                    binding.etEndDate.setText(formatted)
                 }
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
-
         datePicker.show()
     }
 
@@ -112,14 +111,14 @@ class NewTripFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val startDate = runCatching { dateFormat.parse(startDateText) }.getOrNull()
+            val startDate = runCatching { com.travelcompanion.utils.DateUtils.dateFormat.parse(startDateText) }.getOrNull()
             if (startDate == null) {
                 Snackbar.make(binding.root, "Data di inizio non valida", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val endDateText = binding.etEndDate.text?.toString()?.trim().orEmpty()
-            val endDate = runCatching { dateFormat.parse(endDateText) }.getOrNull() ?: startDate
+            val endDate = runCatching { com.travelcompanion.utils.DateUtils.dateFormat.parse(endDateText) }.getOrNull() ?: startDate
 
             val tripType = when (binding.chipGroupType.checkedChipId) {
                 com.travelcompanion.R.id.chip_local -> TripType.LOCAL

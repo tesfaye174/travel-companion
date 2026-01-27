@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 // ViewModel for GPS tracking - handles tracking state, elapsed time, distance, speed
@@ -136,7 +137,7 @@ class TrackingViewModel @Inject constructor(
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60
         val secs = seconds % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, secs)
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs)
     }
 
     /**
@@ -144,7 +145,7 @@ class TrackingViewModel @Inject constructor(
      */
     fun getFormattedDistance(): String {
         val km = _distanceMeters.value / 1000f
-        return String.format("%.1f", km)
+        return String.format(Locale.getDefault(), "%.1f", km)
     }
 
     /**
@@ -152,7 +153,7 @@ class TrackingViewModel @Inject constructor(
      */
     fun getFormattedSpeed(): String {
         val kmh = _currentSpeedMps.value * 3.6f
-        return String.format("%.0f", kmh)
+        return String.format(Locale.getDefault(), "%.0f", kmh)
     }
 
     private fun startTimer() {
