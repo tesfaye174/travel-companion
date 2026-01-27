@@ -111,20 +111,20 @@ interface TripDao {
     )
 
     // Aggregate / statistics helpers
-    @Query("SELECT SUM(total_distance) FROM trips")
-    fun getTotalDistance(): Float?
+    @Query("SELECT COALESCE(SUM(total_distance), 0) FROM trips")
+    fun getTotalDistance(): Float
 
-    @Query("SELECT SUM(total_duration) FROM trips")
-    fun getTotalDuration(): Long?
+    @Query("SELECT COALESCE(SUM(total_duration), 0) FROM trips")
+    fun getTotalDuration(): Long
 
     @Query("SELECT COUNT(*) FROM trips")
     fun getTripCount(): Int
 
     @Query("""
-        SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
-               COUNT(*) as tripCount,
-               SUM(total_distance) as totalDistance,
-               SUM(total_duration) as totalDuration
+         SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
+             COUNT(*) as tripCount,
+             COALESCE(SUM(total_distance), 0) as totalDistance,
+             COALESCE(SUM(total_duration), 0) as totalDuration
         FROM trips
         GROUP BY month
         ORDER BY month

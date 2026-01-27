@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- colors_compat intentionally left empty (dark) to avoid duplicate resource definitions.
+         Reintroduce only after a careful audit if necessary.
+    -->
+</resources>

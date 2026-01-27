@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- colors_compat intentionally left empty to avoid duplicate resource definitions.
+         Legacy compatibility mappings were causing duplicates with existing tokens in colors.xml.
+         Plan: reintroduce only missing aliases after auditing `res/values/colors.xml`.
+    -->
+</resources>

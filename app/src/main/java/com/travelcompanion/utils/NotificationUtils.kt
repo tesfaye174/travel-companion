@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import android.content.pm.PackageManager
 import com.travelcompanion.MainActivity
 import com.travelcompanion.R
+import java.util.Locale
 
 object NotificationUtils {
 
@@ -47,10 +48,11 @@ object NotificationUtils {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val distanceText = String.format(Locale.getDefault(), "%.1f km", distance)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_location)
             .setContentTitle(context.getString(R.string.poi_nearby_title))
-            .setContentText(context.getString(R.string.poi_nearby_text, poiName))
+            .setContentText("${context.getString(R.string.poi_nearby_text, poiName)} • $distanceText")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

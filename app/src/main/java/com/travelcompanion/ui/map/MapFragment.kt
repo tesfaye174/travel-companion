@@ -146,6 +146,10 @@ class MapFragment : Fragment() {
         viewModel.geofenceAreas.observe(viewLifecycleOwner) { areas ->
             renderGeofences(areas)
         }
+        // Observe geofence events and show markers for visited areas
+        viewModel.geofenceEvents.observe(viewLifecycleOwner) { events ->
+            renderGeofenceEvents(events)
+        }
     }
 
     private fun renderJourneys(journeys: List<com.travelcompanion.domain.model.Journey>) {
@@ -174,6 +178,36 @@ class MapFragment : Fragment() {
         areas.forEach { area ->
             val center = GeoPoint(area.latitude, area.longitude)
             MapManager.addGeofenceCircle(map, center, area.radiusMeters.toDouble())
+        }
+    }
+
+    private fun renderGeofenceEvents(events: List<com.travelcompanion.domain.model.GeofenceEvent>) {
+        val map = mapView ?: return
+
+        // Clear existing markers and re-draw journeys so markers appear consistently
+        MapManager.clearMarkers(map)
+        viewModel.journeys.value?.let { renderJourneys(it) }
+
+        val areasById = viewModel.geofenceAreas.value.orEmpty().associateBy { it.id }
+
+        events.forEach { e ->
+            val area = areasById[e.geofenceId]
+            if (area != null) {
+                val point = GeoPoint(area.latitude, area.longitude)
+                val marker = Marker(map)
+                marker.position = point
+                marker.title = "${area.name} • ${e.transition}"
+                map.overlays.add(marker)
+            }
+        }
+
+        // Optionally center on the most recent event
+        if (events.isNotEmpty()) {
+            val mostRecent = events.first()
+            val area = areasById[mostRecent.geofenceId]
+            if (area != null) {
+                MapManager.centerMap(map, GeoPoint(area.latitude, area.longitude), 14.0)
+            }
         }
     }
 

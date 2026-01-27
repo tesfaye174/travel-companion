@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.provider.Settings
 import android.net.Uri
 import android.os.Bundle
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TrackingActivity : AppCompatActivity() {
 
+    companion object {
+        private const val REQ_FINE_LOCATION = 3001
+        private const val REQ_NOTIFICATION = 3002
+        private const val REQ_CAMERA = 3003
+        private const val REQ_BACKGROUND_LOCATION = 3004
+    }
+
     private lateinit var binding: ActivityTrackingJourneyBinding
 
     @Inject
@@ -42,6 +51,18 @@ class TrackingActivity : AppCompatActivity() {
 
     private var pendingPhotoUri: Uri? = null
     private var pendingPhotoFile: File? = null
+
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (!success) {
+            pendingPhotoFile?.delete()
+            pendingPhotoFile = null
+            pendingPhotoUri = null
+            return@registerForActivityResult
+        }
+
+        val file = pendingPhotoFile ?: return@registerForActivityResult
+        promptAddPhotoNote(file)
+    }
 
     private val locationUpdatesReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -96,11 +117,21 @@ class TrackingActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                3001
+                REQ_FINE_LOCATION
             )
             return
         }
 
+        // If background location is required on this platform, ensure it's granted.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), REQ_BACKGROUND_LOCATION)
+            return
+        }
+
+        startTrackingService()
+    }
+
+    private fun startTrackingService() {
         val intent = Intent(this, TrackingService::class.java).apply {
             putExtra(TrackingService.EXTRA_TRIP_ID, tripId)
         }
@@ -114,7 +145,38 @@ class TrackingActivity : AppCompatActivity() {
     private fun ensureNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 3002)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIFICATION)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQ_FINE_LOCATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Fine/coarse granted — check background on newer platforms
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), REQ_BACKGROUND_LOCATION)
+                    } else {
+                        startTrackingService()
+                    }
+                }
+            }
+            REQ_BACKGROUND_LOCATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startTrackingService()
+                } else {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.permission_needed)
+                        .setMessage(R.string.background_location_explanation)
+                        .setPositiveButton(R.string.open_settings) { _, _ ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+                            startActivity(intent)
+                        }
+                        .setNegativeButton(R.string.cancel, null)
+                        .show()
+                }
             }
         }
     }
@@ -131,31 +193,10 @@ class TrackingActivity : AppCompatActivity() {
         pendingPhotoFile = file
         pendingPhotoUri = uri
 
-        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri)
-            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        @Suppress("DEPRECATION")
-        // This method is deprecated in AndroidX but retained for simplicity.
-        startActivityForResult(intent, 4001)
+        // Use Activity Result API to capture a photo into the provided URI.
+        takePictureLauncher.launch(uri)
     }
-
-    @Deprecated("Deprecated in AndroidX; kept for simplicity")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 4001) return
-        if (resultCode != RESULT_OK) {
-            pendingPhotoFile?.delete()
-            pendingPhotoFile = null
-            pendingPhotoUri = null
-            return
-        }
-
-        val file = pendingPhotoFile ?: return
-        promptAddPhotoNote(file)
-    }
+    
 
     private fun promptAddPhotoNote(photoFile: File) {
         val input = TextInputEditText(this).apply { hint = getString(R.string.note_optional_hint) }
