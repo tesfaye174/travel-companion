@@ -21,9 +21,7 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
 
-                        <View android:id="@+id/recording_indicator" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_recording_dot" />
-
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="@string/recording" android:textColor="@color/md_theme_light_error" style="@style/TextAppearance.TravelCompanion.BodySmall" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="0dp" android:layout_weight="1" android:text="" style="@style/TextAppearance.TravelCompanion.BodySmall" />
 
                         <TextView android:id="@+id/tv_tracking_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="monospace" android:text="00:00:00" style="@style/TextAppearance.TravelCompanion.TitleLarge" />
 

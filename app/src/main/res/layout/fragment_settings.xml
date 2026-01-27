@@ -99,9 +99,7 @@
             <!-- Fine LinearLayout principale -->
 
         </LinearLayout>
-        <!-- Fine LinearLayout principale -->
 
-        <!-- Tutte le altre card devono essere fuori dal LinearLayout principale -->
         <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Filled">
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">

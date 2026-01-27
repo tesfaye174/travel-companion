@@ -10,9 +10,7 @@
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-                <View android:id="@+id/recording_indicator" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_recording_dot" />
-
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:text="@string/recording" android:textColor="@color/md_theme_light_error" style="@style/TextAppearance.TravelCompanion.Caption" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:text="" style="@style/TextAppearance.TravelCompanion.Caption" />
 
                 <TextView android:id="@+id/tv_tracking_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="02:15:30" android:fontFamily="monospace" style="@style/TextAppearance.TravelCompanion.Headline6" />
 

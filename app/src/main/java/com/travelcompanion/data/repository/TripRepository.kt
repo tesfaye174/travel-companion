@@ -179,13 +179,13 @@ class TripRepository @Inject constructor(
 
     override suspend fun getTotalDistance(): Float {
         return withContext(Dispatchers.IO) {
-            tripDao.getTotalDistance() ?: 0f
+            tripDao.getTotalDistance()
         }
     }
 
     override suspend fun getTotalDuration(): Long {
         return withContext(Dispatchers.IO) {
-            tripDao.getTotalDuration() ?: 0L
+            tripDao.getTotalDuration()
         }
     }
 
@@ -201,8 +201,8 @@ class TripRepository @Inject constructor(
                 com.travelcompanion.domain.model.MonthlyStat(
                     month = stat.month,
                     tripCount = stat.tripCount,
-                    totalDistance = stat.totalDistance ?: 0f,
-                    totalDuration = stat.totalDuration ?: 0L
+                    totalDistance = stat.totalDistance,
+                    totalDuration = stat.totalDuration
                 )
             }
         }
@@ -219,7 +219,7 @@ class TripRepository @Inject constructor(
                 com.travelcompanion.domain.model.TripTypeStat(
                     type = tt.name,
                     count = stat.count,
-                    percentage = (stat.percentage ?: 0.0).toFloat()
+                    percentage = stat.percentage.toFloat()
                 )
             }
         }

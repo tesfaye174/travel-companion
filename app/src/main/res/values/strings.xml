@@ -212,6 +212,10 @@
     <string name="geofence_exited">Exited %1$s</string>
     <string name="change_theme">Change Theme</string>
 
+    <string name="permission_needed">Permission needed</string>
+    <string name="background_location_explanation">Background location permission is required to continue tracking your trip when the app is in the background. Please grant it in app settings if denied.</string>
+    <string name="open_settings">Open settings</string>
+
     <string name="theme_light">Chiaro</string>
     <string name="theme_dark">Scuro</string>
     <string name="theme_system">Sistema</string>
