@@ -156,17 +156,23 @@ class MapFragment : Fragment() {
         val map = mapView ?: return
         MapManager.clearPolylines(map)
         MapManager.clearMarkers(map)
-        val allPoints = journeys.flatMap { j -> j.coordinates.map { GeoPoint(it.latitude, it.longitude) } }
-        if (allPoints.size >= 2) {
-            MapManager.drawPolyline(map, allPoints, PaletteUtils.greenLight(requireContext()), 8f)
-            MapManager.centerMap(map, allPoints.first(), 10.0)
-            if (showRoutePoints) {
-                allPoints.forEach { p ->
-                    MapManager.addMarker(map, p, "Trip")
+
+        val color = PaletteUtils.greenLight(requireContext())
+        journeys.forEach { j ->
+            val points = j.coordinates.map { GeoPoint(it.latitude, it.longitude) }
+            if (points.size >= 2) {
+                MapManager.drawPolyline(map, points, color, 8f)
+                if (showRoutePoints) {
+                    points.forEach { p ->
+                        MapManager.addMarker(map, p, "Trip")
+                    }
                 }
             }
-        } else if (allPoints.size == 1) {
-            MapManager.centerMap(map, allPoints.first(), 14.0)
+        }
+
+        val allPoints = journeys.flatMap { j -> j.coordinates.map { GeoPoint(it.latitude, it.longitude) } }
+        if (allPoints.isNotEmpty()) {
+            MapManager.centerMap(map, allPoints.first(), 10.0)
         } else {
             showMapError("Nessun viaggio o percorso disponibile da mostrare sulla mappa.")
         }

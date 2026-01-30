@@ -33,6 +33,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TripDetailsFragment : Fragment() {
@@ -50,7 +51,8 @@ class TripDetailsFragment : Fragment() {
     private var currentPhotoUri: Uri? = null
     private var currentPhotoPath: String? = null
     private var currentTrip: Trip? = null
-    @javax.inject.Inject
+
+    @Inject
     lateinit var locationProvider: LocationProvider
 
     private val cameraPermissionLauncher = registerForActivityResult(
@@ -281,12 +283,17 @@ class TripDetailsFragment : Fragment() {
     private fun renderRoute(journeys: List<com.travelcompanion.domain.model.Journey>) {
         val map = mapViewRef ?: return
         MapManager.clearPolylines(map)
+
+        journeys.forEach { j ->
+            val points = j.coordinates.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) }
+            if (points.size >= 2) {
+                MapManager.drawPolyline(map, points, android.graphics.Color.BLUE, 8f)
+            }
+        }
+
         val allPoints = journeys.flatMap { j -> j.coordinates.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) } }
-        if (allPoints.size >= 2) {
-            MapManager.drawPolyline(map, allPoints, android.graphics.Color.BLUE, 8f)
+        if (allPoints.isNotEmpty()) {
             MapManager.centerMap(map, allPoints.first(), 12.0)
-        } else if (allPoints.size == 1) {
-            MapManager.centerMap(map, allPoints.first(), 14.0)
         }
     }
 

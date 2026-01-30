@@ -16,11 +16,12 @@ import com.travelcompanion.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-        @javax.inject.Inject
-        lateinit var settingsDataStore: com.travelcompanion.data.preferences.SettingsDataStore
+    @Inject
+    lateinit var settingsDataStore: com.travelcompanion.data.preferences.SettingsDataStore
 
     private lateinit var binding: ActivityMainBinding
 

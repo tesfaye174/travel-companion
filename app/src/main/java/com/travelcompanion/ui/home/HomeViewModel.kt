@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -21,9 +22,9 @@ class HomeViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    // only show last 3 trips on home screen
+    // only show last recent trips on home screen
     val recentTrips: LiveData<List<Trip>> = repository.getAllTrips()
-        .map { trips -> trips.take(3) }
+        .map { trips -> trips.take(AppConstants.UI.RECENT_TRIPS_COUNT) }
         .asLiveData()
 
     private val _quickStats = MutableLiveData<QuickStats>()
