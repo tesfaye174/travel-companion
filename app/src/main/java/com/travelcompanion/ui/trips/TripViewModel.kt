@@ -42,6 +42,9 @@ class TripViewModel @Inject constructor(
     private val _filterType = MutableStateFlow<TripType?>(null)
 
     private val _searchQuery = MutableStateFlow("")
+
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
     
     private val baseTripsFlow = _filterType.flatMapLatest { type ->
         if (type == null) getAllTripsUseCase() else getTripsByTypeUseCase(type)
@@ -82,7 +85,7 @@ class TripViewModel @Inject constructor(
             try {
                 updateTripUseCase(trip)
             } catch (e: Exception) {
-                // handle error
+                _error.value = e.message ?: "Failed to update trip"
             }
         }
     }
@@ -92,13 +95,17 @@ class TripViewModel @Inject constructor(
             try {
                 deleteTripUseCase(trip)
             } catch (e: Exception) {
-                // handle error
+                _error.value = e.message ?: "Failed to delete trip"
             }
         }
     }
 
     fun getTripById(id: Long): Flow<Trip?> {
         return getTripByIdUseCase(id)
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }
 

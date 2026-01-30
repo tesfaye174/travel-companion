@@ -17,6 +17,9 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import com.travelcompanion.databinding.FragmentMapBinding
+import com.travelcompanion.domain.model.Journey
+import com.travelcompanion.domain.model.GeofenceArea
+import com.travelcompanion.domain.model.GeofenceEvent
 import com.travelcompanion.utils.PermissionUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.pm.PackageManager
@@ -152,7 +155,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun renderJourneys(journeys: List<com.travelcompanion.domain.model.Journey>) {
+    private fun renderJourneys(journeys: List<Journey>) {
         val map = mapView ?: return
         MapManager.clearPolylines(map)
         MapManager.clearMarkers(map)
@@ -178,7 +181,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun renderGeofences(areas: List<com.travelcompanion.domain.model.GeofenceArea>) {
+    private fun renderGeofences(areas: List<GeofenceArea>) {
         val map = mapView ?: return
         MapManager.clearGeofences(map)
         areas.forEach { area ->
@@ -187,7 +190,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun renderGeofenceEvents(events: List<com.travelcompanion.domain.model.GeofenceEvent>) {
+    private fun renderGeofenceEvents(events: List<GeofenceEvent>) {
         val map = mapView ?: return
 
         // Clear existing markers and re-draw journeys so markers appear consistently

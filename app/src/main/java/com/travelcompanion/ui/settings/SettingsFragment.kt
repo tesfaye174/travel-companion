@@ -21,6 +21,8 @@ import com.google.gson.GsonBuilder
 import com.travelcompanion.R
 import com.travelcompanion.data.preferences.SettingsDataStore
 import com.travelcompanion.databinding.FragmentSettingsBinding
+import com.travelcompanion.domain.model.Journey
+import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -281,8 +283,8 @@ class SettingsFragment : Fragment() {
     data class ExportData(
         val exportDate: String,
         val appVersion: String,
-        val trips: List<com.travelcompanion.domain.model.Trip>,
-        val journeys: List<com.travelcompanion.domain.model.Journey>,
+        val trips: List<Trip>,
+        val journeys: List<Journey>,
         val settings: Map<String, Any>
     )
 }

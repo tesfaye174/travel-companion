@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.*
 import com.travelcompanion.domain.model.MonthlyStat
 import com.travelcompanion.domain.model.TripTypeStat
 import com.travelcompanion.databinding.FragmentStatisticsBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -103,6 +104,13 @@ class StatisticsFragment : Fragment() {
 
         viewModel.monthlyStats.observe(viewLifecycleOwner) { stats ->
             updateBarChart(stats.orEmpty())
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
         }
     }
 

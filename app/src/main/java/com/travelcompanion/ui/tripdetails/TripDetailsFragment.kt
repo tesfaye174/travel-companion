@@ -26,6 +26,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
 import com.travelcompanion.databinding.FragmentTripDetailsBinding
 import com.travelcompanion.domain.model.Trip
+import com.travelcompanion.domain.model.Journey
+import com.travelcompanion.utils.PaletteUtils
 import com.travelcompanion.ui.map.MapManager
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -280,18 +282,19 @@ class TripDetailsFragment : Fragment() {
         }
     }
 
-    private fun renderRoute(journeys: List<com.travelcompanion.domain.model.Journey>) {
+    private fun renderRoute(journeys: List<Journey>) {
         val map = mapViewRef ?: return
         MapManager.clearPolylines(map)
 
+        val color = PaletteUtils.greenLight(requireContext())
         journeys.forEach { j ->
-            val points = j.coordinates.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) }
+            val points = j.coordinates.map { GeoPoint(it.latitude, it.longitude) }
             if (points.size >= 2) {
-                MapManager.drawPolyline(map, points, android.graphics.Color.BLUE, 8f)
+                MapManager.drawPolyline(map, points, color, 8f)
             }
         }
 
-        val allPoints = journeys.flatMap { j -> j.coordinates.map { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) } }
+        val allPoints = journeys.flatMap { j -> j.coordinates.map { GeoPoint(it.latitude, it.longitude) } }
         if (allPoints.isNotEmpty()) {
             MapManager.centerMap(map, allPoints.first(), 12.0)
         }

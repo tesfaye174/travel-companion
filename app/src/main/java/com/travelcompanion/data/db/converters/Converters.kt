@@ -2,6 +2,7 @@ package com.travelcompanion.data.db.converters
 
 import androidx.room.TypeConverter
 import com.travelcompanion.domain.model.TripType
+import com.travelcompanion.domain.model.Coordinate
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Date
@@ -34,14 +35,14 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromCoordinatesJson(json: String?): List<com.travelcompanion.domain.model.Coordinate> {
+    fun fromCoordinatesJson(json: String?): List<Coordinate> {
         json ?: return emptyList()
-        val type = object : TypeToken<List<com.travelcompanion.domain.model.Coordinate>>() {}.type
+        val type = object : TypeToken<List<Coordinate>>() {}.type
         return gson.fromJson(json, type)
     }
 
     @TypeConverter
-    fun coordinatesToJson(coordinates: List<com.travelcompanion.domain.model.Coordinate>): String {
+    fun coordinatesToJson(coordinates: List<Coordinate>): String {
         return gson.toJson(coordinates)
     }
 }

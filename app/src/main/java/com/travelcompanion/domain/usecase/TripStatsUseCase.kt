@@ -1,5 +1,7 @@
 package com.travelcompanion.domain.usecase
 
+import com.travelcompanion.domain.model.MonthlyStat
+import com.travelcompanion.domain.model.TripTypeStat
 import com.travelcompanion.domain.repository.ITripRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -43,8 +45,8 @@ class TripStatsUseCase @Inject constructor(
         val totalPhotos: Int,
         val averageDistancePerTrip: Float,
         val averageDurationPerTrip: Long,
-        val monthlyStats: List<com.travelcompanion.domain.model.MonthlyStat>,
-        val tripTypeStats: List<com.travelcompanion.domain.model.TripTypeStat>
+        val monthlyStats: List<MonthlyStat>,
+        val tripTypeStats: List<TripTypeStat>
     ) {
         val totalDurationHours: Float
             get() = totalDurationMs / (1000f * 60f * 60f)

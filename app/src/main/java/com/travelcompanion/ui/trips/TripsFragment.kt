@@ -172,6 +172,13 @@ class TripsFragment : Fragment() {
         viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
             tripAdapter.submitList(trips)
         }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -14,6 +14,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.travelcompanion.R
+import com.travelcompanion.domain.model.Coordinate
+import com.travelcompanion.domain.model.Journey
 import com.travelcompanion.domain.repository.ITripRepository
 import com.travelcompanion.utils.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +41,7 @@ class TrackingService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var currentTripId: Long = -1
-    private var coordinates = CopyOnWriteArrayList<com.travelcompanion.domain.model.Coordinate>()
+    private var coordinates = CopyOnWriteArrayList<Coordinate>()
     private var startTime: Long = 0
 
     private val notificationId = AppConstants.Tracking.TRACKING_NOTIFICATION_ID
@@ -85,7 +87,7 @@ class TrackingService : Service() {
     }
 
     private suspend fun saveLocation(location: Location) = withContext(Dispatchers.IO) {
-        val coordinate = com.travelcompanion.domain.model.Coordinate(
+        val coordinate = Coordinate(
             latitude = location.latitude,
             longitude = location.longitude,
             timestamp = java.util.Date()
@@ -167,7 +169,7 @@ class TrackingService : Service() {
     private suspend fun saveCompleteJourney() {
         if (currentTripId == -1L || coordinates.isEmpty()) return
         
-        val journey = com.travelcompanion.domain.model.Journey(
+        val journey = Journey(
             tripId = currentTripId,
             startTime = java.util.Date(startTime),
             endTime = java.util.Date(),

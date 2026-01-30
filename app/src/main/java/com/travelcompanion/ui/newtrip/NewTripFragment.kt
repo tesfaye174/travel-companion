@@ -149,6 +149,13 @@ class NewTripFragment : Fragment() {
             startActivity(intent)
             viewModel.resetSaveState()
         }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
     }
 
     override fun onDestroyView() {

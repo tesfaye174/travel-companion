@@ -26,6 +26,9 @@ class NewTripViewModel @Inject constructor(
     private val _createdTripId = MutableLiveData<Long>()
     val createdTripId: LiveData<Long> = _createdTripId
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
     private var currentTripId: Long = -1
 
     fun createTrip(
@@ -51,10 +54,14 @@ class NewTripViewModel @Inject constructor(
                 _tripSaved.value = true
                 _createdTripId.value = currentTripId
             } catch (e: Exception) {
-                // In production, we should handle this via a UI state (e.g., show error message)
+                _error.value = e.message ?: "Failed to create trip"
                 _tripSaved.value = false
             }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 
     fun startTracking() {

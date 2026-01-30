@@ -43,6 +43,9 @@ class StatisticsViewModel @Inject constructor(
     private val _tripTypeStats = MutableLiveData<List<TripTypeStat>>()
     val tripTypeStats: LiveData<List<TripTypeStat>> = _tripTypeStats
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
     init {
         loadStatistics()
     }
@@ -59,7 +62,7 @@ class StatisticsViewModel @Inject constructor(
                 _totalPhotos.value = stats.totalPhotos
 
                 _monthlyStats.value = (1..12).map { m ->
-                    stats.monthlyStats.find { it.month == m } ?: com.travelcompanion.domain.model.MonthlyStat(
+                    stats.monthlyStats.find { it.month == m } ?: MonthlyStat(
                         month = m,
                         tripCount = 0,
                         totalDistance = 0f,
@@ -70,9 +73,13 @@ class StatisticsViewModel @Inject constructor(
                 _tripTypeStats.value = stats.tripTypeStats
                 statsLoaded = true
             } catch (e: Exception) {
-                // handle error
+                _error.value = e.message ?: "Failed to load statistics"
             }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }
 
