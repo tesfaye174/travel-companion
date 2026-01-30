@@ -9,6 +9,7 @@ import android.location.LocationManager
 import android.os.Looper
 import timber.log.Timber
 import com.travelcompanion.utils.AppConstants
+import com.travelcompanion.utils.GeofenceBroadcastReceiver
 import com.travelcompanion.data.db.AppDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -156,7 +157,8 @@ class PlatformGeofenceProvider @Inject constructor(
     }
 
     private fun sendTransition(id: String, transition: String) {
-        val intent = Intent(AppConstants.PlatformIntents.ACTION_PLATFORM_GEOFENCE)
+        val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
+        intent.action = AppConstants.PlatformIntents.ACTION_PLATFORM_GEOFENCE
         intent.putExtra(AppConstants.PlatformIntents.EXTRA_GEOFENCE_ID, id)
         intent.putExtra(AppConstants.PlatformIntents.EXTRA_TRANSITION, transition)
         context.sendBroadcast(intent)

@@ -23,7 +23,7 @@ interface ITripRepository {
     suspend fun insertTrip(trip: Trip): Long
     suspend fun updateTrip(trip: Trip)
     suspend fun deleteTrip(trip: Trip)
-    suspend fun getTripById(id: Long): Trip?
+    fun getTripById(id: Long): Flow<Trip?>
 
     fun getAllTrips(): Flow<List<Trip>>
     fun getTripsByType(type: TripType): Flow<List<Trip>>

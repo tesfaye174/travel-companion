@@ -16,7 +16,11 @@ class Converters {
 
     @TypeConverter
     fun toTripType(name: String): TripType {
-        return TripType.valueOf(name)
+        return try {
+            TripType.valueOf(name)
+        } catch (e: Exception) {
+            TripType.LOCAL
+        }
     }
 
     @TypeConverter

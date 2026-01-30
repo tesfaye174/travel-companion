@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Date
@@ -215,7 +216,7 @@ class TrackingActivity : AppCompatActivity() {
                 )
                 lifecycleScope.launch(Dispatchers.IO) {
                     repository.insertPhotoNote(note)
-                    val trip = repository.getTripById(tripId) ?: return@launch
+                    val trip = repository.getTripById(tripId).first() ?: return@launch
                     repository.updateTrip(trip.copy(photoCount = trip.photoCount + 1))
                 }
             }

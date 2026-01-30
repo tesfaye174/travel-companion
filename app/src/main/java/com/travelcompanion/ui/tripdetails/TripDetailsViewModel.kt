@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -33,7 +34,7 @@ class TripDetailsViewModel @Inject constructor(
 
     val trip = tripIdFlow
         .filter { it > 0 }
-        .flatMapLatest { id -> flow { emit(repository.getTripById(id)) } }
+        .flatMapLatest { id -> repository.getTripById(id) }
         .asLiveData()
 
     val journeys = tripIdFlow
@@ -107,7 +108,7 @@ class TripDetailsViewModel @Inject constructor(
             repository.insertPhotoNote(photoNote)
             
             // Update photo count on trip
-            val currentTrip = repository.getTripById(tripId)
+            val currentTrip = repository.getTripById(tripId).first()
             currentTrip?.let {
                 repository.updateTrip(it.copy(photoCount = it.photoCount + 1))
             }

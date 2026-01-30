@@ -10,6 +10,7 @@ import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -74,7 +75,7 @@ class TripViewModel @Inject constructor(
         }
     }
 
-    suspend fun getTripById(id: Long): Trip? {
+    fun getTripById(id: Long): Flow<Trip?> {
         return repository.getTripById(id)
     }
 }

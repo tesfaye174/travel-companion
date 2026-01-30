@@ -20,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,7 +39,7 @@ class TrackingService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var currentTripId: Long = -1
-    private var coordinates = mutableListOf<com.travelcompanion.domain.model.Coordinate>()
+    private var coordinates = CopyOnWriteArrayList<com.travelcompanion.domain.model.Coordinate>()
     private var startTime: Long = 0
 
     private val notificationId = AppConstants.Tracking.TRACKING_NOTIFICATION_ID
@@ -186,7 +187,7 @@ class TrackingService : Service() {
     }
 
     private suspend fun recalculateAndPersistTripTotals(tripId: Long) {
-        val trip = repository.getTripById(tripId) ?: return
+        val trip = repository.getTripById(tripId).first() ?: return
         val journeys = repository.getJourneysByTripId(tripId).first()
 
         val totalDistanceKm = journeys.sumOf { it.distance.toDouble() }.toFloat()

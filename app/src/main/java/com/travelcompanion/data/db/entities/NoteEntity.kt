@@ -23,8 +23,14 @@ data class NoteEntity(
     @ColumnInfo(name = "trip_id", index = true)
     val tripId: Long,
 
+    @ColumnInfo(name = "title")
+    val title: String = "",
+
     @ColumnInfo(name = "content")
     val content: String,
+
+    @ColumnInfo(name = "photo_path")
+    val photoPath: String? = null,
 
     @ColumnInfo(name = "latitude")
     val latitude: Double? = null,

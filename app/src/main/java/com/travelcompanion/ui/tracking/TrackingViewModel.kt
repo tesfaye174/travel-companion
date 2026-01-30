@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -77,7 +78,7 @@ class TrackingViewModel @Inject constructor(
         if (_trackingState.value is TrackingState.Tracking) return
 
         viewModelScope.launch {
-            val trip = repository.getTripById(tripId)
+            val trip = repository.getTripById(tripId).first()
             _currentTrip.value = trip
             _trackingState.value = TrackingState.Tracking(tripId)
             _photoCount.value = trip?.photoCount ?: 0

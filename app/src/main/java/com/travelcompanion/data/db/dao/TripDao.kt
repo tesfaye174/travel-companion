@@ -121,7 +121,7 @@ interface TripDao {
     fun getTripCount(): Int
 
     @Query("""
-         SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
+         SELECT CAST(strftime('%m', datetime(start_date / 1000, 'unixepoch')) AS INTEGER) as month,
              COUNT(*) as tripCount,
              COALESCE(SUM(total_distance), 0) as totalDistance,
              COALESCE(SUM(total_duration), 0) as totalDuration
