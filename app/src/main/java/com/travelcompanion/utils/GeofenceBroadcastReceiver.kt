@@ -47,7 +47,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val transitionLabel = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) "ENTER" else "EXIT"
         val ts = System.currentTimeMillis()
 
-        // BroadcastReceiver has no lifecycle; do a quick IO insert.
+        val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val db = AppDatabase.getDatabase(context.applicationContext)
@@ -63,6 +63,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 }
             } catch (_: Exception) {
                 // Catch generico: la persistenza è best-effort, la notifica utente è già stata inviata.
+            } finally {
+                pendingResult.finish()
             }
         }
     }

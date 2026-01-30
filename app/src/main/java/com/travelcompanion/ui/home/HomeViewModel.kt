@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
-import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.domain.usecase.GetAllTripsUseCase
+import com.travelcompanion.domain.usecase.TripStatsUseCase
 import com.travelcompanion.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
@@ -19,11 +20,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val getAllTripsUseCase: GetAllTripsUseCase,
+    private val tripStatsUseCase: TripStatsUseCase
 ) : ViewModel() {
 
     // only show last recent trips on home screen
-    val recentTrips: LiveData<List<Trip>> = repository.getAllTrips()
+    val recentTrips: LiveData<List<Trip>> = getAllTripsUseCase()
         .map { trips -> trips.take(AppConstants.UI.RECENT_TRIPS_COUNT) }
         .asLiveData()
 
@@ -36,9 +38,12 @@ class HomeViewModel @Inject constructor(
 
     private fun loadQuickStats() {
         viewModelScope.launch {
-            val tripCount = repository.getTripCount()
-            val totalDistance = repository.getTotalDistance()
-            _quickStats.value = QuickStats(tripCount, totalDistance)
+            try {
+                val stats = tripStatsUseCase()
+                _quickStats.value = QuickStats(stats.totalTrips, stats.totalDistanceKm)
+            } catch (e: Exception) {
+                // handle error
+            }
         }
     }
 

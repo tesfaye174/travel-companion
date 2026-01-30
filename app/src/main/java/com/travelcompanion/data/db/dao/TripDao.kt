@@ -3,8 +3,6 @@ package com.travelcompanion.data.db.dao
 import androidx.room.*
 import com.travelcompanion.data.db.entities.TripEntity
 import com.travelcompanion.domain.model.TripType
-import com.travelcompanion.domain.model.MonthlyStat
-import com.travelcompanion.domain.model.TripTypeStat
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -129,7 +127,7 @@ interface TripDao {
         GROUP BY month
         ORDER BY month
     """)
-    fun getMonthlyStats(): List<MonthlyStat>
+    fun getMonthlyStats(): List<MonthlyStatData>
 
     @Query("""
         SELECT trip_type as type,
@@ -138,5 +136,18 @@ interface TripDao {
         FROM trips
         GROUP BY trip_type
     """)
-    fun getTripTypeStats(): List<TripTypeStat>
+    fun getTripTypeStats(): List<TripTypeStatData>
 }
+
+data class MonthlyStatData(
+    val month: Int,
+    val tripCount: Int,
+    val totalDistance: Float,
+    val totalDuration: Long
+)
+
+data class TripTypeStatData(
+    val type: String,
+    val count: Int,
+    val percentage: Double
+)

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
-import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.domain.usecase.CreateTripUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewTripViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val createTripUseCase: CreateTripUseCase
 ) : ViewModel() {
 
     private val _isTracking = MutableLiveData(false)
@@ -46,9 +46,14 @@ class NewTripViewModel @Inject constructor(
                 notes = notes
             )
 
-            currentTripId = repository.insertTrip(trip)
-            _tripSaved.value = true
-            _createdTripId.value = currentTripId
+            try {
+                currentTripId = createTripUseCase(trip)
+                _tripSaved.value = true
+                _createdTripId.value = currentTripId
+            } catch (e: Exception) {
+                // In production, we should handle this via a UI state (e.g., show error message)
+                _tripSaved.value = false
+            }
         }
     }
 

@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.domain.usecase.TripStatsUseCase
 import com.travelcompanion.domain.model.MonthlyStat
 import com.travelcompanion.domain.model.TripTypeStat
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +19,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val tripStatsUseCase: TripStatsUseCase
 ) : ViewModel() {
 
     // Semplice cache in memoria per evitare ricaricamenti su config change
@@ -51,28 +50,28 @@ class StatisticsViewModel @Inject constructor(
     fun loadStatistics() {
         if (statsLoaded) return
         viewModelScope.launch {
-            // Load total stats
-            _totalTrips.value = repository.getTripCount()
-            _totalDistance.value = repository.getTotalDistance()
-            _totalDuration.value = repository.getTotalDuration()
-            _totalPhotos.value = repository.getAllTrips().first().sumOf { it.photoCount }
+            try {
+                val stats = tripStatsUseCase()
 
-            // Load monthly stats
-            val rawMonthly = repository.getMonthlyStats()
-            val byMonth = rawMonthly.associateBy { it.month }
-            _monthlyStats.value = (1..12).map { m ->
-                val existing = byMonth[m]
-                existing ?: com.travelcompanion.domain.model.MonthlyStat(
-                    month = m,
-                    tripCount = 0,
-                    totalDistance = 0f,
-                    totalDuration = 0L
-                )
+                _totalTrips.value = stats.totalTrips
+                _totalDistance.value = stats.totalDistanceKm
+                _totalDuration.value = stats.totalDurationMs
+                _totalPhotos.value = stats.totalPhotos
+
+                _monthlyStats.value = (1..12).map { m ->
+                    stats.monthlyStats.find { it.month == m } ?: com.travelcompanion.domain.model.MonthlyStat(
+                        month = m,
+                        tripCount = 0,
+                        totalDistance = 0f,
+                        totalDuration = 0L
+                    )
+                }
+
+                _tripTypeStats.value = stats.tripTypeStats
+                statsLoaded = true
+            } catch (e: Exception) {
+                // handle error
             }
-
-            // Load trip type stats
-            _tripTypeStats.value = repository.getTripTypeStats()
-            statsLoaded = true
         }
     }
 }

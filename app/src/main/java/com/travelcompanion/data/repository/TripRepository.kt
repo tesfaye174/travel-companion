@@ -181,13 +181,26 @@ class TripRepository @Inject constructor(
 
     override suspend fun getMonthlyStats(): List<com.travelcompanion.domain.model.MonthlyStat> {
         return withContext(Dispatchers.IO) {
-            tripDao.getMonthlyStats()
+            tripDao.getMonthlyStats().map { stat ->
+                com.travelcompanion.domain.model.MonthlyStat(
+                    month = stat.month,
+                    tripCount = stat.tripCount,
+                    totalDistance = stat.totalDistance,
+                    totalDuration = stat.totalDuration
+                )
+            }
         }
     }
 
     override suspend fun getTripTypeStats(): List<com.travelcompanion.domain.model.TripTypeStat> {
         return withContext(Dispatchers.IO) {
-            tripDao.getTripTypeStats()
+            tripDao.getTripTypeStats().map { stat ->
+                com.travelcompanion.domain.model.TripTypeStat(
+                    type = stat.type,
+                    count = stat.count,
+                    percentage = stat.percentage.toFloat()
+                )
+            }
         }
     }
 

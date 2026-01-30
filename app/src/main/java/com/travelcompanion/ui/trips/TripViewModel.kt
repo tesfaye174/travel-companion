@@ -7,7 +7,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
-import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.domain.usecase.CreateTripUseCase
+import com.travelcompanion.domain.usecase.DeleteTripUseCase
+import com.travelcompanion.domain.usecase.GetAllTripsUseCase
+import com.travelcompanion.domain.usecase.GetTripByIdUseCase
+import com.travelcompanion.domain.usecase.GetTripsByTypeUseCase
+import com.travelcompanion.domain.usecase.UpdateTripUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +30,12 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TripViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val getAllTripsUseCase: GetAllTripsUseCase,
+    private val getTripByIdUseCase: GetTripByIdUseCase,
+    private val updateTripUseCase: UpdateTripUseCase,
+    private val deleteTripUseCase: DeleteTripUseCase,
+    private val createTripUseCase: CreateTripUseCase,
+    private val getTripsByTypeUseCase: GetTripsByTypeUseCase
 ) : ViewModel() {
 
     // Using Flow and transforming to LiveData for UI
@@ -34,7 +44,7 @@ class TripViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     
     private val baseTripsFlow = _filterType.flatMapLatest { type ->
-        if (type == null) repository.getAllTrips() else repository.getTripsByType(type)
+        if (type == null) getAllTripsUseCase() else getTripsByTypeUseCase(type)
     }
 
     val allTrips: LiveData<List<Trip>> = baseTripsFlow
@@ -59,24 +69,36 @@ class TripViewModel @Inject constructor(
 
     fun insertTrip(trip: Trip) {
         viewModelScope.launch {
-            repository.insertTrip(trip)
+            try {
+                createTripUseCase(trip)
+            } catch (e: Exception) {
+                // handle error
+            }
         }
     }
 
     fun updateTrip(trip: Trip) {
         viewModelScope.launch {
-            repository.updateTrip(trip)
+            try {
+                updateTripUseCase(trip)
+            } catch (e: Exception) {
+                // handle error
+            }
         }
     }
 
     fun deleteTrip(trip: Trip) {
         viewModelScope.launch {
-            repository.deleteTrip(trip)
+            try {
+                deleteTripUseCase(trip)
+            } catch (e: Exception) {
+                // handle error
+            }
         }
     }
 
     fun getTripById(id: Long): Flow<Trip?> {
-        return repository.getTripById(id)
+        return getTripByIdUseCase(id)
     }
 }
 

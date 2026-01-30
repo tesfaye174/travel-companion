@@ -7,6 +7,8 @@ import com.travelcompanion.domain.model.Note
 import com.travelcompanion.domain.model.PhotoNote
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.domain.usecase.GetTripByIdUseCase
+import com.travelcompanion.domain.usecase.UpdateTripUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class TripDetailsViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val repository: ITripRepository,
+    private val getTripByIdUseCase: GetTripByIdUseCase,
+    private val updateTripUseCase: UpdateTripUseCase
 ) : ViewModel() {
 
     private val tripIdFlow = MutableStateFlow(-1L)
@@ -34,7 +38,7 @@ class TripDetailsViewModel @Inject constructor(
 
     val trip = tripIdFlow
         .filter { it > 0 }
-        .flatMapLatest { id -> repository.getTripById(id) }
+        .flatMapLatest { id -> getTripByIdUseCase(id) }
         .asLiveData()
 
     val journeys = tripIdFlow
@@ -74,7 +78,11 @@ class TripDetailsViewModel @Inject constructor(
 
     fun updateTrip(trip: Trip) {
         viewModelScope.launch {
-            repository.updateTrip(trip)
+            try {
+                updateTripUseCase(trip)
+            } catch (e: Exception) {
+                // handle error
+            }
         }
     }
 
@@ -108,9 +116,13 @@ class TripDetailsViewModel @Inject constructor(
             repository.insertPhotoNote(photoNote)
             
             // Update photo count on trip
-            val currentTrip = repository.getTripById(tripId).first()
+            val currentTrip = getTripByIdUseCase(tripId).first()
             currentTrip?.let {
-                repository.updateTrip(it.copy(photoCount = it.photoCount + 1))
+                try {
+                    updateTripUseCase(it.copy(photoCount = it.photoCount + 1))
+                } catch (e: Exception) {
+                    // ignore mapping error here
+                }
             }
         }
     }
