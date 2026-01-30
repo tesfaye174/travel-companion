@@ -132,11 +132,12 @@ interface TripDao {
     fun getMonthlyStats(): List<MonthlyStat>
 
     @Query("""
-        SELECT trip_type as type,
-               COUNT(*) as count,
-               (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM trips)) as percentage
+        SELECT trip_type as tripType,
+               SUM(total_distance) as totalDistance,
+               SUM(total_duration) as totalDuration,
+               COUNT(*) as tripCount
         FROM trips
         GROUP BY trip_type
     """)
-    fun getTripTypeStats(): List<TripTypeStat>
+    fun getTripTypeStats(): List<TripTypeStatEntity>
 }

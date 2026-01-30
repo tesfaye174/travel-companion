@@ -211,15 +211,16 @@ class TripRepository @Inject constructor(
     override suspend fun getTripTypeStats(): List<com.travelcompanion.domain.model.TripTypeStat> {
         return withContext(Dispatchers.IO) {
             tripDao.getTripTypeStats().map { stat ->
-                val tt = try {
-                    com.travelcompanion.domain.model.TripType.valueOf(stat.type)
+                val tripType = try {
+                    com.travelcompanion.domain.model.TripType.valueOf(stat.tripType)
                 } catch (ex: Exception) {
-                    com.travelcompanion.domain.model.TripType.LOCAL
+                    com.travelcompanion.domain.model.TripType.OTHER
                 }
                 com.travelcompanion.domain.model.TripTypeStat(
-                    type = tt.name,
-                    count = stat.count,
-                    percentage = (stat.percentage ?: 0.0).toFloat()
+                    tripType = tripType,
+                    totalDistance = stat.totalDistance,
+                    totalDuration = stat.totalDuration,
+                    tripCount = stat.tripCount
                 )
             }
         }
