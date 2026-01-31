@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Use AppCompat DayNight theme for broader compatibility with view-based components -->
+// ...existing code...
     <style name="Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primaryVariant</item>
@@ -14,8 +12,8 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="android:navigationBarColor">@color/navBar</item>
         <item name="android:statusBarColor">@color/primaryVariant</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.Corner.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Material3.Corner.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Material3.Corner.Large</item>
@@ -24,4 +22,4 @@
         <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
         <item name="rippleColor">@color/primary</item>
     </style>
-</resources>
+// ...existing code...

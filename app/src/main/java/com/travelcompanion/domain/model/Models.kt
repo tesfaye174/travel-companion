@@ -22,7 +22,8 @@ data class Trip(
 enum class TripType {
     LOCAL,      // short trips around home
     DAY_TRIP,   // one day trips
-    MULTI_DAY   // longer travels
+    MULTI_DAY,  // longer travels
+    OTHER       // unknown/legacy values
 }
 
 /**
@@ -109,3 +110,18 @@ data class GeofenceEvent(
     val timestamp: Long
 )
 
+// Monthly statistics used by repository
+data class MonthlyStat(
+    val month: Int,
+    val tripCount: Int,
+    val totalDistance: Float,
+    val totalDuration: Long
+)
+
+// Trip type aggregated statistics used across app
+data class TripTypeStat(
+    val tripType: TripType,
+    val totalDistance: Float,
+    val totalDuration: Long,
+    val tripCount: Int
+)

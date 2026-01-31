@@ -18,11 +18,11 @@
 
     <com.google.android.material.chip.ChipGroup android:id="@+id/chip_group_type" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:singleSelection="true" app:selectionRequired="true">
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_local" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/local" style="@style/Widget.MaterialComponents.Chip.Choice" />
+        <com.google.android.material.chip.Chip android:id="@+id/chip_local" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/local" />
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" style="@style/Widget.MaterialComponents.Chip.Choice" />
+        <com.google.android.material.chip.Chip android:id="@+id/chip_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day" />
 
-        <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" style="@style/Widget.MaterialComponents.Chip.Choice" />
+        <com.google.android.material.chip.Chip android:id="@+id/chip_multi_day" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/multi_day" />
 
     </com.google.android.material.chip.ChipGroup>
 

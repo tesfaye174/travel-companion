@@ -140,4 +140,12 @@ interface TripDao {
         GROUP BY trip_type
     """)
     fun getTripTypeStats(): List<TripTypeStatEntity>
+
+    // Projection for trip type statistics returned by the above query
+    data class TripTypeStatEntity(
+        val tripType: String,
+        val totalDistance: Float,
+        val totalDuration: Long,
+        val tripCount: Int
+    )
 }

@@ -27,8 +27,8 @@ import javax.inject.Inject
 /**
  * Repository implementation using Room.
  * Handles all database operations and entity-to-domain mapping.
- * 
- * TODO: maybe add caching layer later for performance?
+ *
+ * Includes in-memory caching for frequently accessed data like all trips.
  */
 
 class TripRepository @Inject constructor(
@@ -357,4 +357,3 @@ class TripRepository @Inject constructor(
     // These functions are used in the repository implementation to transform
     // data as it is read from or written to the database.
 }
-

@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.databinding.FragmentNewTripBinding
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.ui.tracking.TrackingActivity
-import com.travelcompanion.ui.tracking.TrackingService
+import com.travelcompanion.service.TrackingService
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -156,4 +156,3 @@ class NewTripFragment : Fragment() {
         _binding = null
     }
 }
-

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dichiarazione di attributi custom usati nei temi per evitare errori di linking delle risorse -->
+    <attr name="colorBackground" format="reference|color"/>
+</resources>

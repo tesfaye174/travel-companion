@@ -7,6 +7,6 @@
 
     <View android:id="@+id/nav_divider" android:layout_width="0dp" android:layout_height="1dp" android:background="@color/md_theme_light_outlineVariant" android:alpha="0.5" app:layout_constraintBottom_toTopOf="@id/bottom_navigation" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/bottom_navigation" style="@style/Widget.TravelCompanion.BottomNavigation" android:layout_width="0dp" android:layout_height="wrap_content" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintRight_toRightOf="parent" app:menu="@menu/bottom_nav_menu" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/bottom_navigation" style="@style/Widget.TravelCompanion.BottomNavigation" android:layout_width="0dp" android:layout_height="wrap_content" android:background="@color/navBar" android:elevation="8dp" android:paddingTop="4dp" android:paddingBottom="8dp" android:paddingStart="8dp" android:paddingEnd="8dp" app:itemIconSize="24dp" app:itemRippleColor="@color/primary" app:labelVisibilityMode="labeled" app:menu="@menu/bottom_nav_menu" app:itemTextColor="@color/white" app:itemIconTint="@color/white" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

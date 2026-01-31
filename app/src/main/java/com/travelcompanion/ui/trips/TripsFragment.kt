@@ -58,7 +58,7 @@ class TripsFragment : Fragment() {
             }
              findNavController().navigate(R.id.navigation_trip_details, bundle)
         }
-        
+
         binding.rvTrips.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = tripAdapter
@@ -171,6 +171,17 @@ class TripsFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
             tripAdapter.submitList(trips)
+            if (trips.isEmpty()) {
+                binding.layoutEmpty.root.visibility = View.VISIBLE
+                binding.rvTrips.visibility = View.GONE
+            } else {
+                binding.layoutEmpty.root.visibility = View.GONE
+                binding.rvTrips.visibility = View.VISIBLE
+            }
+        }
+        // Collega il pulsante 'Crea viaggio' dell'empty state al FAB
+        binding.layoutEmpty.btnEmptyAction.setOnClickListener {
+            binding.fabAddTrip.performClick()
         }
     }
 

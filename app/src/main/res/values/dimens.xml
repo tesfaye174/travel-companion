@@ -32,4 +32,18 @@
     <dimen name="map_height_small">200dp</dimen>
     <dimen name="map_height_medium">300dp</dimen>
     <dimen name="map_height_large">400dp</dimen>
+
+    <dimen name="padding_xs">4dp</dimen>
+    <dimen name="padding_s">8dp</dimen>
+    <dimen name="padding_m">16dp</dimen>
+    <dimen name="padding_l">24dp</dimen>
+    <dimen name="padding_xl">32dp</dimen>
+    <dimen name="margin_card">16dp</dimen>
+    <dimen name="radius_card">16dp</dimen>
+    <dimen name="radius_button">24dp</dimen>
+    <dimen name="radius_chip">16dp</dimen>
+    <dimen name="elevation_card">4dp</dimen>
+    <dimen name="elevation_nav">8dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="bottom_nav_height">64dp</dimen>
 </resources>

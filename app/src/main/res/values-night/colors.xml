@@ -29,4 +29,20 @@
     <color name="md_theme_light_onSecondaryContainer">#33691E</color>
     <color name="md_theme_light_error">#B00020</color>
     <color name="md_theme_light_errorContainer">#93000A</color>
+    <color name="primary">#2563EB</color>
+    <color name="primaryVariant">#1E40AF</color>
+    <color name="secondary">#F59E42</color>
+    <color name="background">#101828</color>
+    <color name="surface">#1A2233</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="onBackground">#FFFFFF</color>
+    <color name="onSurface">#FFFFFF</color>
+    <color name="card">#232B3B</color>
+    <color name="divider">#2D3748</color>
+    <color name="navBar">#2563EB</color>
+    <color name="navBarInactive">#3B4A6B</color>
+    <color name="chipBackground">#233876</color>
+    <color name="chipText">#90A4D4</color>
+    <color name="chipIcon">#F59E42</color>
 </resources>

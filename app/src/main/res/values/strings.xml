@@ -8,6 +8,14 @@
     <string name="trips">Trips</string>
     <string name="tracking">Tracking</string>
     <string name="map">Map</string>
+    <string name="stop_trip">Stop Tracking</string>
+    <string name="stats">Stats</string>
+    <string name="ready_for_adventure">Ready for your next adventure?</string>
+    <string name="upcoming_trips">Upcoming Trips</string>
+    <string name="popular_destinations">Popular Destinations</string>
+    <string name="my_trips">My Trips</string>
+    <string name="explore">Explore</string>
+    <string name="start_trip">Start Trip</string>
 
     <string name="explore_destinations">Explore Destinations</string>
     <string name="create_trip">Create Trip</string>
@@ -197,6 +205,7 @@
     <string name="trip_thumbnail">Trip thumbnail</string>
     <string name="date_icon">Date</string>
     <string name="distance_icon">Distance</string>
+    <string name="time_icon">Duration</string>
     <string name="view_details">View details</string>
 
     <!-- Notifications -->
@@ -216,4 +225,17 @@
     <string name="theme_dark">Scuro</string>
     <string name="theme_system">Sistema</string>
     <string name="choose_theme">Scegli tema</string>
+
+    <!-- Statistics strings -->
+    <string name="stat_total_trips">12</string>
+    <string name="stat_total_distance">450 km</string>
+    <string name="stat_total_photos">48</string>
+    <string name="stat_total_duration">24h</string>
+    <string name="roma_italia">Roma, Italia</string>
+    <string name="date_sample">15-20 Gen 2026</string>
+    <string name="distance_sample">120.5 km</string>
+    <string name="duration_sample">8h 2min</string>
+    <string name="paris">Paris</string>
+    <string name="france">France</string>
+    <string name="zero_photo_count">0</string>
 </resources>

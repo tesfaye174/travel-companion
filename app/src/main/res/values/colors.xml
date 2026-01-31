@@ -12,7 +12,7 @@
     <color name="md_theme_light_onSecondary">#F8F8F8</color>
     <color name="md_theme_light_secondaryContainer">#F1F8E9</color>
     <color name="md_theme_light_onSecondaryContainer">#33691E</color>
-    <color name="md_theme_light_background">#F8F8F8</color>
+    <color name="md_theme_light_background">#FFFBFE</color>
     <color name="md_theme_light_onBackground">#0F0F0F</color>
     <color name="md_theme_light_surface">#F8F8F8</color>
     <color name="md_theme_light_onSurface">#0F0F0F</color>
@@ -68,11 +68,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary">#006C4C</color>
+    <color name="primary">#2563EB</color> <!-- Blu principale -->
     <color name="primary_dark">#005138</color>
     <color name="primary_light">#89F8C7</color>
     <color name="accent">#3D6373</color>
-    <color name="background">#FBFDF8</color>
+    <color name="background">#F5F7FA</color>
     <color name="surface">#FFFFFF</color>
     <color name="error">#BA1A1A</color>
     <color name="success">#4CAF50</color>
@@ -146,7 +146,12 @@
     <color name="color_green_dark">#337418</color>
     <color name="color_white">#F8F8F8</color>
 
-    <color name="md_theme_light_primary">#6200EE</color>
+    <color name="md_theme_light_primary">#6750A4</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
 
+    <color name="navBar">#2563EB</color>
+    <color name="navBarInactive">#B6C3E2</color>
+    <color name="chipBackground">#E0E7FF</color>
+    <color name="chipText">#2563EB</color>
+    <color name="chipIcon">#1E40AF</color>
 </resources>
