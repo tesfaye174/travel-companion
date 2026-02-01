@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.travelcompanion.R
@@ -17,6 +18,9 @@ class TipsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var tipsAdapter: TipsAdapter
+    private var allTips: List<TravelTip> = emptyList()
+    private var currentCategory: TipCategory? = null
+    private var currentSearchQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +34,15 @@ class TipsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupSearch()
+        setupCategoryFilter()
         loadTips()
     }
 
     private fun setupRecyclerView() {
-        tipsAdapter = TipsAdapter { _ ->
-            // Handle tip click - expand or navigate to detail
+        tipsAdapter = TipsAdapter { tip ->
+            // Show tip details in a dialog
+            showTipDetailsDialog(tip)
         }
         binding.rvTips.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -43,8 +50,63 @@ class TipsFragment : Fragment() {
         }
     }
 
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener { text ->
+            currentSearchQuery = text?.toString().orEmpty()
+            filterTips()
+        }
+    }
+
+    private fun setupCategoryFilter() {
+        binding.chipGroupCategories.setOnCheckedStateChangeListener { _, checkedIds ->
+            currentCategory = when {
+                checkedIds.contains(R.id.chip_packing) -> TipCategory.PACKING
+                checkedIds.contains(R.id.chip_safety) -> TipCategory.SAFETY
+                checkedIds.contains(R.id.chip_budget) -> TipCategory.BUDGET
+                checkedIds.contains(R.id.chip_culture) -> TipCategory.CULTURE
+                checkedIds.contains(R.id.chip_transport) -> TipCategory.TRANSPORT
+                else -> null // "All" selected
+            }
+            filterTips()
+        }
+    }
+
+    private fun filterTips() {
+        var filtered = allTips
+
+        // Filter by category
+        if (currentCategory != null) {
+            filtered = filtered.filter { it.category == currentCategory }
+        }
+
+        // Filter by search query
+        if (currentSearchQuery.isNotBlank()) {
+            filtered = filtered.filter {
+                it.title.contains(currentSearchQuery, ignoreCase = true) ||
+                it.description.contains(currentSearchQuery, ignoreCase = true)
+            }
+        }
+
+        tipsAdapter.submitList(filtered)
+        updateEmptyState(filtered.isEmpty())
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        binding.emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.rvTips.visibility = if (isEmpty) View.GONE else View.VISIBLE
+    }
+
+    private fun showTipDetailsDialog(tip: TravelTip) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle(tip.title)
+            .setMessage(tip.description)
+            .setIcon(tip.iconRes)
+            .setPositiveButton(R.string.ok, null)
+            .show()
+    }
+
     private fun loadTips() {
-        val tips = listOf(
+        allTips = listOf(
             TravelTip(
                 id = 1,
                 title = getString(R.string.tip_packing_light),
@@ -81,7 +143,7 @@ class TipsFragment : Fragment() {
                 iconRes = R.drawable.ic_map
             )
         )
-        tipsAdapter.submitList(tips)
+        tipsAdapter.submitList(allTips)
     }
 
     override fun onDestroyView() {

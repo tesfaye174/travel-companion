@@ -35,6 +35,9 @@
 
     <string name="error_loading_trip">Error loading trip</string>
     <string name="error_saving_trip">Error saving trip</string>
+    <string name="destination_required">Destination is required</string>
+    <string name="start_date_required">Start date is required</string>
+    <string name="invalid_date">Invalid date format</string>
 
     <string name="no_trips_title">No Trips Yet</string>
     <string name="no_trips_message">You do not have any trips. Create your first trip to get started.</string>
@@ -69,7 +72,7 @@
     <string name="recording">Recording</string>
     <string name="tracking_location">Tracking location</string>
     <string name="photos">Photos</string>
-    <string name="write_note_hint">Write a note...</string>
+    <string name="write_note_hint">Write a note…</string>
     <string name="trip_type">Trip type</string>
     <string name="local">Local</string>
     <string name="day">Day</string>
@@ -80,7 +83,16 @@
     <string name="new_trip">New Trip</string>
     <string name="geofence_events">Geofence Events</string>
     <string name="map_layers">Map Layers</string>
+    <string name="my_location">My Location</string>
     <string name="new_trip_instructions">Fill in the details to create a new trip.</string>
+
+    <!-- Tracking screen default values -->
+    <string name="time_default">00:00:00</string>
+    <string name="distance_default">0.0</string>
+    <string name="speed_default">0</string>
+    <string name="count_default">0</string>
+    <string name="unit_km">km</string>
+    <string name="unit_kmh">km/h</string>
 
     <!-- Additional missing strings -->
     <string name="select_date">Select date</string>
@@ -186,6 +198,7 @@
     <string name="tip_transport_apps">Use Transport Apps</string>
     <string name="tip_transport_apps_desc">Download local transport apps for easier navigation</string>
     <string name="search_tips">Search tips…</string>
+    <string name="no_tips_found">No tips found</string>
     <string name="featured_tips">Featured Tips</string>
     <string name="all_tips">All Tips</string>
     <string name="read_more">Read More</string>
@@ -245,6 +258,11 @@
     <!-- Notification strings -->
     <string name="time_to_travel_title">Time to Travel!</string>
     <string name="time_to_travel_text">Plan your next adventure</string>
+
+    <!-- Profile strings -->
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="logout_success">Logged out successfully</string>
+    <string name="feature_coming_soon">This feature is coming soon!</string>
 
 </resources>
 

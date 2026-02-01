@@ -92,6 +92,11 @@ class HomeFragment : Fragment() {
         binding.btnExplore.setOnClickListener {
             findNavController().navigate(R.id.navigation_map)
         }
+
+        // Handle "Create Trip" button in empty state
+        binding.layoutEmptyState.btnEmptyAction.setOnClickListener {
+            findNavController().navigate(R.id.navigation_new_trip)
+        }
     }
 
     private fun observeViewModel() {

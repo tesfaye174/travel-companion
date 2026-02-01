@@ -50,7 +50,7 @@ class ProfileFragment : Fragment() {
         try {
             val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
             binding.tvVersion.text = getString(R.string.version_info, packageInfo.versionName)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             binding.tvVersion.text = getString(R.string.version_info, "1.0.0")
         }
     }
@@ -60,7 +60,7 @@ class ProfileFragment : Fragment() {
             // Show toast - in a real app this would open edit screen
             com.google.android.material.snackbar.Snackbar.make(
                 binding.root,
-                "Profile editing coming soon!",
+                R.string.feature_coming_soon,
                 com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
             ).show()
         }
@@ -102,7 +102,7 @@ class ProfileFragment : Fragment() {
                 android.net.Uri.parse("market://details?id=${requireContext().packageName}")
             )
             startActivity(intent)
-        } catch (e: android.content.ActivityNotFoundException) {
+        } catch (_: android.content.ActivityNotFoundException) {
             val intent = android.content.Intent(
                 android.content.Intent.ACTION_VIEW,
                 android.net.Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
@@ -114,12 +114,12 @@ class ProfileFragment : Fragment() {
     private fun showLogoutConfirmation() {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.logout)
-            .setMessage("Are you sure you want to logout?")
+            .setMessage(R.string.logout_confirmation)
             .setPositiveButton(R.string.logout) { _, _ ->
                 // In a real app, clear user session here
                 com.google.android.material.snackbar.Snackbar.make(
                     binding.root,
-                    "Logged out successfully",
+                    R.string.logout_success,
                     com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
                 ).show()
             }

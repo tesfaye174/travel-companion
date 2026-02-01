@@ -80,14 +80,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <!-- Hero Background Image -->
-                        <ImageView
-                            android:id="@+id/iv_hero"
+                        <!-- ViewPager2 for Image Carousel -->
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/vp_hero_images"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <!-- Gradient Overlay for better text visibility -->
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/bg_gradient_card"
-                            android:contentDescription="@string/app_name" />
+                            android:background="@drawable/bg_gradient_card" />
 
                         <!-- Text and Button Overlay -->
                         <LinearLayout
@@ -122,6 +125,15 @@
                                 app:cornerRadius="20dp" />
 
                         </LinearLayout>
+
+                        <!-- Page Indicator Dots -->
+                        <LinearLayout
+                            android:id="@+id/ll_indicators"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal" />
 
                     </FrameLayout>
 

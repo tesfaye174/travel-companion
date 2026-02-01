@@ -25,20 +25,37 @@ import com.travelcompanion.data.db.converters.Converters
 import javax.inject.Inject
 
 /**
- * Repository implementation using Room.
- * Handles all database operations and entity-to-domain mapping.
+ * Implementazione concreta del repository per la gestione dei dati dei viaggi.
  *
- * Includes in-memory caching for frequently accessed data like all trips.
+ * Questa classe fa da intermediario tra il domain layer (ViewModels e UseCases)
+ * e il data layer (Room Database). Seguendo il pattern Repository, il resto
+ * dell'app non sa come i dati vengono effettivamente salvati.
+ *
+ * Responsabilità principali:
+ * - Operazioni CRUD su viaggi, percorsi, foto e note
+ * - Conversione tra Entity (database) e Model (dominio)
+ * - Caching in memoria per ottimizzare le letture frequenti
+ * - Gestione delle statistiche aggregate
+ *
+ * Ho implementato una cache semplice per getAllTrips() perché è chiamato
+ * spesso dalla HomeScreen. La cache viene invalidata ad ogni modifica.
+ * In un'app più grande userei una libreria come Store o Kotlin Flow caching.
+ *
+ * @param database L'istanza del database Room (iniettata da Hilt)
  */
 
 class TripRepository @Inject constructor(
     private val database: AppDatabase
 ) : ITripRepository {
 
-    // Semplice cache in memoria per getAllTrips
+    // Cache in memoria per evitare query ripetute al database.
+    // È una ottimizzazione semplice ma efficace per la lista viaggi
+    // che viene mostrata nella home e aggiornata frequentemente.
     private var cachedTrips: List<Trip>? = null
     private var cacheValid: Boolean = false
 
+    // Riferimenti ai DAO per le varie tabelle.
+    // Li salvo come proprietà per non doverli richiedere ogni volta al database.
     private val tripDao: TripDao = database.tripDao()
     private val journeyDao: JourneyDao = database.journeyDao()
     private val photoNoteDao: PhotoNoteDao = database.photoNoteDao()
@@ -46,10 +63,16 @@ class TripRepository @Inject constructor(
     private val geofenceAreaDao: GeofenceAreaDao = database.geofenceAreaDao()
     private val geofenceEventDao: GeofenceEventDao = database.geofenceEventDao()
 
+    // ==================== OPERAZIONI SUI VIAGGI ====================
+
+    /**
+     * Inserisce un nuovo viaggio nel database.
+     * @return l'ID auto-generato del viaggio inserito
+     */
     override suspend fun insertTrip(trip: Trip): Long {
         val entity = trip.toEntity()
         val result = tripDao.insertTrip(entity)
-        cacheValid = false
+        cacheValid = false  // Invalido la cache perché i dati sono cambiati
         return result
     }
 
@@ -63,11 +86,26 @@ class TripRepository @Inject constructor(
         cacheValid = false
     }
 
+    /**
+     * Recupera un viaggio per ID.
+     * Uso Flow.first() per ottenere il valore corrente una sola volta.
+     */
     override suspend fun getTripById(id: Long): Trip? {
         val entity = tripDao.getTripByIdFlow(id).first()
         return entity?.toDomain()
     }
 
+    /**
+     * Restituisce un Flow con tutti i viaggi.
+     *
+     * Implemento qui la logica di caching: se la cache è valida restituisco
+     * i dati cached, altrimenti li ricarico dal database e aggiorno la cache.
+     *
+     * Uso Flow invece di LiveData perché:
+     * - È più flessibile (posso usare operatori come map, filter, combine)
+     * - Si integra meglio con le coroutine
+     * - Può essere convertito in LiveData con asLiveData() quando serve
+     */
     override fun getAllTrips(): Flow<List<Trip>> {
         return tripDao.getAllTripsFlow().map { entities ->
             if (cacheValid && cachedTrips != null) {

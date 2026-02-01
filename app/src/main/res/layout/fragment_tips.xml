@@ -111,6 +111,33 @@
 
         </HorizontalScrollView>
 
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_info"
+                android:alpha="0.5"
+                android:contentDescription="@string/no_tips_found" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/no_tips_found"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+        </LinearLayout>
+
         <!-- Tips List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_tips"

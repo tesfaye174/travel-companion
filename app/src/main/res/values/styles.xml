@@ -58,7 +58,14 @@
     </style>
 
     <!-- Widget custom -->
-    <style name="Widget.TravelCompanion.BottomNavigation" parent="Widget.Material3.BottomNavigationView" />
+    <style name="Widget.TravelCompanion.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/Widget.TravelCompanion.BottomNavigation.ActiveIndicator</item>
+    </style>
+
+    <style name="Widget.TravelCompanion.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#3B82F6</item>
+    </style>
+
     <style name="Widget.TravelCompanion.Button.Tonal" parent="Widget.Material3.Button" />
     <style name="Widget.TravelCompanion.Button.Text" parent="Widget.Material3.Button.TextButton" />
     <style name="Widget.TravelCompanion.TextInput" parent="Widget.Material3.TextInputLayout.FilledBox.Dense" />

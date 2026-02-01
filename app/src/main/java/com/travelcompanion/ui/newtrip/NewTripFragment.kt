@@ -46,6 +46,11 @@ class NewTripFragment : Fragment() {
         setupDatePickers()
         setupListeners()
         observeViewModel()
+
+        // Handle pre-filled destination from HomeFragment
+        arguments?.getString("destination")?.let { destination ->
+            binding.etDestination.setText(destination)
+        }
     }
 
     private fun setupToolbar() {
@@ -100,20 +105,23 @@ class NewTripFragment : Fragment() {
         binding.btnStartTrip.setOnClickListener {
             val destination = binding.etDestination.text?.toString()?.trim().orEmpty()
             if (destination.isEmpty()) {
-                binding.etDestination.error = getString(com.travelcompanion.R.string.destination)
-                Snackbar.make(binding.root, "Inserisci una destinazione", Snackbar.LENGTH_SHORT).show()
+                binding.tilDestination.error = getString(com.travelcompanion.R.string.destination_required)
                 return@setOnClickListener
+            } else {
+                binding.tilDestination.error = null
             }
 
             val startDateText = binding.etStartDate.text?.toString()?.trim().orEmpty()
             if (startDateText.isEmpty()) {
-                Snackbar.make(binding.root, "Seleziona una data di inizio", Snackbar.LENGTH_SHORT).show()
+                binding.tilStartDate.error = getString(com.travelcompanion.R.string.start_date_required)
                 return@setOnClickListener
+            } else {
+                binding.tilStartDate.error = null
             }
 
             val startDate = runCatching { com.travelcompanion.utils.DateUtils.dateFormat.parse(startDateText) }.getOrNull()
             if (startDate == null) {
-                Snackbar.make(binding.root, "Data di inizio non valida", Snackbar.LENGTH_SHORT).show()
+                binding.tilStartDate.error = getString(com.travelcompanion.R.string.invalid_date)
                 return@setOnClickListener
             }
 
@@ -148,6 +156,8 @@ class NewTripFragment : Fragment() {
             }
             startActivity(intent)
             viewModel.resetSaveState()
+            // Navigate back to prevent returning to this fragment
+            findNavController().navigateUp()
         }
     }
 

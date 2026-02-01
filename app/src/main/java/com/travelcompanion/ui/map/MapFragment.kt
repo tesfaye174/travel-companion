@@ -16,6 +16,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import com.travelcompanion.databinding.FragmentMapBinding
+import com.travelcompanion.R
 import com.travelcompanion.utils.PermissionUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.pm.PackageManager
@@ -78,11 +79,11 @@ class MapFragment : Fragment() {
         val sharedPreferences = requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
         Configuration.getInstance().load(requireContext(), sharedPreferences)
         Configuration.getInstance().userAgentValue = requireContext().packageName
-        
+
         // Setup map with online tiles (MAPNIK from OpenStreetMap)
         mapView?.setTileSource(TileSourceFactory.MAPNIK)
         mapView?.setMultiTouchControls(true)
-        
+
         // Set default center to Italy (can be overridden by user location or trip data)
         val defaultCenter = GeoPoint(41.9028, 12.4964) // Rome, Italy
         mapView?.controller?.setZoom(6.0)
@@ -228,18 +229,24 @@ class MapFragment : Fragment() {
         val context = context ?: return
 
         if (!PermissionUtils.hasLocationPermissions(context)) {
-            Snackbar.make(binding.root, "Grant location permissions to center the map", Snackbar.LENGTH_LONG).show()
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                2001
-            )
+            Snackbar.make(binding.root, R.string.location_permission_required, Snackbar.LENGTH_LONG)
+                .setAction("Grant") {
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                        2001
+                    )
+                }
+                .show()
             return
         }
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return
         }
+
+        // Mostra indicatore di caricamento
+        Snackbar.make(binding.root, "Getting your location...", Snackbar.LENGTH_SHORT).show()
 
         locationProvider.getCurrentLocation({ location ->
             // Remove existing MyLocationNewOverlay (compatible with API 21+)
@@ -254,10 +261,14 @@ class MapFragment : Fragment() {
             map.overlays.add(myLocationOverlay)
 
             val latLng = GeoPoint(location.latitude, location.longitude)
-            map.controller.setCenter(latLng)
-            map.controller.setZoom(14.0)
-        }, { _ ->
-            Snackbar.make(binding.root, "Unable to obtain current location", Snackbar.LENGTH_SHORT).show()
+            map.controller.animateTo(latLng)
+            map.controller.setZoom(15.0)
+            map.invalidate()
+        }, { error ->
+            Snackbar.make(binding.root, "Unable to get location. Please try again.", Snackbar.LENGTH_LONG)
+                .setAction("Retry") { centerOnMyLocation() }
+                .show()
+            Timber.w(error, "Failed to get current location")
         })
     }
 

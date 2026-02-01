@@ -19,17 +19,40 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
-// ViewModel for GPS tracking - handles tracking state, elapsed time, distance, speed
+/**
+ * ViewModel per la schermata di tracking GPS.
+ *
+ * Gestisce tutto lo stato relativo al tracking in tempo reale:
+ * - Stato del tracking (idle, tracking, stopped)
+ * - Tempo trascorso (aggiornato ogni secondo)
+ * - Distanza percorsa (calcolata dai punti GPS)
+ * - Velocità attuale
+ * - Conteggio foto scattate
+ * - Storico posizioni per disegnare la polyline sulla mappa
+ *
+ * Lo stato è gestito con StateFlow invece di LiveData perché:
+ * - È più efficiente per aggiornamenti frequenti (ogni secondo)
+ * - Si integra meglio con Jetpack Compose (se decidessi di migrare)
+ * - Supporta operatori Flow come combine, flatMapLatest ecc.
+ *
+ * @param repository Per salvare i dati del percorso quando il tracking termina
+ */
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    // Tracking state
+    // ==================== STATO DEL TRACKING ====================
+
+    /**
+     * Sealed class che rappresenta i possibili stati del tracking.
+     * Uso una sealed class invece di un enum per poter passare dati
+     * nello stato Tracking (l'ID del viaggio corrente).
+     */
     sealed class TrackingState {
-        object Idle : TrackingState()
-        data class Tracking(val tripId: Long) : TrackingState()
-        object Stopped : TrackingState()
+        object Idle : TrackingState()              // Tracking non avviato
+        data class Tracking(val tripId: Long) : TrackingState()  // In corso
+        object Stopped : TrackingState()           // Terminato
     }
 
     private val _trackingState = MutableStateFlow<TrackingState>(TrackingState.Idle)
@@ -94,7 +117,8 @@ class TrackingViewModel @Inject constructor(
     }
 
     /**
-     * Stop tracking
+     * Ferma il tracking corrente.
+     * Il salvataggio del Journey viene gestito dal TrackingService.
      */
     fun stopTracking() {
         timerJob?.cancel()
@@ -103,7 +127,13 @@ class TrackingViewModel @Inject constructor(
     }
 
     /**
-     * Update location from service
+     * Chiamato dal TrackingService quando arriva una nuova posizione GPS.
+     *
+     * Calcola la distanza incrementale dal punto precedente e aggiorna
+     * lo storico posizioni per la polyline sulla mappa.
+     *
+     * Ignoro movimenti < 1 metro per filtrare il rumore del GPS quando
+     * l'utente è fermo (il GPS può oscillare anche di qualche metro).
      */
     fun onLocationUpdate(location: Location) {
         _currentLocation.value = location
@@ -112,25 +142,30 @@ class TrackingViewModel @Inject constructor(
         // Calculate distance from previous point
         previousLocation?.let { prev ->
             val distance = prev.distanceTo(location)
-            if (distance > 1f) { // Ignore noise < 1 meter
+            if (distance > 1f) { // Soglia minima per filtrare rumore GPS
                 _distanceMeters.value += distance
             }
         }
         previousLocation = location
 
-        // Add to history for polyline
+        // Aggiungo la posizione allo storico per disegnare la polyline
         _locationHistory.value = _locationHistory.value + location
     }
 
     /**
-     * Update photo count when a new photo is taken
+     * Incrementa il contatore foto quando l'utente scatta una foto.
      */
     fun incrementPhotoCount() {
         _photoCount.value++
     }
 
+    // ==================== METODI DI FORMATTAZIONE ====================
+    // Questi metodi formattano i dati grezzi per la visualizzazione nella UI.
+    // Ho scelto di metterli qui invece che nella View per testabilità.
+
     /**
-     * Get formatted elapsed time (HH:mm:ss)
+     * Formatta il tempo trascorso in formato HH:mm:ss.
+     * Es: 01:23:45 per 1 ora, 23 minuti e 45 secondi
      */
     fun getFormattedElapsedTime(): String {
         val seconds = _elapsedTimeSeconds.value
@@ -156,14 +191,22 @@ class TrackingViewModel @Inject constructor(
         return String.format(Locale.getDefault(), "%.0f", kmh)
     }
 
+    /**
+     * Avvia il timer che aggiorna il tempo trascorso ogni secondo.
+     *
+     * Uso un loop infinito con delay invece di un Timer perché:
+     * - Si integra meglio con le coroutine e viewModelScope
+     * - Viene cancellato automaticamente quando il ViewModel viene distrutto
+     * - Non devo preoccuparmi di memory leak
+     */
     private fun startTimer() {
-        timerJob?.cancel()
+        timerJob?.cancel()  // Cancello eventuali timer precedenti
         startTime = System.currentTimeMillis()
         timerJob = viewModelScope.launch {
             while (true) {
                 val elapsed = (System.currentTimeMillis() - startTime) / 1000
                 _elapsedTimeSeconds.value = elapsed
-                delay(1000)
+                delay(1000)  // Aspetto 1 secondo prima del prossimo aggiornamento
             }
         }
     }

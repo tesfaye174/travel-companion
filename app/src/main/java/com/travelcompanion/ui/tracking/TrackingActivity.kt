@@ -43,11 +43,26 @@ class TrackingActivity : AppCompatActivity() {
     private var pendingPhotoUri: Uri? = null
     private var pendingPhotoFile: File? = null
 
+    private var trackingStartTime: Long = 0L
+    private var timerJob: kotlinx.coroutines.Job? = null
+
     private val locationUpdatesReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action != TrackingService.ACTION_LOCATION_UPDATE) return
             lastLat = intent.getDoubleExtra("lat", Double.NaN).takeIf { !it.isNaN() }
             lastLon = intent.getDoubleExtra("lon", Double.NaN).takeIf { !it.isNaN() }
+
+            // Update distance
+            val distance = intent.getFloatExtra("dist", 0f)
+            binding.tvDistance.text = String.format(java.util.Locale.getDefault(), "%.1f", distance)
+
+            // Update map position
+            lastLat?.let { lat ->
+                lastLon?.let { lon ->
+                    val geoPoint = org.osmdroid.util.GeoPoint(lat, lon)
+                    binding.mapTracking.controller.animateTo(geoPoint)
+                }
+            }
         }
     }
 
@@ -59,10 +74,35 @@ class TrackingActivity : AppCompatActivity() {
         tripId = intent.getLongExtra(TrackingService.EXTRA_TRIP_ID, -1)
 
         setupToolbar()
+        setupMap()
         setupListeners()
+        loadTripDetails()
 
         ensureNotificationPermissionIfNeeded()
         startTrackingIfPossible()
+    }
+
+    private fun setupMap() {
+        // Configure osmdroid
+        org.osmdroid.config.Configuration.getInstance().load(this, getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
+        org.osmdroid.config.Configuration.getInstance().userAgentValue = packageName
+
+        binding.mapTracking.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
+        binding.mapTracking.setMultiTouchControls(true)
+        binding.mapTracking.controller.setZoom(15.0)
+    }
+
+    private fun loadTripDetails() {
+        if (tripId <= 0) return
+        lifecycleScope.launch(Dispatchers.IO) {
+            val trip = repository.getTripById(tripId)
+            launch(Dispatchers.Main) {
+                trip?.let {
+                    binding.tvDestination.text = it.destination.ifBlank { it.title }
+                    binding.tvPhotoCount.text = it.photoCount.toString()
+                }
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -72,20 +112,19 @@ class TrackingActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Stop tracking button
         binding.fabStopTracking.setOnClickListener {
             stopTracking()
             finish()
         }
 
-        // `fragment_tracking` is included in the activity layout; find its buttons by id
-        val btnAddPhoto = findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_add_photo)
-        val btnAddNote = findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_add_note)
-
-        btnAddPhoto?.setOnClickListener {
+        // Add photo button
+        binding.btnAddPhoto.setOnClickListener {
             capturePhoto()
         }
 
-        btnAddNote?.setOnClickListener {
+        // Add note button
+        binding.btnAddNote.setOnClickListener {
             promptAddNote()
         }
     }
@@ -105,9 +144,27 @@ class TrackingActivity : AppCompatActivity() {
             putExtra(TrackingService.EXTRA_TRIP_ID, tripId)
         }
         ContextCompat.startForegroundService(this, intent)
+
+        // Start the timer
+        startTimer()
+    }
+
+    private fun startTimer() {
+        trackingStartTime = System.currentTimeMillis()
+        timerJob = lifecycleScope.launch {
+            while (true) {
+                val elapsed = System.currentTimeMillis() - trackingStartTime
+                val hours = (elapsed / 3600000).toInt()
+                val minutes = ((elapsed % 3600000) / 60000).toInt()
+                val seconds = ((elapsed % 60000) / 1000).toInt()
+                binding.tvTrackingTime.text = String.format(java.util.Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+                kotlinx.coroutines.delay(1000)
+            }
+        }
     }
 
     private fun stopTracking() {
+        timerJob?.cancel()
         stopService(Intent(this, TrackingService::class.java))
     }
 
@@ -234,4 +291,3 @@ class TrackingActivity : AppCompatActivity() {
         return true
     }
 }
-

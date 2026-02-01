@@ -50,7 +50,7 @@ class DestinationsAdapter(
             binding.tvDestinationCountry.text = destination.country
 
             Glide.with(binding.root.context)
-                .load(destination.imageUrl)
+                .load(destination.imageResId)
                 .centerCrop()
                 .placeholder(R.drawable.placeholder_image)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -63,7 +63,7 @@ data class Destination(
     val id: Int,
     val city: String,
     val country: String,
-    val imageUrl: String
+    val imageResId: Int
 )
 
 object SuggestedDestinations {
@@ -72,49 +72,49 @@ object SuggestedDestinations {
             id = 1,
             city = "New York",
             country = "USA",
-            imageUrl = "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=800"
+            imageResId = R.drawable.destination_new_york
         ),
         Destination(
             id = 2,
             city = "Paris",
             country = "France",
-            imageUrl = "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800"
+            imageResId = R.drawable.destination_paris
         ),
         Destination(
             id = 3,
             city = "Torino",
             country = "Italia",
-            imageUrl = "https://images.unsplash.com/photo-1568316674871-82cc9da4ab41?w=800"
+            imageResId = R.drawable.destination_turin
         ),
         Destination(
             id = 4,
             city = "Bologna",
             country = "Italia",
-            imageUrl = "https://images.unsplash.com/photo-1568973427107-9d9162f56aa6?w=800"
+            imageResId = R.drawable.destination_emilia_romagna
         ),
         Destination(
             id = 5,
             city = "Madrid",
             country = "Spain",
-            imageUrl = "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800"
+            imageResId = R.drawable.destination_madrid
         ),
         Destination(
             id = 6,
             city = "Rome",
             country = "Italia",
-            imageUrl = "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800"
+            imageResId = R.drawable.destination_rome_colosseum
         ),
         Destination(
             id = 7,
             city = "London",
             country = "UK",
-            imageUrl = "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800"
+            imageResId = R.drawable.destination_dream_city
         ),
         Destination(
             id = 8,
             city = "Barcelona",
             country = "Spain",
-            imageUrl = "https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800"
+            imageResId = R.drawable.destination_paris_arc
         )
     )
 }

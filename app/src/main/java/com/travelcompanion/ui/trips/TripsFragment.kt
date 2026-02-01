@@ -48,6 +48,7 @@ class TripsFragment : Fragment() {
         setupSwipeToDelete()
         setupChips()
         setupSearch()
+        setupClickListeners()
         observeViewModel()
     }
 
@@ -171,6 +172,23 @@ class TripsFragment : Fragment() {
         }
     }
 
+    private fun setupClickListeners() {
+        // Back button to go to home
+        binding.btnBackHome.setOnClickListener {
+            findNavController().navigate(R.id.navigation_home)
+        }
+
+        // FAB to create new trip
+        binding.fabAddTrip.setOnClickListener {
+            findNavController().navigate(R.id.navigation_new_trip)
+        }
+
+        // Empty state button to create new trip
+        binding.layoutEmpty.btnEmptyAction.setOnClickListener {
+            findNavController().navigate(R.id.navigation_new_trip)
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
             tripAdapter.submitList(trips)
@@ -181,10 +199,6 @@ class TripsFragment : Fragment() {
                 binding.layoutEmpty.root.visibility = View.GONE
                 binding.rvTrips.visibility = View.VISIBLE
             }
-        }
-        // Collega il pulsante 'Crea viaggio' dell'empty state al FAB
-        binding.layoutEmpty.btnEmptyAction.setOnClickListener {
-            binding.fabAddTrip.performClick()
         }
     }
 
