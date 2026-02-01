@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import timber.log.Timber
 import dagger.hilt.android.AndroidEntryPoint
 import com.travelcompanion.location.LocationProvider
 import org.osmdroid.config.Configuration
@@ -29,6 +28,7 @@ import com.travelcompanion.utils.PaletteUtils
 import android.content.Context
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
@@ -235,7 +235,13 @@ class MapFragment : Fragment() {
         }
 
         locationProvider.getCurrentLocation({ location ->
-            map.overlays.removeIf { it is MyLocationNewOverlay }
+            // Remove existing MyLocationNewOverlay (compatible with API 21+)
+            val iterator = map.overlays.iterator()
+            while (iterator.hasNext()) {
+                if (iterator.next() is MyLocationNewOverlay) {
+                    iterator.remove()
+                }
+            }
             val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), map)
             myLocationOverlay.enableMyLocation()
             map.overlays.add(myLocationOverlay)

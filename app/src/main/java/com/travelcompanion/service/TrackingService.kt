@@ -8,16 +8,17 @@ import android.app.Service
 import android.content.Intent
 import android.location.Location
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.travelcompanion.R
 import com.travelcompanion.data.db.AppDatabase
-import com.travelcompanion.data.db.entities.JourneyEntity
 import com.travelcompanion.domain.model.Coordinate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,7 +31,6 @@ class TrackingService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private var currentTripId: Long = 0
-    private var currentJourneyId: Long = 0
     private val coordinates = mutableListOf<Coordinate>()
     private val binder = LocalBinder()
 
@@ -68,7 +68,12 @@ class TrackingService : Service() {
 
     fun stopTracking() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            stopForeground(true)
+        }
         stopSelf()
     }
 
@@ -83,7 +88,7 @@ class TrackingService : Service() {
                 )
                 coordinates.add(coordinate)
             } catch (e: Exception) {
-                // best-effort logging
+                Timber.e(e, "Error handling location update")
             }
         }
     }
@@ -98,9 +103,11 @@ class TrackingService : Service() {
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel("tracking_channel", "Tracking", NotificationManager.IMPORTANCE_LOW)
-        val manager = getSystemService(NotificationManager::class.java)
-        manager?.createNotificationChannel(channel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("tracking_channel", "Tracking", NotificationManager.IMPORTANCE_LOW)
+            val manager = getSystemService(NotificationManager::class.java)
+            manager?.createNotificationChannel(channel)
+        }
     }
 
     override fun onDestroy() {
