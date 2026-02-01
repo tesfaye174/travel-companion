@@ -29,6 +29,7 @@ object NotificationUtils {
         notificationManager.createNotificationChannel(channel)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun showPointOfInterestNotification(
         context: Context,
         poiName: String,

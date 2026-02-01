@@ -26,7 +26,7 @@ import java.util.Date
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import com.travelcompanion.utils.PaletteUtils
-import androidx.preference.PreferenceManager
+import android.content.Context
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 
@@ -75,7 +75,7 @@ class MapFragment : Fragment() {
         mapView = binding.mapContainer
 
         // Required for OSMDroid to work
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val sharedPreferences = requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
         Configuration.getInstance().load(requireContext(), sharedPreferences)
         Configuration.getInstance().userAgentValue = requireContext().packageName
         mapView?.setTileSource(TileSourceFactory.MAPNIK)

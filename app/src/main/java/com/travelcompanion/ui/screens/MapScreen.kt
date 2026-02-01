@@ -9,9 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.observe
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.preference.PreferenceManager
+import androidx.compose.runtime.livedata.observeAsState
 import com.travelcompanion.ui.map.MapViewModel
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -19,6 +17,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import com.travelcompanion.ui.map.MapManager
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     tripId: Long?,
@@ -28,7 +27,7 @@ fun MapScreen(
 
     // Configure OSMDroid once for this composable
     LaunchedEffect(Unit) {
-        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context))
+        Configuration.getInstance().load(context, context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = context.packageName
         // Ensure ViewModel has loaded data
         viewModel.loadJourneysForMap()

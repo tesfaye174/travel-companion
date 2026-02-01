@@ -201,8 +201,8 @@ class TripRepository @Inject constructor(
                 com.travelcompanion.domain.model.MonthlyStat(
                     month = stat.month,
                     tripCount = stat.tripCount,
-                    totalDistance = stat.totalDistance ?: 0f,
-                    totalDuration = stat.totalDuration ?: 0L
+                    totalDistance = stat.totalDistance,
+                    totalDuration = stat.totalDuration
                 )
             }
         }

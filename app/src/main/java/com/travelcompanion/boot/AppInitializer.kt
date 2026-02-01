@@ -28,7 +28,7 @@ object AppInitializer {
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "daily_travel_reminder",
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
     }

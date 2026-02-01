@@ -94,6 +94,7 @@ class EditTripDialogFragment : DialogFragment() {
                 TripType.LOCAL -> binding.chipLocal.isChecked = true
                 TripType.DAY_TRIP -> binding.chipDay.isChecked = true
                 TripType.MULTI_DAY -> binding.chipMultiDay.isChecked = true
+                TripType.OTHER -> binding.chipLocal.isChecked = true
             }
         }
     }

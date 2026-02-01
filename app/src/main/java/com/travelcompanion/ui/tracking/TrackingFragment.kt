@@ -82,7 +82,7 @@ class TrackingFragment : Fragment() {
 
     private fun setupMap() {
         // Configure osmdroid
-        org.osmdroid.config.Configuration.getInstance().load(requireContext(), androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        org.osmdroid.config.Configuration.getInstance().load(requireContext(), requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
         org.osmdroid.config.Configuration.getInstance().userAgentValue = requireContext().packageName
         val mapView = binding.mapTracking
         mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
@@ -168,7 +168,7 @@ class TrackingFragment : Fragment() {
 
         // Observe current trip for destination display
         viewModel.currentTrip.observe(viewLifecycleOwner) { trip ->
-            binding.tvDestination.text = trip?.destination ?: getString(R.string.tracking)
+            binding.tvDestination.text = trip?.destination ?: getString(R.string.tracking_journey)
         }
     }
 

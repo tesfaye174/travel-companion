@@ -13,8 +13,9 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.travelcompanion.R
-import com.travelcompanion.data.local.entity.LocationPoint
-import com.travelcompanion.data.repository.TripRepository
+import com.travelcompanion.data.db.AppDatabase
+import com.travelcompanion.data.db.entities.JourneyEntity
+import com.travelcompanion.domain.model.Coordinate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -23,12 +24,14 @@ import javax.inject.Inject
 class TrackingService : Service() {
 
     @Inject
-    lateinit var repository: TripRepository
+    lateinit var database: AppDatabase
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private var currentTripId: Long = 0
+    private var currentJourneyId: Long = 0
+    private val coordinates = mutableListOf<Coordinate>()
     private val binder = LocalBinder()
 
     inner class LocalBinder : Binder() {
@@ -72,14 +75,13 @@ class TrackingService : Service() {
     private fun handleLocationUpdate(location: Location) {
         serviceScope.launch {
             try {
-                repository.logLocation(
-                    LocationPoint(
-                        tripId = currentTripId,
-                        latitude = location.latitude,
-                        longitude = location.longitude,
-                        timestamp = System.currentTimeMillis()
-                    )
+                // Add coordinate to current journey
+                val coordinate = Coordinate(
+                    latitude = location.latitude,
+                    longitude = location.longitude,
+                    timestamp = java.util.Date(System.currentTimeMillis())
                 )
+                coordinates.add(coordinate)
             } catch (e: Exception) {
                 // best-effort logging
             }

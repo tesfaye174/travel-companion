@@ -133,9 +133,9 @@ class StatisticsFragment : Fragment() {
 
     private fun updatePieChart(stats: List<TripTypeStat>) {
         val entries = stats
-            .filter { it.count > 0 }
+            .filter { it.tripCount > 0 }
             .map { s ->
-                PieEntry(s.count.toFloat(), s.type.replace('_', ' '))
+                PieEntry(s.tripCount.toFloat(), s.tripType.name.replace('_', ' '))
             }
 
         val dataSet = PieDataSet(entries, "Trip types").apply {

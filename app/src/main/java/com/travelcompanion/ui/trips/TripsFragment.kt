@@ -52,12 +52,15 @@ class TripsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        tripAdapter = TripsAdapter { trip ->
-            val bundle = Bundle().apply {
-                putLong("tripId", trip.id)
-            }
-             findNavController().navigate(R.id.navigation_trip_details, bundle)
-        }
+        tripAdapter = TripsAdapter(
+            onTripClick = { trip ->
+                val bundle = Bundle().apply {
+                    putLong("tripId", trip.id)
+                }
+                findNavController().navigate(R.id.navigation_trip_details, bundle)
+            },
+            onTripLongClick = { /* long click handled by swipe to delete */ }
+        )
 
         binding.rvTrips.apply {
             layoutManager = LinearLayoutManager(requireContext())

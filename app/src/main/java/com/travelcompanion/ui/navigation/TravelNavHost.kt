@@ -16,22 +16,19 @@ fun TravelNavHost(navController: NavHostController, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "home") {
 
         composable("home") {
-            HomeScreen(
-                viewModel = viewModel,
-                onNavigateToMap = { navController.navigate("map") }
-            )
+            HomeScreen(viewModel = viewModel)
         }
 
         composable(
             route = "map?tripId={tripId}",
-            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType; defaultValue = 0L })
         ) { backStackEntry ->
             val tripId = backStackEntry.arguments?.getLong("tripId")
             MapScreen(tripId = tripId)
         }
 
         composable("stats") {
-            StatsScreen(viewModel = viewModel)
+            StatsScreen()
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.travelcompanion.databinding.FragmentHomeBinding
 import com.travelcompanion.R
+import com.travelcompanion.ui.trips.TripsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +21,7 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var destinationsAdapter: DestinationsAdapter
+    private lateinit var tripsAdapter: TripsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupDestinationsRecyclerView()
+        setupTripsRecyclerView()
         setupClickListeners()
         observeViewModel()
     }
@@ -56,9 +59,38 @@ class HomeFragment : Fragment() {
         destinationsAdapter.submitList(SuggestedDestinations.destinations)
     }
 
+    private fun setupTripsRecyclerView() {
+        tripsAdapter = TripsAdapter(
+            onTripClick = { trip ->
+                val bundle = Bundle().apply {
+                    putLong("tripId", trip.id)
+                }
+                findNavController().navigate(R.id.navigation_trip_details, bundle)
+            },
+            onTripLongClick = { _ -> }
+        )
+
+        binding.rvRecentTrips.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = tripsAdapter
+        }
+    }
+
     private fun setupClickListeners() {
         binding.fabAddTrip.setOnClickListener {
             findNavController().navigate(R.id.navigation_new_trip)
+        }
+
+        binding.btnStartTrip.setOnClickListener {
+            findNavController().navigate(R.id.navigation_new_trip)
+        }
+
+        binding.btnMyTrips.setOnClickListener {
+            findNavController().navigate(R.id.navigation_trips)
+        }
+
+        binding.btnExplore.setOnClickListener {
+            findNavController().navigate(R.id.navigation_map)
         }
     }
 
@@ -66,6 +98,7 @@ class HomeFragment : Fragment() {
         viewModel.quickStats.observe(viewLifecycleOwner) { stats ->
             binding.tvTotalTrips.text = getString(R.string.total_trips_val, stats.totalTrips)
             binding.tvTotalDistance.text = getString(R.string.total_distance_val, stats.totalDistance)
+            binding.layoutQuickStats.visibility = if (stats.totalTrips > 0) View.VISIBLE else View.GONE
         }
 
         viewModel.recentTrips.observe(viewLifecycleOwner) { trips ->
@@ -75,7 +108,7 @@ class HomeFragment : Fragment() {
             } else {
                 binding.rvRecentTrips.visibility = View.VISIBLE
                 binding.layoutEmptyState.root.visibility = View.GONE
-                // Here you would normally update the adapter
+                tripsAdapter.submitList(trips)
             }
         }
     }

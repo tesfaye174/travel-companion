@@ -11,7 +11,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.travelcompanion.R
-import com.travelcompanion.ui.MainActivity
+import com.travelcompanion.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

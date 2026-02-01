@@ -154,4 +154,14 @@
     <color name="chipBackground">#E0E7FF</color>
     <color name="chipText">#2563EB</color>
     <color name="chipIcon">#1E40AF</color>
+
+    <!-- Semantic colors for theme -->
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="onBackground">#1A1A1A</color>
+    <color name="onSurface">#1A1A1A</color>
+    <color name="secondary">#F59E0B</color>
+    <color name="primaryVariant">#1E40AF</color>
+    <color name="card">#FFFFFF</color>
+    <color name="divider">#E5E7EB</color>
 </resources>

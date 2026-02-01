@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.livedata.observeAsState
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.travelcompanion.ui.statistics.StatisticsViewModel
 import com.travelcompanion.domain.model.MonthlyStat
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsScreen(viewModel: StatisticsViewModel = hiltViewModel()) {
     val monthlyStats by viewModel.monthlyStats.observeAsState(emptyList())

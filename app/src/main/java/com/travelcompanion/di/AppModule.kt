@@ -3,8 +3,6 @@ package com.travelcompanion.di
 import android.content.Context
 import androidx.room.Room
 import com.travelcompanion.data.db.AppDatabase
-import com.travelcompanion.data.repository.TripRepository
-import com.travelcompanion.domain.repository.ITripRepository
 import com.travelcompanion.utils.DispatcherProvider
 import com.travelcompanion.utils.DispatcherProviderImpl
 import dagger.Module
@@ -48,15 +46,10 @@ object AppModule {
             AppDatabase::class.java,
             "travel_companion_db"
         )
-            .fallbackToDestructiveMigration(true)
+            .fallbackToDestructiveMigration()
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideTripRepository(database: AppDatabase): ITripRepository {
-        return TripRepository(database)
-    }
 
     @Provides
     @Singleton

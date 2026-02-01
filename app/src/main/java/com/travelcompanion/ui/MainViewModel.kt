@@ -7,14 +7,15 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.travelcompanion.data.local.entity.Trip
-import com.travelcompanion.data.local.entity.TripType
+import com.travelcompanion.domain.model.Trip
+import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.data.repository.TripRepository
 import com.travelcompanion.domain.usecase.AnalyzePredictionUseCase
 import com.travelcompanion.service.TrackingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,8 +51,14 @@ class MainViewModel @Inject constructor(
 
     fun startTrip(name: String, dest: String, type: TripType) {
         viewModelScope.launch {
-            val trip = Trip(name = name, destination = dest, type = type,
-                startDate = System.currentTimeMillis(), endDate = 0, isActive = true)
+            val trip = Trip(
+                title = name,
+                destination = dest,
+                tripType = type,
+                startDate = Date(),
+                endDate = null,
+                isTracking = true
+            )
             val id = repository.insertTrip(trip)
             startService(id)
         }
@@ -59,9 +66,9 @@ class MainViewModel @Inject constructor(
 
     fun stopTrip() {
         viewModelScope.launch {
-            val current = _uiState.value.trips.find { it.isActive }
+            val current = _uiState.value.trips.find { it.isTracking }
             current?.let {
-                val updated = it.copy(isActive = false, endDate = System.currentTimeMillis())
+                val updated = it.copy(isTracking = false, endDate = Date())
                 repository.updateTrip(updated)
                 stopService()
             }

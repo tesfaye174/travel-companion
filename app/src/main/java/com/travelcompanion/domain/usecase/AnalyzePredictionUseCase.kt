@@ -1,7 +1,7 @@
 package com.travelcompanion.domain.usecase
 
-import com.travelcompanion.data.local.entity.LocationPoint
-import com.travelcompanion.data.local.entity.Trip
+import com.travelcompanion.domain.model.LocationPoint
+import com.travelcompanion.domain.model.Trip
 
 data class PredictionResult(
     val predictedKm: Double,

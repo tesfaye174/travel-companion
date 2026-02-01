@@ -12,8 +12,8 @@ import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.utils.DateUtils
 import java.util.Locale
 
-class TripsAdapter(
-    private val onTripClick: (Trip) -> Unit
+class TripsAdapter(private val onTripClick: (Trip) -> Unit,
+    private val onTripLongClick: (Trip) -> Unit = {}
 ) : ListAdapter<Trip, TripsAdapter.TripViewHolder>(TripDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
@@ -53,6 +53,10 @@ class TripsAdapter(
             binding.tvPhotoCount.text = trip.photoCount.toString()
 
             binding.root.setOnClickListener { onTripClick(trip) }
+            binding.root.setOnLongClickListener {
+                onTripLongClick(trip)
+                true
+            }
         }
     }
 

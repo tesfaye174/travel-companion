@@ -202,7 +202,7 @@ class TripDetailsFragment : Fragment() {
 
     private fun setupMap() {
         // Configure osmdroid
-        Configuration.getInstance().load(requireContext(), androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        Configuration.getInstance().load(requireContext(), requireContext().getSharedPreferences("osmdroid", android.content.Context.MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = requireContext().packageName
         val mapView = binding.mapDetails
         mapView.setTileSource(TileSourceFactory.MAPNIK)

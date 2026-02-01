@@ -11,7 +11,7 @@ object MapManager {
         val polyline = Polyline().apply {
             outlinePaint.color = color
             outlinePaint.strokeWidth = width
-            this.points.addAll(points)
+            setPoints(points)
         }
         map.overlays.add(polyline)
     }

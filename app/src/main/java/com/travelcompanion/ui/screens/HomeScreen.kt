@@ -6,11 +6,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.travelcompanion.data.local.entity.TripType
+import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.ui.MainViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Place
 
 @Composable
 fun HomeScreen(viewModel: MainViewModel = hiltViewModel()) {
@@ -20,7 +20,7 @@ fun HomeScreen(viewModel: MainViewModel = hiltViewModel()) {
     Scaffold(
         bottomBar = { BottomNavigationBar() },
         floatingActionButton = {
-            if (state.trips.none { it.isActive }) {
+            if (state.trips.none { it.isTracking }) {
                 FloatingActionButton(onClick = { showAddDialog = true }) {
                     Text("+")
                 }
@@ -41,18 +41,18 @@ fun HomeScreen(viewModel: MainViewModel = hiltViewModel()) {
                 }
             }
 
-            state.trips.filter { it.isActive }.forEach { trip ->
+            state.trips.filter { it.isTracking }.forEach { trip ->
                 Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Attivo: ${trip.name}")
+                        Text("Attivo: ${trip.title}")
                         Button(onClick = { viewModel.stopTrip() }) { Text("STOP") }
                     }
                 }
             }
 
-            state.trips.filter { !it.isActive }.forEach { trip ->
+            state.trips.filter { !it.isTracking }.forEach { trip ->
                 Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                    Text(text = trip.name, modifier = Modifier.padding(8.dp))
+                    Text(text = trip.title, modifier = Modifier.padding(8.dp))
                 }
             }
         }
@@ -70,7 +70,7 @@ fun HomeScreen(viewModel: MainViewModel = hiltViewModel()) {
 fun BottomNavigationBar() {
     NavigationBar {
         NavigationBarItem(selected = true, onClick = {}, icon = { Icon(Icons.Default.Home, contentDescription = "Home") }, label = { Text("Home") })
-        NavigationBarItem(selected = false, onClick = {}, icon = { Icon(Icons.Default.Map, contentDescription = "Map") }, label = { Text("Map") })
+        NavigationBarItem(selected = false, onClick = {}, icon = { Icon(Icons.Default.Place, contentDescription = "Map") }, label = { Text("Map") })
     }
 }
 
