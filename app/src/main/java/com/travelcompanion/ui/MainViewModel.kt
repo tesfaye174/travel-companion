@@ -1,17 +1,14 @@
 package com.travelcompanion.ui
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.IBinder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
-import com.travelcompanion.data.repository.TripRepository
+import com.travelcompanion.domain.repository.ITripRepository
 import com.travelcompanion.domain.usecase.AnalyzePredictionUseCase
-import com.travelcompanion.service.TrackingService
+import com.travelcompanion.ui.tracking.TrackingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,20 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: TripRepository,
+    private val repository: ITripRepository,
     private val appContext: android.app.Application
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TravelUiState())
     val uiState: StateFlow<TravelUiState> = _uiState.asStateFlow()
-
-    private var trackingService: TrackingService? = null
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            trackingService = (service as TrackingService.LocalBinder).getService()
-        }
-        override fun onServiceDisconnected(name: ComponentName?) { trackingService = null }
-    }
 
     init {
         loadData()
@@ -60,7 +49,7 @@ class MainViewModel @Inject constructor(
                 isTracking = true
             )
             val id = repository.insertTrip(trip)
-            startService(id)
+            startTrackingService(id)
         }
     }
 
@@ -70,22 +59,21 @@ class MainViewModel @Inject constructor(
             current?.let {
                 val updated = it.copy(isTracking = false, endDate = Date())
                 repository.updateTrip(updated)
-                stopService()
+                stopTrackingService()
             }
         }
     }
 
-    private fun startService(tripId: Long) {
-        Intent(appContext, TrackingService::class.java).also { intent ->
-            appContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-            appContext.startForegroundService(intent)
-            trackingService?.startTracking(tripId)
+    private fun startTrackingService(tripId: Long) {
+        val intent = Intent(appContext, TrackingService::class.java).apply {
+            putExtra(TrackingService.EXTRA_TRIP_ID, tripId)
         }
+        appContext.startForegroundService(intent)
     }
 
-    private fun stopService() {
-        trackingService?.stopTracking()
-        appContext.unbindService(serviceConnection)
+    private fun stopTrackingService() {
+        val intent = Intent(appContext, TrackingService::class.java)
+        appContext.stopService(intent)
     }
 }
 

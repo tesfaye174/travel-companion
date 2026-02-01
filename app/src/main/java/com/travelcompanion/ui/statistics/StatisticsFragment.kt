@@ -2,7 +2,6 @@ package com.travelcompanion.ui.statistics
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,10 @@ import com.github.mikephil.charting.data.*
 import com.travelcompanion.domain.model.MonthlyStat
 import com.travelcompanion.domain.model.TripTypeStat
 import com.travelcompanion.databinding.FragmentStatisticsBinding
+import com.travelcompanion.R
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class StatisticsFragment : Fragment() {
@@ -40,8 +41,24 @@ class StatisticsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupCharts()
+        setupTimeFilter()
         observeViewModel()
         viewModel.loadStatistics()
+    }
+
+    private fun setupTimeFilter() {
+        // Set initial selection based on ViewModel
+        binding.chipThisYear.isChecked = true
+        
+        binding.chipGroupPeriod.setOnCheckedStateChangeListener { _, checkedIds ->
+            val period = when {
+                checkedIds.contains(R.id.chip_this_month) -> StatisticsViewModel.TimePeriod.THIS_MONTH
+                checkedIds.contains(R.id.chip_this_year) -> StatisticsViewModel.TimePeriod.THIS_YEAR
+                checkedIds.contains(R.id.chip_all_time) -> StatisticsViewModel.TimePeriod.ALL_TIME
+                else -> StatisticsViewModel.TimePeriod.THIS_YEAR
+            }
+            viewModel.setTimePeriod(period)
+        }
     }
 
     private fun setupCharts() {
@@ -93,8 +110,8 @@ class StatisticsFragment : Fragment() {
         }
 
         viewModel.totalDuration.observe(viewLifecycleOwner) { ms ->
-            // Not currently displayed in layout, but useful for future UI
-            ms ?: return@observe
+            val millis = ms ?: 0L
+            binding.tvTotalDuration.text = formatDuration(millis)
         }
 
         viewModel.tripTypeStats.observe(viewLifecycleOwner) { stats ->
@@ -168,6 +185,20 @@ class StatisticsFragment : Fragment() {
             11 -> "Nov"
             12 -> "Dec"
             else -> month.toString()
+        }
+    }
+
+    private fun formatDuration(millis: Long): String {
+        if (millis <= 0) return "0h"
+        
+        val days = TimeUnit.MILLISECONDS.toDays(millis)
+        val hours = TimeUnit.MILLISECONDS.toHours(millis) % 24
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60
+        
+        return when {
+            days > 0 -> "${days}d ${hours}h"
+            hours > 0 -> "${hours}h ${minutes}m"
+            else -> "${minutes}m"
         }
     }
 

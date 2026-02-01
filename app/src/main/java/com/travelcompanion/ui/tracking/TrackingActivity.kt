@@ -1,7 +1,6 @@
 package com.travelcompanion.ui.tracking
 
 import android.Manifest
-import com.travelcompanion.service.TrackingService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

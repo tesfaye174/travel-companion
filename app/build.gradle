@@ -20,6 +20,34 @@ android {
 
         // BuildConfig field for location provider selection
         buildConfigField "boolean", "USE_PLAY_SERVICES_LOCATION", "true"
+
+        // Test instrumentation runner
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            // For production, use your own keystore
+            // storeFile file("release-key.jks")
+            // storePassword "your-store-password"
+            // keyAlias "your-key-alias"
+            // keyPassword "your-key-password"
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // signingConfig signingConfigs.release
+        }
     }
 
     compileOptions {
@@ -71,12 +99,6 @@ dependencies {
     kapt "androidx.room:room-compiler:${roomVersion}"
     implementation "androidx.room:room-paging:${roomVersion}"
 
-    // --- Network (API) ---
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
-    implementation "com.squareup.moshi:moshi:1.15.0"
-    implementation "com.squareup.moshi:moshi-kotlin:1.15.0"
-
     // --- Gson (for JSON serialization) ---
     implementation "com.google.code.gson:gson:2.10.1"
 
@@ -88,7 +110,6 @@ dependencies {
 
     // --- Location & Maps ---
     implementation "com.google.android.gms:play-services-location:21.1.0"
-    implementation "com.google.android.gms:play-services-maps:18.2.0"
     implementation "org.osmdroid:osmdroid-android:6.1.18"
 
     // Material Components (needed for styles referenced in resources)

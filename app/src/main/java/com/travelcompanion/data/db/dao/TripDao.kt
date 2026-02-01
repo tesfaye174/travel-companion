@@ -121,12 +121,12 @@ interface TripDao {
     fun getTripCount(): Int
 
     @Query("""
-        SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
+        SELECT CAST(strftime('%m', datetime(start_date / 1000, 'unixepoch')) AS INTEGER) as month,
                COUNT(*) as tripCount,
                SUM(total_distance) as totalDistance,
                SUM(total_duration) as totalDuration
         FROM trips
-        GROUP BY month
+        GROUP BY strftime('%m', datetime(start_date / 1000, 'unixepoch'))
         ORDER BY month
     """)
     fun getMonthlyStats(): List<MonthlyStat>

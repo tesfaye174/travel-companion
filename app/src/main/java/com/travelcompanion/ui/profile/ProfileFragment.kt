@@ -57,7 +57,12 @@ class ProfileFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnEditProfile.setOnClickListener {
-            // Navigate to edit profile
+            // Show toast - in a real app this would open edit screen
+            com.google.android.material.snackbar.Snackbar.make(
+                binding.root,
+                "Profile editing coming soon!",
+                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+            ).show()
         }
 
         binding.cardSettings.setOnClickListener {
@@ -65,21 +70,61 @@ class ProfileFragment : Fragment() {
         }
 
         binding.cardAbout.setOnClickListener {
-            // Show about dialog
+            showAboutDialog()
         }
 
         binding.cardRateApp.setOnClickListener {
-            // Open Play Store
+            openPlayStore()
         }
 
         binding.cardShareApp.setOnClickListener {
-            // Share app
             shareApp()
         }
 
         binding.btnLogout.setOnClickListener {
-            // Handle logout
+            showLogoutConfirmation()
         }
+    }
+
+    private fun showAboutDialog() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.about_app)
+            .setMessage(getString(R.string.app_description) + "\n\n" + getString(R.string.app_version))
+            .setPositiveButton(R.string.ok, null)
+            .setIcon(R.mipmap.ic_launcher)
+            .show()
+    }
+
+    private fun openPlayStore() {
+        try {
+            val intent = android.content.Intent(
+                android.content.Intent.ACTION_VIEW,
+                android.net.Uri.parse("market://details?id=${requireContext().packageName}")
+            )
+            startActivity(intent)
+        } catch (e: android.content.ActivityNotFoundException) {
+            val intent = android.content.Intent(
+                android.content.Intent.ACTION_VIEW,
+                android.net.Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
+            )
+            startActivity(intent)
+        }
+    }
+
+    private fun showLogoutConfirmation() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.logout)
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton(R.string.logout) { _, _ ->
+                // In a real app, clear user session here
+                com.google.android.material.snackbar.Snackbar.make(
+                    binding.root,
+                    "Logged out successfully",
+                    com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun observeViewModel() {

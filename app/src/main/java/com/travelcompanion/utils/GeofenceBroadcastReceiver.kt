@@ -84,8 +84,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             .setContentText(action)
             .setSmallIcon(R.drawable.ic_map)
             .build()
-            
-        manager.notify(3, notification)
+        
+        // Use unique notification ID based on geofence ID hash and timestamp
+        val notificationId = (ids.hashCode() + System.currentTimeMillis().toInt()) and 0x7FFFFFFF
+        manager.notify(notificationId, notification)
     }
 }
 

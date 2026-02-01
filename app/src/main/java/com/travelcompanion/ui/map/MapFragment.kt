@@ -78,11 +78,18 @@ class MapFragment : Fragment() {
         val sharedPreferences = requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
         Configuration.getInstance().load(requireContext(), sharedPreferences)
         Configuration.getInstance().userAgentValue = requireContext().packageName
+        
+        // Setup map with online tiles (MAPNIK from OpenStreetMap)
         mapView?.setTileSource(TileSourceFactory.MAPNIK)
         mapView?.setMultiTouchControls(true)
+        
+        // Set default center to Italy (can be overridden by user location or trip data)
+        val defaultCenter = GeoPoint(41.9028, 12.4964) // Rome, Italy
+        mapView?.controller?.setZoom(6.0)
+        mapView?.controller?.setCenter(defaultCenter)
 
-        // Load custom OSM data from assets/map.osm if available and valid
-        loadOsmData()
+        // Load custom POI markers from assets if available (optional)
+        loadCustomPOIMarkers()
 
         viewModel.loadJourneysForMap()
         viewModel.loadGeofenceAreas()
@@ -91,53 +98,54 @@ class MapFragment : Fragment() {
         observeAndRender()
     }
 
-    private fun loadOsmData() {
+    /**
+     * Loads custom Points of Interest from assets/poi.osm if available.
+     * This is optional - the map will work with online tiles even without this file.
+     */
+    private fun loadCustomPOIMarkers() {
         try {
-            val inputStream = requireContext().assets.open("map.osm")
+            val inputStream = requireContext().assets.open("poi.osm")
             val factory = XmlPullParserFactory.newInstance()
             val parser = factory.newPullParser()
             parser.setInput(inputStream, null)
 
             var eventType = parser.eventType
-            val nodes = mutableListOf<GeoPoint>()
-            var hasValidData = false
+            val pois = mutableListOf<POIData>()
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && parser.name == "node") {
                     val lat = parser.getAttributeValue(null, "lat")?.toDoubleOrNull()
                     val lon = parser.getAttributeValue(null, "lon")?.toDoubleOrNull()
+                    val name = parser.getAttributeValue(null, "name") ?: "POI"
                     if (lat != null && lon != null) {
-                        nodes.add(GeoPoint(lat, lon))
-                        hasValidData = true
+                        pois.add(POIData(GeoPoint(lat, lon), name))
                     }
                 }
                 eventType = parser.next()
             }
+            inputStream.close()
 
-            if (hasValidData) {
-                // Add markers for nodes
-                nodes.forEach { point ->
+            if (pois.isNotEmpty()) {
+                pois.forEach { poi ->
                     val marker = Marker(mapView)
-                    marker.position = point
-                    marker.title = "OSM Node"
+                    marker.position = poi.location
+                    marker.title = poi.name
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     mapView?.overlays?.add(marker)
                 }
-                Timber.d("Loaded ${nodes.size} OSM nodes")
-            } else {
-                Timber.w("No valid OSM data found in map.osm. The file may be incomplete or corrupted.")
-                showMapError("Nessun dato valido trovato in map.osm. Il file potrebbe essere mancante o corrotto.")
+                Timber.d("Loaded ${pois.size} custom POI markers")
             }
+        } catch (e: java.io.FileNotFoundException) {
+            // No custom POI file - this is fine, map works without it
+            Timber.d("No custom POI file found (poi.osm) - using online map tiles only")
         } catch (e: java.io.IOException) {
-            Timber.e(e, "Errore di I/O durante il caricamento OSM: ${e.message}")
-            showMapError("File map.osm non trovato nella cartella assets.")
-        } catch (e: org.xmlpull.v1.XmlPullParserException) {
-            Timber.e(e, "Errore di parsing XML OSM: ${e.message}")
-            showMapError("Errore di parsing del file map.osm.")
+            Timber.w(e, "Could not read POI file: ${e.message}")
         } catch (e: Exception) {
-            Timber.e(e, "Failed to load OSM data: ${e.message}")
-            showMapError("Errore sconosciuto durante il caricamento della mappa.")
+            Timber.w(e, "Error loading custom POIs: ${e.message}")
         }
     }
+
+    private data class POIData(val location: GeoPoint, val name: String)
 
     private fun observeAndRender() {
         viewModel.journeys.observe(viewLifecycleOwner) { journeys ->
@@ -163,9 +171,8 @@ class MapFragment : Fragment() {
             }
         } else if (allPoints.size == 1) {
             MapManager.centerMap(map, allPoints.first(), 14.0)
-        } else {
-            showMapError("Nessun viaggio o percorso disponibile da mostrare sulla mappa.")
         }
+        // No error message if empty - it's normal to have no trips yet
     }
 
     private fun renderGeofences(areas: List<com.travelcompanion.domain.model.GeofenceArea>) {
