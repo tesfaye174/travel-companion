@@ -23,7 +23,11 @@ import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import dagger.hilt.android.AndroidEntryPoint
 
-/**\n * Fragment showing list of all trips with search and filter.\n * Swipe left to delete (with undo).\n */
+/**
+ * Fragment con la lista di tutti i viaggi.
+ * Si puo filtrare per tipo e cercare per testo.
+ * Swipe a sinistra per cancellare con possibilita di annullare.
+ */
 @AndroidEntryPoint
 class TripsFragment : Fragment() {
 

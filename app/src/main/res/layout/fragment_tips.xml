@@ -151,4 +151,16 @@
 
     </LinearLayout>
 
+    <!-- Shuffle Tips FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shuffle_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/shuffle_tips"
+        app:srcCompat="@drawable/ic_shuffle"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

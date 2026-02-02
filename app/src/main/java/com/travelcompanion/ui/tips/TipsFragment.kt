@@ -36,6 +36,7 @@ class TipsFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
         setupCategoryFilter()
+        setupShuffleButton()
         loadTips()
     }
 
@@ -69,6 +70,17 @@ class TipsFragment : Fragment() {
             }
             filterTips()
         }
+    }
+
+    private fun setupShuffleButton() {
+        binding.fabShuffleTips.setOnClickListener {
+            shuffleTips()
+        }
+    }
+
+    private fun shuffleTips() {
+        allTips = allTips.shuffled()
+        filterTips()
     }
 
     private fun filterTips() {

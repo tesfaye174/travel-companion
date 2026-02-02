@@ -9,16 +9,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.databinding.FragmentNewTripBinding
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.ui.tracking.TrackingActivity
 import com.travelcompanion.ui.tracking.TrackingService
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.util.*
 
-// Fragment for creating new trips
+/**
+ * Fragment per creare un nuovo viaggio.
+ * L'utente inserisce titolo, destinazione, date e tipo.
+ */
 @AndroidEntryPoint
 class NewTripFragment : Fragment() {
 
@@ -28,7 +29,6 @@ class NewTripFragment : Fragment() {
 
     private val viewModel: NewTripViewModel by viewModels()
 
-    // Usa DateUtils per la formattazione delle date per coerenza
 
     override fun onCreateView(
         inflater: LayoutInflater,

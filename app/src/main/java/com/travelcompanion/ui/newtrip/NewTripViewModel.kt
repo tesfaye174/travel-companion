@@ -1,5 +1,6 @@
 package com.travelcompanion.ui.newtrip
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,14 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.domain.repository.ITripRepository
+import com.travelcompanion.utils.GeocodingHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class NewTripViewModel @Inject constructor(
-    private val repository: ITripRepository
+    private val repository: ITripRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _isTracking = MutableLiveData(false)
@@ -37,13 +42,24 @@ class NewTripViewModel @Inject constructor(
         notes: String = ""
     ) {
         viewModelScope.launch {
+            // Geocode the destination to get coordinates
+            val geocodingResult = GeocodingHelper.geocodeLocation(context, destination)
+
+            if (geocodingResult != null) {
+                Timber.d("Geocoded '$destination' to: ${geocodingResult.latitude}, ${geocodingResult.longitude}")
+            } else {
+                Timber.w("Could not geocode destination: $destination")
+            }
+
             val trip = Trip(
                 title = title,
                 destination = destination,
                 tripType = tripType,
                 startDate = startDate,
                 endDate = endDate,
-                notes = notes
+                notes = notes,
+                destinationLatitude = geocodingResult?.latitude,
+                destinationLongitude = geocodingResult?.longitude
             )
 
             currentTripId = repository.insertTrip(trip)

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'com.google.dagger.hilt.android'
     id 'org.jetbrains.kotlin.kapt'
     id 'kotlin-parcelize'
@@ -62,13 +63,8 @@ android {
     buildFeatures {
         compose true
         viewBinding true
-        dataBinding true
+        dataBinding false
         buildConfig true
-    }
-
-    composeOptions {
-        // This version should match the Compose compiler for your Kotlin version.
-        kotlinCompilerExtensionVersion '1.5.10'
     }
 }
 
@@ -87,14 +83,14 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
     // --- DI ---
-    implementation "com.google.dagger:hilt-android:2.50"
-    kapt "com.google.dagger:hilt-compiler:2.50"
+    implementation "com.google.dagger:hilt-android:2.51.1"
+    kapt "com.google.dagger:hilt-compiler:2.51.1"
     implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
     implementation "androidx.hilt:hilt-work:1.1.0"
     kapt "androidx.hilt:hilt-compiler:1.1.0"
 
     // --- DB ---
-    def roomVersion = '2.6.1'
+    def roomVersion = '2.7.0'
     implementation "androidx.room:room-runtime:${roomVersion}"
     implementation "androidx.room:room-ktx:${roomVersion}"
     kapt "androidx.room:room-compiler:${roomVersion}"

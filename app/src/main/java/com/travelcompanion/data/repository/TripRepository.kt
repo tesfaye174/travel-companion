@@ -86,26 +86,12 @@ class TripRepository @Inject constructor(
         cacheValid = false
     }
 
-    /**
-     * Recupera un viaggio per ID.
-     * Uso Flow.first() per ottenere il valore corrente una sola volta.
-     */
     override suspend fun getTripById(id: Long): Trip? {
         val entity = tripDao.getTripByIdFlow(id).first()
         return entity?.toDomain()
     }
 
-    /**
-     * Restituisce un Flow con tutti i viaggi.
-     *
-     * Implemento qui la logica di caching: se la cache è valida restituisco
-     * i dati cached, altrimenti li ricarico dal database e aggiorno la cache.
-     *
-     * Uso Flow invece di LiveData perché:
-     * - È più flessibile (posso usare operatori come map, filter, combine)
-     * - Si integra meglio con le coroutine
-     * - Può essere convertito in LiveData con asLiveData() quando serve
-     */
+    // uso flow cosi la ui si aggiorna automaticamente quando cambiano i dati
     override fun getAllTrips(): Flow<List<Trip>> {
         return tripDao.getAllTripsFlow().map { entities ->
             if (cacheValid && cachedTrips != null) {
@@ -277,7 +263,9 @@ class TripRepository @Inject constructor(
             totalDuration = totalDuration,
             photoCount = photoCount,
             notes = notes,
-            isTracking = isTracking
+            isTracking = isTracking,
+            destinationLatitude = destinationLatitude,
+            destinationLongitude = destinationLongitude
         )
     }
 
@@ -294,7 +282,9 @@ class TripRepository @Inject constructor(
             totalDuration = totalDuration,
             photoCount = photoCount,
             notes = notes,
-            isTracking = isTracking
+            isTracking = isTracking,
+            destinationLatitude = destinationLatitude,
+            destinationLongitude = destinationLongitude
         )
     }
 

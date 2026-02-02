@@ -3,35 +3,12 @@ package com.travelcompanion.domain.model
 import java.util.Date
 
 /**
- * Modelli di dominio dell'applicazione Travel Companion.
- *
- * Questi sono i "domain models", cioè le classi che rappresentano i concetti
- * del dominio applicativo senza dipendere da dettagli implementativi come
- * Room o Retrofit. È una buona pratica del Clean Architecture.
- *
- * Differenza con le Entity:
- * - Entity (es. TripEntity) → mappate direttamente alle tabelle del database
- * - Domain Model (es. Trip) → usate nel resto dell'app (ViewModel, UseCase)
- *
- * La conversione tra i due avviene nel Repository tramite funzioni di estensione
- * toEntity() e toDomain() definite nel file di mapping.
+ * Modelli del dominio dell'app.
+ * Sono separati dalle entity di Room cosi il resto dell'app
+ * non dipende dal database. La conversione la fa il repository.
  */
 
-/**
- * Rappresenta un viaggio completo dell'utente.
- *
- * @property id ID univoco auto-generato dal database (0 per nuovi viaggi)
- * @property title Titolo del viaggio scelto dall'utente
- * @property destination Nome della destinazione (es. "Roma, Italia")
- * @property tripType Categoria del viaggio (locale, giornaliero, più giorni)
- * @property startDate Data di inizio del viaggio
- * @property endDate Data di fine (null se viaggio in corso o single day)
- * @property totalDistance Distanza totale percorsa in km
- * @property totalDuration Durata totale in millisecondi
- * @property photoCount Numero di foto scattate durante il viaggio
- * @property notes Eventuali note testuali dell'utente
- * @property isTracking True se il tracking GPS è attualmente attivo
- */
+// rappresenta un viaggio
 data class Trip(
     val id: Long = 0,
     val title: String,
@@ -43,28 +20,20 @@ data class Trip(
     val totalDuration: Long = 0,
     val photoCount: Int = 0,
     val notes: String = "",
-    val isTracking: Boolean = false
+    val isTracking: Boolean = false,
+    val destinationLatitude: Double? = null,
+    val destinationLongitude: Double? = null
 )
 
-/**
- * Enum che definisce le categorie di viaggio disponibili.
- * Usato per filtrare e raggruppare i viaggi nella UI.
- */
+// tipi di viaggio per i filtri
 enum class TripType {
-    LOCAL,      // Spostamenti brevi vicino casa (es. gita al parco)
-    DAY_TRIP,   // Escursioni di un giorno (es. visita a una città vicina)
-    MULTI_DAY,  // Viaggi di più giorni (es. vacanze, weekend fuori)
-    OTHER       // Categoria di fallback per valori legacy o non specificati
+    LOCAL,
+    DAY_TRIP,
+    MULTI_DAY,
+    OTHER
 }
 
-/**
- * Rappresenta un singolo percorso registrato durante il tracking GPS.
- *
- * Un viaggio (Trip) può avere più Journey, ad esempio se l'utente
- * ferma e riavvia il tracking più volte durante lo stesso viaggio.
- *
- * @property coordinates Lista ordinata dei punti GPS registrati
- */
+// percorso registrato col gps durante un viaggio
 data class Journey(
     val id: Long = 0,
     val tripId: Long,
@@ -74,34 +43,25 @@ data class Journey(
     val coordinates: List<Coordinate> = emptyList()
 )
 
-/**
- * Un singolo punto GPS con timestamp.
- * Usato per costruire la polyline del percorso sulla mappa.
- */
+// punto gps singolo
 data class Coordinate(
     val latitude: Double,
     val longitude: Double,
     val timestamp: Date = Date()
 )
 
-/**
- * Foto con nota opzionale, associata a un viaggio.
- * Le coordinate permettono di mostrare la foto sulla mappa nel punto esatto.
- */
+// foto con nota associata al viaggio
 data class PhotoNote(
     val id: Long = 0,
     val tripId: Long,
-    val imagePath: String,      // Percorso locale del file immagine
-    val note: String,           // Descrizione/didascalia della foto
+    val imagePath: String,
+    val note: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
     val timestamp: Date = Date()
 )
 
-/**
- * Nota testuale con posizione opzionale.
- * L'utente può aggiungere appunti durante il viaggio, anche senza foto.
- */
+// nota testuale
 data class Note(
     val id: Long = 0,
     val tripId: Long,
@@ -113,26 +73,19 @@ data class Note(
     val photoPath: String? = null
 )
 
-/**
- * Punto GPS dettagliato con dati dei sensori.
- * Usato internamente durante il tracking per avere più precisione.
- * Include altitudine, accuratezza GPS e velocità istantanea.
- */
+// punto gps con dati extra dei sensori
 data class LocationPoint(
     val id: Long = 0,
     val journeyId: Long,
     val latitude: Double,
     val longitude: Double,
-    val altitude: Double? = null,   // Altitudine in metri (se disponibile)
-    val accuracy: Float? = null,    // Accuratezza GPS in metri
-    val speed: Float? = null,       // Velocità in m/s
+    val altitude: Double? = null,
+    val accuracy: Float? = null,
+    val speed: Float? = null,
     val timestamp: Long
 )
 
-/**
- * Aggregazione di tutti i dati di un viaggio per la schermata di dettaglio.
- * Contiene il viaggio base più tutti gli elementi collegati.
- */
+// aggregazione di tutti i dati di un viaggio
 data class TripDetails(
     val trip: Trip,
     val journeys: List<Journey> = emptyList(),
@@ -143,14 +96,11 @@ data class TripDetails(
     val locationPoints: List<LocationPoint> = emptyList()
 )
 
-// Type alias per retrocompatibilità con il codice esistente
+// alias per retrocompatibilita
 typealias Photo = PhotoNote
 typealias Point = LocationPoint
 
-/**
- * Area geografica monitorata per le notifiche di geofencing.
- * Quando l'utente entra o esce da quest'area riceve una notifica.
- */
+// area geografica per le notifiche geofence
 data class GeofenceArea(
     val id: String,
     val name: String,
@@ -159,33 +109,23 @@ data class GeofenceArea(
     val radiusMeters: Float
 )
 
-/**
- * Evento di transizione geofence (ingresso o uscita da un'area).
- * Questi eventi vengono salvati per mostrare la cronologia nella mappa.
- */
+// evento quando entri/esci da un'area geofence
 data class GeofenceEvent(
     val id: Long = 0,
     val geofenceId: String,
-    val transition: String,     // "ENTER" o "EXIT"
+    val transition: String,
     val timestamp: Long
 )
 
-// ==================== MODELLI PER LE STATISTICHE ====================
+// --- modelli per le statistiche ---
 
-/**
- * Statistiche aggregate per mese, usate nella schermata statistiche.
- */
 data class MonthlyStat(
-    val month: Int,             // Mese (1-12)
+    val month: Int,
     val tripCount: Int,
-    val totalDistance: Float,   // In km
-    val totalDuration: Long     // In millisecondi
+    val totalDistance: Float,
+    val totalDuration: Long
 )
 
-/**
- * Statistiche raggruppate per tipo di viaggio.
- * Permette di vedere quanti km ha fatto l'utente per categoria.
- */
 data class TripTypeStat(
     val tripType: TripType,
     val totalDistance: Float,

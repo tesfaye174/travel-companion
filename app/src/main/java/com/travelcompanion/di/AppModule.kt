@@ -25,41 +25,22 @@ import com.travelcompanion.location.PlatformLocationProvider
 import com.travelcompanion.BuildConfig
 
 /**
- * Modulo Hilt principale per l'iniezione delle dipendenze.
- *
- * Hilt è il framework DI raccomandato da Google per Android.
- * Questo modulo fornisce le dipendenze "singleton" che esistono
- * per tutta la vita dell'applicazione.
- *
- * @InstallIn(SingletonComponent::class) indica che le dipendenze
- * qui definite vivono a livello di Application (non Activity/Fragment).
- *
- * Dipendenze fornite:
- * - Database Room
- * - NotificationManager
- * - Dispatcher per coroutine
- * - Provider per localizzazione e geofencing
+ * Modulo Hilt per l'injection delle dipendenze.
+ * Qui definisco come creare le varie istanze che servono nell'app:
+ * database, notification manager, dispatcher per le coroutine, ecc.
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    /**
-     * Fornisce il NotificationManager di sistema per inviare notifiche.
-     */
     @Provides
     @Singleton
     fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    /**
-     * Fornisce l'istanza singleton del database Room.
-     *
-     * @Singleton garantisce che esista una sola istanza del database.
-     * fallbackToDestructiveMigration() ricrea il DB se la versione cambia.
-     * Questo è accettabile in sviluppo, in produzione userei migrazioni.
-     */
+    // creo il database room, uso fallbackToDestructiveMigration
+    // perchè in sviluppo mi fa comodo ricreare il db se cambio schema
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -72,19 +53,13 @@ object AppModule {
             .build()
     }
 
-    /**
-     * Fornisce l'interfaccia DispatcherProvider per i test.
-     * Nei test posso iniettare un'implementazione fake che usa TestDispatcher.
-     */
     @Provides
     @Singleton
     fun provideDispatcherProvider(): DispatcherProvider {
         return DispatcherProviderImpl()
     }
 
-    // ==================== DISPATCHER QUALIFICATI ====================
-    // Uso @Qualifier per distinguere i diversi dispatcher.
-    // Questo permette di iniettare il dispatcher specifico dove serve.
+    // dispatcher per le coroutine, li separo cosi posso testarli
 
     @Provides
     @IoDispatcher
@@ -98,17 +73,8 @@ object AppModule {
     @DefaultDispatcher
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
-    // ==================== PROVIDER LOCATION ====================
-
-    /**
-     * Fornisce il LocationProvider appropriato in base alla configurazione.
-     *
-     * Se USE_PLAY_SERVICES_LOCATION è true (default), usa Google Play Services.
-     * Altrimenti usa il LocationManager di Android (per dispositivi senza Play Services).
-     *
-     * Questo pattern "Strategy" permette di cambiare implementazione
-     * senza modificare il codice che usa LocationProvider.
-     */
+    // provider per la location - uso play services se disponibile,
+    // altrimenti il location manager di android base
     @Provides
     fun provideLocationProvider(@ApplicationContext context: Context): LocationProvider {
         return if (BuildConfig.USE_PLAY_SERVICES_LOCATION) {
@@ -118,10 +84,7 @@ object AppModule {
         }
     }
 
-    /**
-     * Fornisce il GeofenceProvider appropriato.
-     * Stessa logica del LocationProvider - supporta dispositivi con e senza Play Services.
-     */
+    // stessa cosa per il geofencing
     @Provides
     fun provideGeofenceProvider(@ApplicationContext context: Context, database: AppDatabase): GeofenceProvider {
         return if (BuildConfig.USE_PLAY_SERVICES_LOCATION) {
@@ -132,18 +95,16 @@ object AppModule {
     }
 }
 
-// ==================== QUALIFIER ANNOTATIONS ====================
-// Queste annotazioni servono per distinguere le diverse istanze
-// dello stesso tipo (CoroutineDispatcher) durante l'iniezione.
+// annotation per distinguere i vari dispatcher
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class IoDispatcher      // Per operazioni I/O (database, network, file)
+annotation class IoDispatcher
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class MainDispatcher    // Per aggiornamenti UI
+annotation class MainDispatcher
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class DefaultDispatcher // Per computazioni CPU-intensive
+annotation class DefaultDispatcher

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 /**
- * Repository interface for data operations.
- * Uses Flow for reactive updates and suspend for one-shot ops.
+ * Interfaccia del repository per accedere ai dati.
+ * Flow per le liste che si aggiornano, suspend per operazioni singole.
  */
 interface ITripRepository {
 

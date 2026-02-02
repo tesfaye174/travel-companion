@@ -38,6 +38,12 @@ data class TripEntity(
     val notes: String = "",
 
     @ColumnInfo(name = "is_tracking")
-    val isTracking: Boolean = false
+    val isTracking: Boolean = false,
+
+    @ColumnInfo(name = "destination_latitude")
+    val destinationLatitude: Double? = null,
+
+    @ColumnInfo(name = "destination_longitude")
+    val destinationLongitude: Double? = null
 )
 
