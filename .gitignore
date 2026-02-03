@@ -37,3 +37,13 @@ local.properties
 
 # Ignore log files
 *.log
+
+# Backup folder created by cleanup script
+cleanup_backup_*/
+
+# Kotlin caches
+.kotlin/
+
+# Local IDE folders (ensure ignored)
+.idea/
+.vscode/

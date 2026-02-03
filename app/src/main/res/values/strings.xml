@@ -113,10 +113,18 @@
     <string name="insights_subtitle">Your travel insights</string>
     <string name="this_month">This month</string>
 
+    <!-- Pin Map strings -->
+    <string name="pin_map_title">Posiziona Pin</string>
+    <string name="pin_map_hint">Tocca sulla mappa per posizionare un pin</string>
+    <string name="pin_map_hint_placed">Tocca in un altro punto per spostare il pin</string>
+    <string name="pin_marker_title">Posizione selezionata</string>
+    <string name="error_getting_location">Impossibile ottenere la posizione</string>
+
     <!-- Navigation titles -->
     <string name="title_home">Home</string>
     <string name="title_trips">Trips</string>
     <string name="title_map">Map</string>
+    <string name="title_pin_map">Pin Map</string>
     <string name="title_statistics">Statistics</string>
     <string name="title_tips">Tips</string>
     <string name="title_profile">Profile</string>

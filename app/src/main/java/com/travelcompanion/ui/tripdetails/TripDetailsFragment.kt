@@ -303,6 +303,7 @@ class TripDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         mapViewRef?.onDetach()
+        mapViewRef = null
         _binding = null
     }
 }

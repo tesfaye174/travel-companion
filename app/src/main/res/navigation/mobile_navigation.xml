@@ -24,6 +24,12 @@
         tools:layout="@layout/fragment_map" />
 
     <fragment
+        android:id="@+id/navigation_pin_map"
+        android:name="com.travelcompanion.ui.map.PinMapFragment"
+        android:label="@string/title_pin_map"
+        tools:layout="@layout/fragment_pin_map" />
+
+    <fragment
         android:id="@+id/navigation_tips"
         android:name="com.travelcompanion.ui.tips.TipsFragment"
         android:label="@string/title_tips"

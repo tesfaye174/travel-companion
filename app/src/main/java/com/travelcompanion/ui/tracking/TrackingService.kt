@@ -21,6 +21,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Inject
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.gson.Gson
+import java.io.File
+import java.io.FileWriter
+import com.travelcompanion.workers.SaveJourneyWorker
 
 @AndroidEntryPoint
 class TrackingService : Service() {
@@ -41,8 +48,14 @@ class TrackingService : Service() {
     private var coordinates = mutableListOf<com.travelcompanion.domain.model.Coordinate>()
     private var startTime: Long = 0
 
+    // DB id del journey checkpoint (0 se non ancora creato)
+    private var currentJourneyDbId: Long = 0L
+
     private val notificationId = AppConstants.Tracking.TRACKING_NOTIFICATION_ID
     private val channelId = AppConstants.Tracking.TRACKING_CHANNEL_ID
+
+    // soglia checkpoint: salva parziale ogni N coordinate
+    private val CHECKPOINT_EVERY = 30
 
     override fun onCreate() {
         super.onCreate()
@@ -99,20 +112,91 @@ class TrackingService : Service() {
 
         // Broadcast update
         sendLocationUpdate(location, totalDistance)
+
+        // Checkpoint: ogni CHECKPOINT_EVERY coordinate salva parziale nel DB
+        if (coordinates.size % CHECKPOINT_EVERY == 0) {
+            // crea o aggiorna un Journey parziale
+            val partial = com.travelcompanion.domain.model.Journey(
+                id = currentJourneyDbId,
+                tripId = currentTripId,
+                startTime = java.util.Date(startTime),
+                endTime = java.util.Date(),
+                distance = totalDistance,
+                coordinates = coordinates.toList()
+            )
+
+            try {
+                val savedId = repository.insertJourney(partial)
+                if (currentJourneyDbId == 0L) currentJourneyDbId = savedId
+                Timber.d("Checkpoint saved journey id=$savedId coords=${coordinates.size}")
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to save checkpoint journey")
+            }
+        }
     }
 
     override fun onDestroy() {
+        // Prima schedulo il salvataggio, poi cancello il scope per evitare che i dati
+        // in memoria vengano persi prima della schedulazione
+        stopTracking()
         super.onDestroy()
         serviceScope.cancel()
-        stopTracking()
     }
 
     private fun stopTracking() {
         locationProvider.stopLocationUpdates()
-        
-        // Save journey before stopping service using NonCancellable to ensure completion
-        CoroutineScope(Dispatchers.IO + kotlinx.coroutines.NonCancellable).launch {
-            saveCompleteJourney()
+
+        // Schedule save via WorkManager instead of launching a NonCancellable coroutine
+        // to ensure the work runs even if the service/app process is killed.
+        if (currentTripId != -1L && coordinates.isNotEmpty()) {
+            // se abbiamo un journey checkpoint in DB passiamo solo l'id
+            try {
+                val workDataBuilder = androidx.work.Data.Builder()
+
+                if (currentJourneyDbId != 0L) {
+                    workDataBuilder.putLong(SaveJourneyWorker.KEY_JOURNEY_DB_ID, currentJourneyDbId)
+                } else {
+                    // fallback: serializza l'intero journey (se piccolo)
+                    val journey = com.travelcompanion.domain.model.Journey(
+                        tripId = currentTripId,
+                        startTime = java.util.Date(startTime),
+                        endTime = java.util.Date(),
+                        distance = calculateTotalDistance(),
+                        coordinates = coordinates.toList()
+                    )
+
+                    val gson = com.google.gson.Gson()
+                    val json = gson.toJson(journey)
+
+                    if (json.toByteArray().size < 9000) {
+                        workDataBuilder.putString(SaveJourneyWorker.KEY_JOURNEY_JSON, json)
+                    } else {
+                        val file = java.io.File.createTempFile("journey_", ".json", cacheDir)
+                        java.io.FileWriter(file).use { fw -> fw.write(json) }
+                        workDataBuilder.putString(SaveJourneyWorker.KEY_JOURNEY_FILE_PATH, file.absolutePath)
+                    }
+                }
+
+                val request = androidx.work.OneTimeWorkRequestBuilder<com.travelcompanion.workers.SaveJourneyWorker>()
+                    .setInputData(workDataBuilder.build())
+                    .build()
+
+                androidx.work.WorkManager.getInstance(this).enqueueUniqueWork(
+                    "save_journey_${currentTripId}",
+                    androidx.work.ExistingWorkPolicy.REPLACE,
+                    request
+                )
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to schedule SaveJourneyWorker")
+                // As a last resort, try to save synchronously in IO (best-effort)
+                runBlocking(Dispatchers.IO) {
+                    try {
+                        saveCompleteJourney()
+                    } catch (ex: Exception) {
+                        Timber.e(ex, "Synchronous fallback save failed")
+                    }
+                }
+            }
         }
 
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -165,7 +249,7 @@ class TrackingService : Service() {
 
     private suspend fun saveCompleteJourney() {
         if (currentTripId == -1L || coordinates.isEmpty()) return
-        
+
         val journey = com.travelcompanion.domain.model.Journey(
             tripId = currentTripId,
             startTime = java.util.Date(startTime),

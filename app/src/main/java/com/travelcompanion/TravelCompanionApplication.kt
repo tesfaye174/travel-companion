@@ -6,11 +6,14 @@ import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.Configuration
 import com.travelcompanion.utils.NotificationUtils
 import com.travelcompanion.ui.worker.ReminderWorker
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import androidx.hilt.work.HiltWorkerFactory
 
 /**
  * Classe Application dell'app.
@@ -19,6 +22,9 @@ import java.util.concurrent.TimeUnit
  */
 @HiltAndroidApp
 class TravelCompanionApplication : Application() {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -31,6 +37,12 @@ class TravelCompanionApplication : Application() {
 
         // creo il canale per le notifiche (obbligatorio da android 8)
         NotificationUtils.createNotificationChannel(this)
+
+        // Initialize WorkManager with Hilt's WorkerFactory so @HiltWorker can inject
+        val config = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+        WorkManager.initialize(this, config)
 
         // schedulo il reminder giornaliero
         schedulePeriodicReminder()

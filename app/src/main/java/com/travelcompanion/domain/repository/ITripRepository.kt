@@ -36,6 +36,7 @@ interface ITripRepository {
     suspend fun deleteJourney(journey: Journey)
     fun getJourneysByTripId(tripId: Long): Flow<List<Journey>>
     fun getAllJourneys(): Flow<List<Journey>>
+    suspend fun getJourneyById(id: Long): Journey?
 
     // ========== PHOTOS ==========
 

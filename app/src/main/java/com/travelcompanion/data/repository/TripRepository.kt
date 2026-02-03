@@ -129,6 +129,11 @@ class TripRepository @Inject constructor(
         journeyDao.deleteJourney(journey.toEntity())
     }
 
+    override suspend fun getJourneyById(id: Long): Journey? {
+        val entity = journeyDao.getJourneyById(id)
+        return entity?.toDomain()
+    }
+
     override fun getJourneysByTripId(tripId: Long): Flow<List<Journey>> {
         return journeyDao.getJourneysByTripId(tripId).map { entities ->
             entities.map { it.toDomain() }
