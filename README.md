@@ -5,236 +5,181 @@
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg)](https://android-arsenal.com/api?level=26)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A modern Android application for tracking, organizing, and reliving your travel memories. Built with Clean Architecture, MVVM pattern, and Jetpack libraries.
+Una moderna applicazione Android per pianificare, tracciare e rivivere i tuoi viaggi. Implementa principi di Clean Architecture e MVVM, utilizzando le librerie Jetpack.
 
-## Screenshots
+Breve sommario:
+- Gestione viaggi e itinerari
+- Tracciamento GPS (foreground/background)
+- Mappe (Google Maps e OSM/OSMDroid per modalità offline)
+- Foto geotaggate, note e statistiche
 
-| Home | Trips | Map | Statistics |
-| ---- | ----- | --- | ---------- |
-| ![Home](docs/screenshots/home.png) | ![Trips](docs/screenshots/trips.png) | ![Map](docs/screenshots/map.png) | ![Stats](docs/screenshots/stats.png) |
+## Indice
 
-## Features
+- [Caratteristiche](#caratteristiche)
+- [Requisiti](#requisiti)
+- [Installazione e avvio rapido (Windows)](#installazione-e-avvio-rapido-windows)
+- [Struttura del progetto](#struttura-del-progetto)
+- [Stack tecnologico](#stack-tecnologico)
+- [Dettagli su location/geofencing](#dettagli-su-locationgeofencing)
+- [Esecuzione test](#esecuzione-test)
+- [Contribuire](#contribuire)
+- [Licenza e autore](#licenza-e-autore)
 
-### Core Features
+## Caratteristiche
 
-- **GPS Tracking** - Real-time location tracking with foreground service
-- **Google Maps Integration** - View routes with polylines and markers
-- **Map Integration (OSM)** - View routes with polylines and markers using offline OSM and OSMDroid
-- **Photo Capture** - Take geotagged photos during trips using CameraX
-- **Notes** - Add text notes to document your journey
-- **Statistics** - Visualize travel data with charts (MPAndroidChart)
-- **Geofencing** - Get notified when entering/exiting saved locations
+- Tracciamento GPS in tempo reale con servizio foreground
+- Integrazione con Google Maps (polilinee, marker)
+- Supporto offline con OSMDroid e file OSM in `app/src/main/assets`
+- Scatto di foto geotaggate (CameraX)
+- Note testuali e foto-note per i viaggi
+- Statistiche visuali (MPAndroidChart)
+- Geofencing (Play Services o implementazione platform fallback)
+- Creazione/modifica/cancellazione itinerari
+- Esportazione dati in JSON e cancellazione completa dati
+- Preferenze persistenti con DataStore
 
-### Trip Management
+## Requisiti
 
-- Create, edit, and delete trips
-- Search and filter trips by type
-- Swipe-to-delete with undo
-- Export data to JSON
-- Delete all data option
+- Windows (per comandi mostrati qui)
+- Android Studio (consigliata versione recente compatibile con il wrapper Gradle)
+- JDK 11+ o quello richiesto dal wrapper Gradle
+- Android SDK (API level presente in `app/build.gradle`)
+- Gradle wrapper incluso (`gradlew`, `gradlew.bat`)
 
-### User Experience
+## Installazione e avvio rapido (Windows)
 
-│   ├── map/               # Map UI (OSMDroid / offline OSM)
+1. Clona il repository (se non l'hai già fatto):
 
-- Persistent settings with DataStore
-- Modern Material Design 3 UI
-- Accessibility support
-
-## Architecture
-
-This project follows **Clean Architecture** principles with **MVVM** pattern:
-
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                        │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Fragments  │  │  ViewModels │  │  Adapters/Bindings  │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      DOMAIN LAYER                            │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Use Cases  │  │   Models    │  │  Repository (I/F)   │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       DATA LAYER                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │ Repository  │  │    DAOs     │  │      Entities       │  │
-│  │   (Impl)    │  │   (Room)    │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```powershell
+git clone https://github.com/tesfaye174/travel-companion.git ; cd travel-companion
 ```
 
-### Project Structure
+2. Compilare (build debug):
 
-```text
-app/src/main/java/com/travelcompanion/
-├── data/
-│   ├── db/
-│   │   ├── dao/           # Room DAOs (6 DAOs)
-│   │   ├── entities/      # Room Entities (6 tables)
-│   │   ├── converters/    # Type converters
-│   │   └── AppDatabase.kt
-│   ├── preferences/       # DataStore preferences
-│   └── repository/        # Repository implementations
-├── di/                    # Hilt dependency injection
-├── domain/
-│   ├── model/             # Domain models
-│   ├── repository/        # Repository interfaces
-│   └── usecase/           # Use cases (business logic)
-├── ui/
-│   ├── home/              # Home screen
-│   ├── trips/             # Trips list
-│   ├── tripdetails/       # Trip details
-│   ├── newtrip/           # Create trip
-│   ├── tracking/          # GPS tracking (Activity + Service)
-│   ├── map/               # Google Maps
-│   ├── statistics/        # Charts and stats
-│   └── settings/          # App settings
-└── utils/                 # Utility classes
+```powershell
+.\gradlew assembleDebug
 ```
 
-## Tech Stack
+3. Pulire la build:
 
-| Category | Libraries |
-| -------- | --------- |
-| **Language** | Kotlin 1.9.21 |
-| **Min SDK** | 26 (Android 8.0) |
-| **Target SDK** | 34 (Android 14) |
-| **Architecture** | Clean Architecture + MVVM |
-| **DI** | Hilt 2.48 |
-| **Database** | Room 2.6.1 |
-| **Preferences** | DataStore 1.0.0 |
-| **Async** | Coroutines + Flow |
-| **Navigation** | Navigation Component 2.7.6 |
-| **Maps** | OSMDroid (offline OSM files) |
-| **Location** | Fused Location Provider 21.1.0 |
-| **Camera** | CameraX 1.3.1 |
-| **Background** | WorkManager 2.9.0 |
-| **Charts** | MPAndroidChart 3.1.0 |
-| **Images** | Glide 4.15.1 |
-| **Logging** | Timber 5.0.1 |
-
-## Getting Started
-
-### Prerequisites
-
-- Android Studio Hedgehog (2023.1.1) or newer
-- JDK 17
-- Android SDK 34
-
-### Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/tesfaye174/travel-companion.git
-   cd travel-companion
-   ```
-
-2. **Provide offline OSM data**
-
-   Place your OSM XML file in `app/src/main/assets/map.osm`. The app's map UI (OSMDroid) will load `assets/map.osm` at runtime. Replace this file with your provided OSM export.
-
-3. **Build the project**
-
-   ```bash
-   ./gradlew assembleDebug
-   ```
-
-4. **Run on device/emulator**
-
-   ```bash
-   ./gradlew installDebug
-   ```
-
-### Running Tests
-
-```bash
-# Unit tests
-./gradlew test
-
-# Instrumented tests (requires device/emulator)
-./gradlew connectedAndroidTest
+```powershell
+.\gradlew clean
 ```
 
-## Database Schema
+4. Eseguire test unitari:
 
-## Platform vs Play Services (location & geofencing)
+```powershell
+.\gradlew test
+```
 
-This project supports two interchangeable implementations for location and geofencing:
+5. Test strumentati (richiede dispositivo o emulatore connesso):
 
-- **Play Services (default)**: uses Google Play Services `FusedLocationProviderClient` and the Play Services Geofencing API. This provides more accurate location fixes and a robust geofencing service.
-- **Platform (fallback)**: uses Android `LocationManager` for location and a polling-based geofence detector implemented by the app. This mode is intended for environments without Google Play Services, but has limitations (see below).
+```powershell
+.\gradlew connectedAndroidTest
+```
 
-How to switch:
+6. Analisi dipendenze (utile per debug conflitti):
 
-- The app exposes a build-time flag in `app/build.gradle` called `USE_PLAY_SERVICES_LOCATION` (default: `true`). To use platform providers, set it to `false` and rebuild.
+```powershell
+.\gradlew :app:dependencies
+```
 
-Limitations of Platform mode:
+7. Per output diagnostico più dettagliato (stacktrace + info):
 
-- Geofencing is implemented via periodic location updates and distance checks (battery- and accuracy-sensitive).
-- Platform geofencing does not persist across device reboots and may miss fast enter/exit transitions.
-- For production-level geofencing (reliable background delivery, device restarts), prefer the Play Services implementation.
+```powershell
+.\gradlew build --stacktrace --info
+```
 
-Files of interest:
+In Android Studio: aprire la cartella `travel-companion` come progetto e usare Run/Debug, Logcat e il Debugger.
 
-- `app/src/main/java/com/travelcompanion/location/PlayServicesLocationProvider.kt`
-- `app/src/main/java/com/travelcompanion/location/PlatformLocationProvider.kt`
-- `app/src/main/java/com/travelcompanion/location/PlayServicesGeofenceProvider.kt`
-- `app/src/main/java/com/travelcompanion/location/PlatformGeofenceProvider.kt`
-- `app/src/main/java/com/travelcompanion/utils/GeofenceBroadcastReceiver.kt`
+## Struttura del progetto
 
-If you want, I can extend the platform provider to persist geofences across reboots and add battery optimizations.
+Principali cartelle e file:
 
-The app uses Room database with 6 tables:
+- `app/` — modulo Android principale
+  - `build.gradle` — configurazione del modulo
+  - `src/` — codice sorgente (`main`, `test`)
+  - `img/` — immagini di esempio incluse nel repo
+  - `build/` — artefatti generati (non versionati)
+- `gradle/`, `gradlew`, `gradlew.bat`, `gradle-wrapper.properties` — wrapper Gradle
+- `local.properties` — percorso SDK locale (non committare credenziali)
+- `LICENSE`, `README.md`, `settings.gradle`
 
-| Table | Description |
-| ----- | ----------- |
-| `trips` | Main trip information |
-| `journeys` | GPS tracked segments |
-| `photo_notes` | Photos with optional notes |
-| `notes` | Text notes |
-| `geofence_areas` | Saved geofence locations |
-| `geofence_events` | Geofence enter/exit events |
+Note: le cartelle generate da Gradle (es. `app/build/`) non dovrebbero essere modificate manualmente.
 
-## Permissions
+## Stack tecnologico
 
-| Permission | Usage |
-| ---------- | ----- |
-| `ACCESS_FINE_LOCATION` | GPS tracking |
-| `ACCESS_BACKGROUND_LOCATION` | Geofencing |
-| `CAMERA` | Photo capture |
-| `POST_NOTIFICATIONS` | Tracking & geofence alerts |
-| `FOREGROUND_SERVICE_LOCATION` | Background tracking |
+- Linguaggio: Kotlin 1.9.x (con interoperabilità Java dove necessario)
+- Min SDK: 26
+- Target SDK: 34 (verificare in `app/build.gradle`)
+- Architettura: Clean Architecture + MVVM
+- DI: Hilt
+- DB: Room
+- Preferenze: DataStore
+- Concorrenza: Coroutines + Flow
+- Mappe: Google Maps + OSMDroid (offline)
+- Fotocamera: CameraX
+- Background: WorkManager
+- Grafici: MPAndroidChart
+- Immagini: Glide
+- Logging: Timber
 
-## Testing
+## Dettagli su location/geofencing
 
-The project includes:
+Questo progetto fornisce due implementazioni intercambiabili per location e geofencing:
 
-- **Unit Tests**: ViewModel and Repository tests with Mockito
-- **Instrumented Tests**: Room database tests
-- **Test Utilities**: Custom dispatchers for coroutine testing
+- `Play Services` (predefinito): usa `FusedLocationProviderClient` e le API di geofencing di Play Services.
+- `Platform` (fallback): usa `LocationManager` e una soluzione di geofencing basata su polling.
 
-## License
+Come cambiare modalità: modificare il flag di build `USE_PLAY_SERVICES_LOCATION` in `app/build.gradle` e ricostruire il progetto.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Limitazioni della modalità Platform:
+- Meno precisa e più sensibile alla batteria.
+- Geofence non persistono automaticamente dopo reboot (a meno che non si estenda il provider per salvarli e ri-registrarli).
 
-## Author
+File utili di riferimento (path relativi a `app/src/main/java`):
+- `com.travelcompanion.location.PlayServicesLocationProvider` (o percorso corrispondente)
+- `com.travelcompanion.location.PlatformLocationProvider`
+- `com.travelcompanion.location.PlayServicesGeofenceProvider`
+- `com.travelcompanion.location.PlatformGeofenceProvider`
+- `com.travelcompanion.utils.GeofenceBroadcastReceiver`
 
-### Tesfaye
+## Esecuzione test
 
-- GitHub: [@tesfaye174](https://github.com/tesfaye174)
+- Unit tests:
 
-## Acknowledgments
+```powershell
+.\gradlew test
+```
 
-- [OSMDroid](https://github.com/osmdroid/osmdroid)
-- [Material Design](https://material.io)
-- [Android Jetpack](https://developer.android.com/jetpack)
-- [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+- Instrumented tests (device/emulatore richiesto):
+
+```powershell
+.\gradlew connectedAndroidTest
+```
+
+## Suggerimenti per debug
+
+- Controllare `app/build.gradle`, `settings.gradle` e `local.properties` per errori di configurazione.
+- Usare `--stacktrace --info` per ottenere dettagli dalla build Gradle.
+- Logcat è la prima risorsa per crash e problemi runtime.
+
+## Contribuire
+
+Se vuoi contribuire:
+- Apri un issue per bug/feature
+- Crea un branch per ogni modifica (`feature/`, `fix/`)
+- Apri una pull request con descrizione e test quando possibile
+
+## Licenza e autore
+
+- Licenza: MIT — vedere il file `LICENSE` nella root del progetto.
+- Autore: Tesfaye — GitHub: https://github.com/tesfaye174
+
+---
+
+Se vuoi, posso:
+- Tradurre le schermate (`docs/screenshots`) e aggiungere anteprime aggiornate.
+- Aggiungere una sezione di troubleshooting più dettagliata (esempi di errori comuni e come risolverli).
+- Implementare uno script PowerShell di setup per Windows per eseguire build/test automaticamente.
+

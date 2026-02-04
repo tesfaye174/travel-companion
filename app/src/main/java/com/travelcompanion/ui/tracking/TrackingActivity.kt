@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Date
 import javax.inject.Inject
+import org.osmdroid.config.Configuration
 
 @AndroidEntryPoint
 class TrackingActivity : AppCompatActivity() {
@@ -84,8 +85,8 @@ class TrackingActivity : AppCompatActivity() {
 
     private fun setupMap() {
         // Configure osmdroid
-        org.osmdroid.config.Configuration.getInstance().load(this, getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
-        org.osmdroid.config.Configuration.getInstance().userAgentValue = packageName
+        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = packageName
 
         binding.mapTracking.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
         binding.mapTracking.setMultiTouchControls(true)
@@ -126,6 +127,21 @@ class TrackingActivity : AppCompatActivity() {
         // Add note button
         binding.btnAddNote.setOnClickListener {
             promptAddNote()
+        }
+
+        // Plus / Minus FABs: zoom in / zoom out the map (clamped)
+        binding.fabPlus.setOnClickListener {
+            val controller = binding.mapTracking.controller
+            val currentZoom = binding.mapTracking.zoomLevelDouble
+            val newZoom = (currentZoom + 1.0).coerceIn(1.0, 20.0)
+            controller.setZoom(newZoom)
+        }
+
+        binding.fabMinus.setOnClickListener {
+            val controller = binding.mapTracking.controller
+            val currentZoom = binding.mapTracking.zoomLevelDouble
+            val newZoom = (currentZoom - 1.0).coerceIn(1.0, 20.0)
+            controller.setZoom(newZoom)
         }
     }
 
@@ -272,7 +288,7 @@ class TrackingActivity : AppCompatActivity() {
                 IntentFilter(TrackingService.ACTION_LOCATION_UPDATE),
                 ContextCompat.RECEIVER_NOT_EXPORTED
             )
-        } catch (ex: SecurityException) {
+        } catch (_: SecurityException) {
             // On some platform versions strict export checks can throw; avoid crashing the activity.
         }
     }
@@ -281,7 +297,7 @@ class TrackingActivity : AppCompatActivity() {
         super.onStop()
         try {
             unregisterReceiver(locationUpdatesReceiver)
-        } catch (ex: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // receiver not registered or already unregistered
         }
     }

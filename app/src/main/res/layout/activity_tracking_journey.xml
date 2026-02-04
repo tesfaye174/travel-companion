@@ -18,6 +18,7 @@
             app:navigationIcon="@drawable/ic_back"
             app:title="@string/tracking_journey" />
     </com.google.android.material.appbar.AppBarLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,6 +27,7 @@
             android:id="@+id/map_tracking"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,193 +82,254 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-        <LinearLayout
+
+        <!-- removed bottom cards from here; they are moved outside FrameLayout to be direct children of CoordinatorLayout -->
+
+    </FrameLayout>
+
+    <!-- bottom cards moved outside FrameLayout so we can anchor FABs to the card reliably -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical">
-            <com.google.android.material.card.MaterialCardView
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+            <!-- stats card content (unchanged) -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp">
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_distance"
-                            style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/distance_default"
-                            android:textColor="@color/stat_distance" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.BodySmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/unit_km"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/colorOutlineVariant" />
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_speed"
-                            style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/speed_default"
-                            android:textColor="@color/stat_time" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.BodySmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/unit_kmh"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/colorOutlineVariant" />
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_photo_count"
-                            style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/count_default"
-                            android:textColor="@color/stat_photos" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.BodySmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/photos"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="28dp"
-                app:cardElevation="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="20dp">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_add_photo"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:contentDescription="@string/take_photo"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@drawable/ic_camera"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconSize="28dp"
-                            app:iconTint="?attr/colorPrimary" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.LabelMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/take_photo"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-                    <LinearLayout
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_distance"
+                        style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/fab_stop_tracking"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/md_theme_light_error"
-                            android:contentDescription="@string/stop_tracking"
-                            app:elevation="6dp"
-                            app:fabCustomSize="80dp"
-                            app:maxImageSize="36dp"
-                            app:srcCompat="@drawable/ic_stop"
-                            app:tint="@color/md_theme_light_onError" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.LabelMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/stop_trip"
-                            android:textColor="@color/md_theme_light_error"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
+                        android:text="@string/distance_default"
+                        android:textColor="@color/stat_distance" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.BodySmall"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_add_note"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:contentDescription="@string/add_note"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@drawable/ic_note"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconSize="28dp"
-                            app:iconTint="?attr/colorPrimary" />
-                        <TextView
-                            style="@style/TextAppearance.TravelCompanion.LabelMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/add_note"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
+                        android:text="@string/unit_km"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-    </FrameLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/colorOutlineVariant" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_speed"
+                        style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/speed_default"
+                        android:textColor="@color/stat_time" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unit_kmh"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/colorOutlineVariant" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_photo_count"
+                        style="@style/TextAppearance.TravelCompanion.HeadlineSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/count_default"
+                        android:textColor="@color/stat_photos" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/photos"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_bottom_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp">
+            <!-- bottom control card content (unchanged) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="20dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_add_photo"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:contentDescription="@string/take_photo"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:cornerRadius="32dp"
+                        app:icon="@drawable/ic_camera"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:iconSize="28dp"
+                        app:iconTint="?attr/colorPrimary" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.LabelMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/take_photo"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_stop_tracking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/md_theme_light_error"
+                        android:contentDescription="@string/stop_tracking"
+                        app:elevation="6dp"
+                        app:fabCustomSize="80dp"
+                        app:maxImageSize="36dp"
+                        app:srcCompat="@drawable/ic_stop"
+                        app:tint="@color/md_theme_light_onError" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.LabelMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/stop_trip"
+                        android:textColor="@color/md_theme_light_error"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_add_note"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:contentDescription="@string/add_note"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:cornerRadius="32dp"
+                        app:icon="@drawable/ic_note"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:iconSize="28dp"
+                        app:iconTint="?attr/colorPrimary" />
+                    <TextView
+                        style="@style/TextAppearance.TravelCompanion.LabelMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/add_note"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Group of FABs anchored to the top of the bottom control card so they stay just above it -->
+    <LinearLayout
+        android:id="@+id/fab_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_anchor="@id/card_bottom_controls"
+        app:layout_anchorGravity="top|center"
+        android:layout_marginTop="-28dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_minus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:translationX="-88dp"
+            android:translationY="-12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/decrement"
+            android:src="@drawable/ic_minus"
+            app:backgroundTint="@android:color/white"
+            app:tint="?attr/colorPrimary"
+            app:elevation="10dp"
+            app:fabSize="auto"
+            app:useCompatPadding="true" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_plus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:translationX="88dp"
+            android:translationY="-12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/increment"
+            android:src="@drawable/ic_plus"
+            app:backgroundTint="@android:color/white"
+            app:tint="?attr/colorPrimary"
+            app:elevation="10dp"
+            app:fabSize="auto"
+            app:useCompatPadding="true" />
+
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

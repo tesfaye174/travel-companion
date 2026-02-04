@@ -21,7 +21,7 @@ import androidx.hilt.work.HiltWorkerFactory
  * Timber per i log, il canale notifiche e il worker per i reminder.
  */
 @HiltAndroidApp
-class TravelCompanionApplication : Application() {
+class TravelCompanionApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -38,15 +38,25 @@ class TravelCompanionApplication : Application() {
         // creo il canale per le notifiche (obbligatorio da android 8)
         NotificationUtils.createNotificationChannel(this)
 
-        // Initialize WorkManager with Hilt's WorkerFactory so @HiltWorker can inject
-        val config = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-        WorkManager.initialize(this, config)
+        // Non inizializzo manualmente WorkManager qui: se è abilitata
+        // l'inizializzazione automatica (InitializationProvider) WorkManager
+        // sarà già inizializzato prima di onCreate e userà la
+        // Configuration fornita da getWorkManagerConfiguration().
 
         // schedulo il reminder giornaliero
         schedulePeriodicReminder()
     }
+
+    // Fornisco la Configuration a WorkManager in modo che utilizzi il
+    // HiltWorkerFactory per l'injection dei worker. Non chiamare
+    // WorkManager.initialize manualmente per evitare doppia inizializzazione.
+    // WorkManager versions differ: some expect a method getWorkManagerConfiguration(),
+    // others expect a property `workManagerConfiguration`. Implement the property
+    // to be compatible with the project's WorkManager API.
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
     // configuro workmanager per mandare un reminder ogni giorno
     private fun schedulePeriodicReminder() {

@@ -101,7 +101,7 @@ foreach ($item in $toMove) {
         $report += $item
         Write-Host "Moved: $item -> $dest"
     } catch {
-        Write-Host "Failed to move $item: $_" -ForegroundColor Red
+        Write-Host ("Failed to move {0}: {1}" -f $item, $_) -ForegroundColor Red
     }
 }
 

@@ -49,7 +49,7 @@ object AppModule {
             AppDatabase::class.java,
             "travel_companion_db"
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 

@@ -26,6 +26,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    lint {
+        // Disable lint detector that crashes due to metadata version mismatch in this environment
+        disable 'StateFlowValueCalledInComposition'
+    }
+
     signingConfigs {
         release {
             // For production, use your own keystore

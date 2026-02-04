@@ -273,6 +273,9 @@
     <string name="logout_success">Logged out successfully</string>
     <string name="feature_coming_soon">This feature is coming soon!</string>
 
-</resources>
+    <!-- Adding missing increment/decrement strings used by layout FABs -->
+    <string name="decrement">Decrementa</string>
+    <string name="increment">Incrementa</string>
 
+</resources>
 
