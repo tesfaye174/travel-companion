@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import timber.log.Timber
 
 class CameraHelper(private val context: Context) {
 
@@ -42,13 +43,13 @@ class CameraHelper(private val context: Context) {
                 )
             } catch (e: IllegalStateException) {
                 // CameraX binding error, likely already bound
-                e.printStackTrace()
+                Timber.w(e, "CameraHelper: bindToLifecycle failed (IllegalState)")
             } catch (e: SecurityException) {
                 // Camera permission denied
-                e.printStackTrace()
+                Timber.w(e, "CameraHelper: permission denied for camera")
             } catch (e: Exception) {
                 // Catch generico come fallback, da monitorare
-                e.printStackTrace()
+                Timber.e(e, "CameraHelper: unexpected error starting camera")
             }
         }, ContextCompat.getMainExecutor(context))
     }
@@ -69,7 +70,7 @@ class CameraHelper(private val context: Context) {
                 }
 
                 override fun onError(exc: ImageCaptureException) {
-                    exc.printStackTrace()
+                    Timber.e(exc, "CameraHelper: error saving image")
                 }
             }
         )

@@ -25,8 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Fragment con la lista di tutti i viaggi.
- * Si puo filtrare per tipo e cercare per testo.
- * Swipe a sinistra per cancellare con possibilita di annullare.
  */
 @AndroidEntryPoint
 class TripsFragment : Fragment() {
@@ -75,6 +73,7 @@ class TripsFragment : Fragment() {
 
     private fun setupSwipeToDelete() {
         val swipeCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Suppress("unused") // using ColorDrawable("#F44336") is acceptable here
             private val deleteBackground = ColorDrawable(Color.parseColor("#F44336"))
             private val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
 
@@ -211,4 +210,3 @@ class TripsFragment : Fragment() {
         _binding = null
     }
 }
-

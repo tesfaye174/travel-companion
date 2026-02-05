@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Backup rules: include app files in full backups (use carefully to avoid sensitive data).
+     For student projects this simplest rule backs all app files. -->
 <full-backup-content>
     <include domain="file" path="." />
 </full-backup-content>

@@ -10,11 +10,15 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
+import com.travelcompanion.data.db.PinDao
+import com.travelcompanion.data.db.PinEntity
 import com.travelcompanion.databinding.FragmentPinMapBinding
 import com.travelcompanion.location.LocationProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -44,6 +48,9 @@ class PinMapFragment : Fragment() {
     @Inject
     lateinit var locationProvider: LocationProvider
 
+    @Inject
+    lateinit var pinDao: PinDao
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,6 +75,7 @@ class PinMapFragment : Fragment() {
 
         setupMap()
         setupListeners()
+        loadSavedPins()
     }
 
     private fun setupMap() {
@@ -124,6 +132,9 @@ class PinMapFragment : Fragment() {
 
         // Mostra le coordinate nella card
         showCoordinates(geoPoint)
+
+        // Salva il pin nel database
+        savePinToDb(geoPoint)
 
         Timber.d("Pin posizionato a: ${geoPoint.latitude}, ${geoPoint.longitude}")
     }
@@ -200,6 +211,31 @@ class PinMapFragment : Fragment() {
             ).show()
             Timber.w(error, "Failed to get current location")
         })
+    }
+
+    private fun savePinToDb(geoPoint: GeoPoint) {
+        lifecycleScope.launch {
+            val pin = PinEntity(latitude = geoPoint.latitude, longitude = geoPoint.longitude)
+            pinDao.insertPin(pin)
+        }
+    }
+
+    private fun loadSavedPins() {
+        lifecycleScope.launch {
+            val pins = pinDao.getAllPins()
+            val map = mapView ?: return@launch
+            pins.forEach { pin ->
+                val marker = Marker(map).apply {
+                    position = GeoPoint(pin.latitude, pin.longitude)
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    icon = customPinIcon
+                    title = getString(R.string.pin_marker_title)
+                    snippet = "Lat: %.6f, Lon: %.6f".format(pin.latitude, pin.longitude)
+                }
+                map.overlays.add(marker)
+            }
+            map.invalidate()
+        }
     }
 
     override fun onResume() {

@@ -33,7 +33,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
  */
 @Singleton
 class SettingsDataStore @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
 
     // ==================== CHIAVI DELLE PREFERENZE ====================
@@ -116,6 +116,7 @@ class SettingsDataStore @Inject constructor(
     }
 
     /** Imposta l'unità di misura per le distanze ("km" o "mi") */
+    @Suppress("unused")
     suspend fun setDistanceUnit(unit: String) {
         context.dataStore.edit { preferences ->
             preferences[DISTANCE_UNIT] = unit

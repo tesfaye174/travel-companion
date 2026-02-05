@@ -26,8 +26,11 @@ import com.travelcompanion.BuildConfig
 
 /**
  * Modulo Hilt per l'injection delle dipendenze.
- * Qui definisco come creare le varie istanze che servono nell'app:
- * database, notification manager, dispatcher per le coroutine, ecc.
+ *
+ * Nota (studente): qui descrivo in modo semplice come vengono fornite le dipendenze.
+ * - Il database è condiviso come singleton
+ * - I dispatcher sono forniti per testabilità
+ * - Uso build config per scegliere provider di location
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -93,6 +96,11 @@ object AppModule {
             PlatformGeofenceProvider(context, database)
         }
     }
+
+    @Provides
+    @Singleton
+    fun providePinDao(database: AppDatabase): com.travelcompanion.data.db.PinDao =
+        database.pinDao()
 }
 
 // annotation per distinguere i vari dispatcher

@@ -30,10 +30,14 @@ class SaveJourneyWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
+            // Nota per lo studente: doWork gira in background e deve essere resiliente.
+            // Qui gestiamo sia il caso in cui viene passato un DB id (finalizza journey)
+            // sia il caso in cui il journey arriva come JSON/file temporaneo.
             try {
                 val gson = Gson()
 
-                // Se è stato passato un id DB, finalizza quel journey
+                // Se è stato passato un id DB, finalizza quel journey: aggiorna i dati finali (endTime, distance, coordinates) nel database.
+                // Questo garantisce che il journey sia completo e coerente anche in caso di salvataggi parziali.
                 val dbId = inputData.getLong(KEY_JOURNEY_DB_ID, 0L)
                 if (dbId != 0L) {
                     val existing = repository.getJourneyById(dbId)
@@ -42,8 +46,8 @@ class SaveJourneyWorker @AssistedInject constructor(
                         return@withContext Result.failure()
                     }
 
-                    // aggiorna campi finali basati sugli ultimi dati (se presenti nel DB
-                    // l'existing potrebbe già contenere coordinates parziali)
+                    // Aggiorna i campi finali del journey in base agli ultimi dati disponibili nel DB.
+                    // L'oggetto existing potrebbe già contenere coordinate parziali se il salvataggio è stato fatto in più step.
                     val journeys = repository.getJourneysByTripId(existing.tripId).first()
 
                     val totalDistanceKm = journeys.sumOf { j: Journey -> j.distance.toDouble() }.toFloat()
@@ -63,11 +67,11 @@ class SaveJourneyWorker @AssistedInject constructor(
                         )
                     )
 
-                    // mark journey end time/distance by updating the journey itself
+                    // Segna la fine del journey aggiornando endTime e distance nel database.
                     val finalized = existing.copy(
                         endTime = java.util.Date(),
                         distance = totalDistanceKm,
-                        // coordinates left as-is (already present)
+                        // Le coordinate vengono lasciate invariate se già presenti (già salvate in step precedenti).
                     )
 
                     repository.updateJourney(finalized)
@@ -75,7 +79,7 @@ class SaveJourneyWorker @AssistedInject constructor(
                     return@withContext Result.success()
                 }
 
-                // Fallback: JSON or file input
+                // Fallback: se non è stato passato un id DB, si usa l'input JSON o file per ricostruire il journey.
                 val json = inputData.getString(KEY_JOURNEY_JSON)?.takeIf { it.isNotBlank() }
                     ?: run {
                         val path = inputData.getString(KEY_JOURNEY_FILE_PATH)
@@ -89,10 +93,10 @@ class SaveJourneyWorker @AssistedInject constructor(
 
                 val journey = gson.fromJson(json, Journey::class.java)
 
-                // salva il journey usando il repository iniettato
+                // Salva il journey usando il repository iniettato tramite Hilt.
                 repository.insertJourney(journey)
 
-                // ricalcola totals e aggiorna trip
+                // Ricalcola i totali (distance, duration) e aggiorna il trip associato.
                 val trip = repository.getTripById(journey.tripId) ?: return@withContext Result.failure()
                 val journeys = repository.getJourneysByTripId(journey.tripId).first()
 
@@ -111,15 +115,19 @@ class SaveJourneyWorker @AssistedInject constructor(
                     )
                 )
 
-                // attempt cleanup of temp file if provided
+                // Prova a eliminare il file temporaneo se è stato usato per il salvataggio.
                 inputData.getString(KEY_JOURNEY_FILE_PATH)?.let { path ->
-                    try { File(path).delete() } catch (e: Exception) { /* ignore */ }
+                    try {
+                        File(path).delete()
+                    } catch (e: Exception) {
+                        Timber.w(e, "Failed to delete temporary journey file: %s", path)
+                    }
                 }
 
                 Result.success()
             } catch (e: Exception) {
                 Timber.e(e, "Error while saving journey in SaveJourneyWorker")
-                // Ritorna retry per errori transitori
+                // Ritorna retry per errori transitori (es. DB lock, IO temporanei) per garantire robustezza del worker.
                 Result.retry()
             }
         }

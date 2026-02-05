@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Data extraction rules: define what app files may be included in backups
+     or device transfers. For simplicity we include app files; restrict as needed. -->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="file" path="."/>

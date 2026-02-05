@@ -1,6 +1,5 @@
 package com.travelcompanion.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,6 +37,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Avvia un nuovo viaggio e il tracking associato.
+     * Esempio di commento didattico: questa funzione crea un nuovo oggetto Trip, lo salva nel database
+     * e avvia il servizio di tracking. Tutte le operazioni sono svolte in coroutine per non bloccare la UI.
+     */
     fun startTrip(name: String, dest: String, type: TripType) {
         viewModelScope.launch {
             val trip = Trip(
@@ -53,6 +57,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Termina il viaggio attualmente in corso (se presente) e aggiorna il database.
+     * Esempio di commento didattico: la funzione cerca il viaggio in tracking, lo aggiorna e ferma il servizio.
+     */
     fun stopTrip() {
         viewModelScope.launch {
             val current = _uiState.value.trips.find { it.isTracking }

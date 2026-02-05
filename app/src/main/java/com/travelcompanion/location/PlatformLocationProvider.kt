@@ -13,7 +13,7 @@ import com.travelcompanion.utils.LocationUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PlatformLocationProvider @Inject constructor(@ApplicationContext private val context: Context) : LocationProvider {
+class PlatformLocationProvider @Inject constructor(@param:ApplicationContext private val context: Context) : LocationProvider {
 
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     private var listener: LocationListener? = null
@@ -92,8 +92,9 @@ class PlatformLocationProvider @Inject constructor(@ApplicationContext private v
                     Looper.getMainLooper()
                 )
             }
-        } catch (e: SecurityException) {
-            // permission should be checked before
+        } catch (se: SecurityException) {
+            // permission should be checked before; log to help debugging on devices with strict policies
+            timber.log.Timber.w(se, "PlatformLocationProvider: security exception requesting location updates")
         }
     }
 

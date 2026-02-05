@@ -56,17 +56,34 @@ class TipsFragment : Fragment() {
             currentSearchQuery = text?.toString().orEmpty()
             filterTips()
         }
+        // Chiudi la tastiera quando l'utente preme invio
+        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == android.view.KeyEvent.KEYCODE_ENTER && event.action == android.view.KeyEvent.ACTION_DOWN)) {
+                v.clearFocus()
+                val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun setupCategoryFilter() {
-        binding.chipGroupCategories.setOnCheckedStateChangeListener { _, checkedIds ->
+        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
             currentCategory = when {
                 checkedIds.contains(R.id.chip_packing) -> TipCategory.PACKING
                 checkedIds.contains(R.id.chip_safety) -> TipCategory.SAFETY
                 checkedIds.contains(R.id.chip_budget) -> TipCategory.BUDGET
                 checkedIds.contains(R.id.chip_culture) -> TipCategory.CULTURE
                 checkedIds.contains(R.id.chip_transport) -> TipCategory.TRANSPORT
-                else -> null // "All" selected
+                else -> null // "All" selezionato
+            }
+            // Se nessuna chip è selezionata, seleziona "All"
+            if (checkedIds.isEmpty() || currentCategory == null) {
+                group.check(R.id.chip_all)
+                currentCategory = null
             }
             filterTips()
         }
@@ -78,27 +95,30 @@ class TipsFragment : Fragment() {
         }
     }
 
+    private var lastShuffled: List<TravelTip>? = null
     private fun shuffleTips() {
-        allTips = allTips.shuffled()
+        var shuffled: List<TravelTip>
+        do {
+            shuffled = allTips.shuffled()
+        } while (shuffled == lastShuffled && allTips.size > 1)
+        allTips = shuffled
+        lastShuffled = shuffled
         filterTips()
     }
 
     private fun filterTips() {
         var filtered = allTips
-
-        // Filter by category
+        // Filtro per categoria
         if (currentCategory != null) {
             filtered = filtered.filter { it.category == currentCategory }
         }
-
-        // Filter by search query
+        // Filtro per ricerca
         if (currentSearchQuery.isNotBlank()) {
             filtered = filtered.filter {
                 it.title.contains(currentSearchQuery, ignoreCase = true) ||
                 it.description.contains(currentSearchQuery, ignoreCase = true)
             }
         }
-
         tipsAdapter.submitList(filtered)
         updateEmptyState(filtered.isEmpty())
     }
@@ -106,6 +126,10 @@ class TipsFragment : Fragment() {
     private fun updateEmptyState(isEmpty: Boolean) {
         binding.emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
         binding.rvTips.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        // Migliora la visibilità del messaggio vuoto
+        if (isEmpty) {
+            binding.etSearch.clearFocus()
+        }
     }
 
     private fun showTipDetailsDialog(tip: TravelTip) {

@@ -183,9 +183,8 @@
     <string name="countries_visited">Countries Visited</string>
     <string name="cities_visited">Cities Visited</string>
     <string name="logout">Logout</string>
-    <string name="about_app">About App</string>
-    <string name="rate_app">Rate App</string>
-    <string name="share_app">Share App</string>
+    <string name="rate_app">Rate the app</string>
+    <string name="share_app">Share the app</string>
     <string name="version_info">Version %s</string>
 
     <!-- Tips screen -->
@@ -268,7 +267,7 @@
     <string name="time_to_travel_title">Time to Travel!</string>
     <string name="time_to_travel_text">Plan your next adventure</string>
 
-    <!-- Profile strings -->
+    <!-- Profile screen -->
     <string name="logout_confirmation">Are you sure you want to logout?</string>
     <string name="logout_success">Logged out successfully</string>
     <string name="feature_coming_soon">This feature is coming soon!</string>
@@ -276,6 +275,15 @@
     <!-- Adding missing increment/decrement strings used by layout FABs -->
     <string name="decrement">Decrementa</string>
     <string name="increment">Incrementa</string>
+
+    <string name="chevron">Chevron icon</string>
+    <string name="about_app">Informazioni sull\'app</string>
+
+    <!-- MapFragment missing strings -->
+    <string name="location_permission_rationale">Per centrare la mappa è necessario il permesso di posizione. Consenti l\'accesso alla posizione nelle impostazioni.</string>
+    <string name="getting_location">Recupero della posizione&#8230;</string>
+    <string name="unable_get_location">Impossibile ottenere la posizione. Per favore riprova.</string>
+    <string name="retry">Riprova</string>
 
 </resources>
 

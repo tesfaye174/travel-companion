@@ -243,6 +243,7 @@ class TripRepository @Inject constructor(
                 val tripType = try {
                     com.travelcompanion.domain.model.TripType.valueOf(stat.tripType)
                 } catch (ex: Exception) {
+                    timber.log.Timber.w(ex, "TripRepository: unknown TripType '%s' in stats", stat.tripType)
                     com.travelcompanion.domain.model.TripType.OTHER
                 }
                 com.travelcompanion.domain.model.TripTypeStat(

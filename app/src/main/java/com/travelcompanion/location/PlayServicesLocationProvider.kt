@@ -10,7 +10,7 @@ import com.travelcompanion.utils.LocationUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PlayServicesLocationProvider @Inject constructor(@ApplicationContext private val context: Context) : LocationProvider {
+class PlayServicesLocationProvider @Inject constructor(@param:ApplicationContext private val context: Context) : LocationProvider {
 
     private val fused: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private var callback: LocationCallback? = null

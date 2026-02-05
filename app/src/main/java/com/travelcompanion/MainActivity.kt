@@ -1,6 +1,5 @@
 package com.travelcompanion
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -8,6 +7,7 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -16,6 +16,7 @@ import com.travelcompanion.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 
 /**
  * Activity principale - è l'unica dell'app, uso il pattern Single Activity
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.first
 class MainActivity : AppCompatActivity() {
 
     // serve per leggere il tema salvato dall'utente
+    // In questa variabile viene iniettato il DataStore delle impostazioni tramite Hilt. Permette di accedere alle preferenze utente in modo reattivo.
     @javax.inject.Inject
     lateinit var settingsDataStore: com.travelcompanion.data.preferences.SettingsDataStore
 
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     // le schermate principali dove voglio che si veda la bottom bar
-    // nelle altre (tipo dettaglio viaggio) la nascondo
+    // Qui si definisce l'elenco delle destinazioni principali dell'app, dove la bottom bar deve essere visibile. Negli altri fragment (es. dettaglio viaggio) la barra viene nascosta per dare più spazio ai contenuti.
     private val mainDestinations = setOf(
         R.id.navigation_home,
         R.id.navigation_map,
@@ -43,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         R.id.navigation_profile
     )
 
+    /**
+     * Applica il tema salvato dall'utente (chiaro, scuro o sistema).
+     * Se la lettura fallisce, applica il tema di sistema.
+     */
     private fun applySavedTheme() {
         lifecycleScope.launch {
             try {
@@ -53,41 +59,40 @@ class MainActivity : AppCompatActivity() {
                     else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
             } catch (e: Exception) {
-                // se qualcosa va storto uso il tema di sistema
+                // Se qualcosa va storto leggo comunque il tema di sistema.
+                // Qui loggo l'errore in modo semplice: non vogliamo crashare l'app per un problema di preferenze.
+                Timber.w(e, "applySavedTheme: failed to read settings, using system default")
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
     }
 
-    // setup della navigazione con bottom bar e navcontroller
+    /**
+     * Configura la navigazione e la bottom bar.
+     * Mostra/nasconde la bottom bar in base alla destinazione.
+     * Gestisce la vibrazione e la selezione dei tab.
+     */
     private fun setupNavigation() {
         val navView = binding.bottomNavigation
-
-        // prendo il navcontroller dal fragment container
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
 
-        // nascondo la bottom bar quando sono in una schermata di dettaglio
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val shouldShowBottomNav = destination.id in mainDestinations
             binding.bottomNavigation.isVisible = shouldShowBottomNav
             binding.navDivider.isVisible = shouldShowBottomNav
         }
 
-        // vibrazione quando cambio tab, è un tocco carino
         val vibrator = getVibratorCompat()
-
-        // listener per gestire i click sui tab
         navView.setOnItemSelectedListener { item ->
-            // vibrazione corta di 30ms
+            // Vibrazione breve per feedback
+            // Quando l'utente seleziona una voce della bottom bar, viene attivata una breve vibrazione per migliorare il feedback tattile e l'usabilità.
             vibrator?.let {
                 if (it.hasVibrator() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     it.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
             }
-
-            // navigo alla destinazione con delle animazioni fade
             val navOptions = androidx.navigation.NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .setPopUpTo(R.id.navigation_home, inclusive = false, saveState = true)
@@ -95,44 +100,35 @@ class MainActivity : AppCompatActivity() {
                 .setEnterAnim(android.R.anim.fade_in)
                 .setExitAnim(android.R.anim.fade_out)
                 .build()
-
             try {
                 navController.navigate(item.itemId, null, navOptions)
                 true
             } catch (e: Exception) {
-                // a volte capita che la destinazione non esiste, meglio non crashare
+                // Se la destinazione non esiste o la navigazione fallisce, logghiamo e ignoriamo il click.
+                Timber.w(e, "MainActivity: navigation to %s failed", item.itemId)
                 false
             }
         }
-
-        // per ora non faccio niente se l'utente clicca di nuovo sulla tab selezionata
-        // magari in futuro aggiungo lo scroll to top
-        navView.setOnItemReselectedListener { _ ->
-        }
-
-        // sincronizzo la selezione della bottom bar quando navigo col back button
+        navView.setOnItemReselectedListener { _ -> }
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // aggiorno quale tab è selezionato
             val menu = navView.menu
-            for (i in 0 until menu.size()) {
-                val menuItem = menu.getItem(i)
-                if (menuItem.itemId == destination.id) {
-                    menuItem.isChecked = true
-                    break
-                }
+            menu.forEach { menuItem ->
+                menuItem.isChecked = (menuItem.itemId == destination.id)
             }
         }
     }
 
-    // restituisce il vibrator compatibile con le varie versioni android
-    // da android 12 cambia come si ottiene
+    /**
+     * Restituisce il Vibrator compatibile con la versione Android.
+     * Da Android 12 in poi si usa VibratorManager.
+     */
     private fun getVibratorCompat(): Vibrator? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = getSystemService(VIBRATOR_MANAGER_SERVICE) as? VibratorManager
             vibratorManager?.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+            getSystemService(VIBRATOR_SERVICE) as? Vibrator
         }
     }
 

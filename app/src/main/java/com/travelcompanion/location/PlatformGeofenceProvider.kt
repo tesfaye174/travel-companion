@@ -23,7 +23,7 @@ import javax.inject.Inject
  * also understands.
  */
 class PlatformGeofenceProvider @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val database: AppDatabase
 ) : GeofenceProvider {
 
@@ -43,7 +43,9 @@ class PlatformGeofenceProvider @Inject constructor(
                 val areas = database.geofenceAreaDao().getAll().first()
                 areas.forEach { area ->
                     geofences[area.id] = Triple(area.latitude, area.longitude, area.radiusMeters)
-                    insideState.putIfAbsent(area.id, false)
+                    if (!insideState.containsKey(area.id)) {
+                        insideState[area.id] = false
+                    }
                 }
                 if (geofences.isNotEmpty()) startListeningIfNeeded()
             } catch (e: Exception) {
@@ -54,7 +56,9 @@ class PlatformGeofenceProvider @Inject constructor(
 
     override fun addGeofence(id: String, lat: Double, lng: Double, radius: Float) {
         geofences[id] = Triple(lat, lng, radius)
-        insideState.putIfAbsent(id, false)
+        if (!insideState.containsKey(id)) {
+            insideState[id] = false
+        }
         startListeningIfNeeded()
         Timber.d("PlatformGeofenceProvider added geofence %s", id)
     }
@@ -148,7 +152,7 @@ class PlatformGeofenceProvider @Inject constructor(
             try {
                 locationManager.removeUpdates(it)
             } catch (e: Exception) {
-                // ignore
+                Timber.w(e, "PlatformGeofenceProvider: error removing updates during restart")
             }
             listener = null
             startListeningIfNeeded()
@@ -163,4 +167,3 @@ class PlatformGeofenceProvider @Inject constructor(
         Timber.d("PlatformGeofenceProvider broadcasted %s for %s", transition, id)
     }
 }
-

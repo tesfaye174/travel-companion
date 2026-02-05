@@ -1,4 +1,3 @@
-
 package com.travelcompanion.ui.settings
 import java.io.IOException
 
@@ -138,7 +137,7 @@ class SettingsFragment : Fragment() {
             val currentTheme = settingsDataStore.settingsFlow.first().themeMode
             val checkedItem = themeValues.indexOf(currentTheme)
 
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.choose_theme)
                 .setSingleChoiceItems(themeOptions, checkedItem) { dialog, which ->
                     val selected = themeValues[which]
@@ -173,13 +172,13 @@ class SettingsFragment : Fragment() {
 
                 Toast.makeText(requireContext(), R.string.export_data_success, Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: IO error during exportData")
                 Toast.makeText(requireContext(), R.string.export_data_error, Toast.LENGTH_SHORT).show()
             } catch (e: SecurityException) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: permission error during exportData")
                 Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: unexpected error during exportData")
                 Toast.makeText(requireContext(), R.string.export_data_error, Toast.LENGTH_SHORT).show()
             }
         }
@@ -263,11 +262,11 @@ class SettingsFragment : Fragment() {
 
                 Toast.makeText(requireContext(), R.string.all_data_deleted, Toast.LENGTH_SHORT).show()
             } catch (e: IOException) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: IO error while deleting data")
             } catch (e: SecurityException) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: permission error while deleting data")
             } catch (e: Exception) {
-                Timber.e(e)
+                Timber.e(e, "SettingsFragment: unexpected error while deleting data")
             }
         }
     }

@@ -7,8 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-// Reuse the existing AppDatabase in the project (no duplicate Room database binding).
-// This module provides a direct provider for TripDao to simplify injection where needed.
+// Modulino semplice: fornisce i DAO (es. `TripDao`) usando l'istanza di `AppDatabase`.
+// Nota per lo studente: preferisco separare i provider per chiarezza e testabilità.
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {

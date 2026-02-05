@@ -1,18 +1,14 @@
 package com.travelcompanion.ui.tracking
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.IBinder
-import android.os.Looper
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.*
 import com.travelcompanion.R
 import com.travelcompanion.domain.repository.ITripRepository
 import com.travelcompanion.utils.AppConstants
@@ -21,16 +17,18 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Inject
-import androidx.work.Data
+import com.travelcompanion.workers.SaveJourneyWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.google.gson.Gson
-import java.io.File
-import java.io.FileWriter
-import com.travelcompanion.workers.SaveJourneyWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.Data
 
 @AndroidEntryPoint
 class TrackingService : Service() {
+
+    // NOTE (student): This service runs in the foreground while tracking a trip.
+    // It collects location points, saves periodic checkpoints to the DB and
+    // schedules a background worker to persist the final journey when stopped.
 
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -68,12 +66,20 @@ class TrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Timber.d("TrackingService onStartCommand: intent=%s flags=%d startId=%d", intent, flags, startId)
         intent?.getLongExtra(EXTRA_TRIP_ID, -1)?.let { tripId ->
             currentTripId = tripId
             startTime = System.currentTimeMillis()
             startTracking()
 
-            startForeground(notificationId, createTrackingNotification())
+            try {
+                // startForeground può lanciare IllegalStateException in certi casi; proteggiamo
+                startForeground(notificationId, createTrackingNotification())
+            } catch (e: IllegalStateException) {
+                Timber.e(e, "startForeground failed")
+            } catch (e: Exception) {
+                Timber.e(e, "Unexpected error calling startForeground")
+            }
         }
 
         return START_STICKY
@@ -136,22 +142,36 @@ class TrackingService : Service() {
     }
 
     override fun onDestroy() {
-        // Prima schedulo il salvataggio, poi cancello il scope per evitare che i dati
-        // in memoria vengano persi prima della schedulazione
-        stopTracking()
+        Timber.d("TrackingService onDestroy called")
+        // Ordine sicuro: prima fermo il tracking, poi libero le risorse e infine cancello il scope
+        try {
+            stopTracking()
+        } catch (e: Exception) {
+            Timber.e(e, "Error during stopTracking in onDestroy")
+        }
+
+        // Cancello il scope per interrompere eventuali job pendenti
+        try {
+            serviceScope.cancel()
+        } catch (e: Exception) {
+            Timber.w(e, "Error cancelling serviceScope")
+        }
+
         super.onDestroy()
-        serviceScope.cancel()
     }
 
     private fun stopTracking() {
-        locationProvider.stopLocationUpdates()
+        try {
+            locationProvider.stopLocationUpdates()
+        } catch (e: Exception) {
+            Timber.w(e, "Error stopping location updates")
+        }
 
         // Schedule save via WorkManager instead of launching a NonCancellable coroutine
         // to ensure the work runs even if the service/app process is killed.
         if (currentTripId != -1L && coordinates.isNotEmpty()) {
-            // se abbiamo un journey checkpoint in DB passiamo solo l'id
             try {
-                val workDataBuilder = androidx.work.Data.Builder()
+                val workDataBuilder = Data.Builder()
 
                 if (currentJourneyDbId != 0L) {
                     workDataBuilder.putLong(SaveJourneyWorker.KEY_JOURNEY_DB_ID, currentJourneyDbId)
@@ -171,19 +191,24 @@ class TrackingService : Service() {
                     if (json.toByteArray().size < 9000) {
                         workDataBuilder.putString(SaveJourneyWorker.KEY_JOURNEY_JSON, json)
                     } else {
-                        val file = java.io.File.createTempFile("journey_", ".json", cacheDir)
-                        java.io.FileWriter(file).use { fw -> fw.write(json) }
-                        workDataBuilder.putString(SaveJourneyWorker.KEY_JOURNEY_FILE_PATH, file.absolutePath)
+                        try {
+                            val file = java.io.File.createTempFile("journey_", ".json", cacheDir)
+                            java.io.FileWriter(file).use { fw -> fw.write(json) }
+                            workDataBuilder.putString(SaveJourneyWorker.KEY_JOURNEY_FILE_PATH, file.absolutePath)
+                        } catch (e: Exception) {
+                            Timber.e(e, "Failed to write temporary journey file")
+                            // continue without file path; WorkManager may fail and we'll fallback synchronously
+                        }
                     }
                 }
 
-                val request = androidx.work.OneTimeWorkRequestBuilder<com.travelcompanion.workers.SaveJourneyWorker>()
+                val request = OneTimeWorkRequestBuilder<SaveJourneyWorker>()
                     .setInputData(workDataBuilder.build())
                     .build()
 
-                androidx.work.WorkManager.getInstance(this).enqueueUniqueWork(
+                WorkManager.getInstance(applicationContext).enqueueUniqueWork(
                     "save_journey_${currentTripId}",
-                    androidx.work.ExistingWorkPolicy.REPLACE,
+                    ExistingWorkPolicy.REPLACE,
                     request
                 )
             } catch (e: Exception) {
@@ -199,12 +224,25 @@ class TrackingService : Service() {
             }
         }
 
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                // pre-N versions: use boolean flag to remove the notification
+                @Suppress("DEPRECATION")
+                stopForeground(true)
+            }
+        } catch (e: Exception) {
+            Timber.w(e, "Error stopping foreground")
+        }
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(channelId, "Tracking", NotificationManager.IMPORTANCE_LOW)
-        notificationManager.createNotificationChannel(channel)
+        // NotificationChannel exists only on Android O+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Tracking", NotificationManager.IMPORTANCE_LOW)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     private fun createTrackingNotification(): Notification {
@@ -239,12 +277,20 @@ class TrackingService : Service() {
     }
 
     private fun sendLocationUpdate(location: Location, distance: Float) {
-        val intent = Intent(ACTION_LOCATION_UPDATE)
-        intent.setPackage(packageName)
-        intent.putExtra("lat", location.latitude)
-        intent.putExtra("lon", location.longitude)
-        intent.putExtra("dist", distance)
-        sendBroadcast(intent)
+        val intent = Intent(ACTION_LOCATION_UPDATE).apply {
+            setPackage(packageName)
+            putExtra("lat", location.latitude)
+            putExtra("lon", location.longitude)
+            putExtra("dist", distance)
+        }
+        try {
+            // uso applicationContext per essere sicuri che l'update arrivi all'app
+            applicationContext.sendBroadcast(intent)
+        } catch (e: SecurityException) {
+            Timber.w(e, "sendBroadcast security exception for location update")
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to send location broadcast")
+        }
     }
 
     private suspend fun saveCompleteJourney() {

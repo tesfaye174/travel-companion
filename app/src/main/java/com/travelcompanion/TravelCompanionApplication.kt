@@ -29,21 +29,19 @@ class TravelCompanionApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
-        // attivo timber solo in debug, in release non voglio log
-        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        if (isDebuggable) {
+        // Attivo Timber solo quando l'app è in modalità debug.
+        // Questo evita di inviare log dettagliati in release e somiglia al comportamento usato nei progetti universitari.
+        if ((applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
             Timber.plant(Timber.DebugTree())
         }
 
-        // creo il canale per le notifiche (obbligatorio da android 8)
+        // Creo il canale per le notifiche (obbligatorio da Android 8/Oreo) per garantire la corretta visualizzazione delle notifiche.
         NotificationUtils.createNotificationChannel(this)
 
-        // Non inizializzo manualmente WorkManager qui: se è abilitata
-        // l'inizializzazione automatica (InitializationProvider) WorkManager
-        // sarà già inizializzato prima di onCreate e userà la
-        // Configuration fornita da getWorkManagerConfiguration().
+        // Non inizializzo manualmente WorkManager qui: se è abilitata l'inizializzazione automatica tramite InitializationProvider,
+        // WorkManager sarà già pronto prima di onCreate e userà la configurazione di default.
 
-        // schedulo il reminder giornaliero
+        // Schedulo un reminder periodico (giornaliero). Lo faccio sempre, WorkManager gestisce l'esecuzione.
         schedulePeriodicReminder()
     }
 

@@ -17,9 +17,10 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("unused")
 class NewTripViewModel @Inject constructor(
     private val repository: ITripRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _isTracking = MutableLiveData(false)
@@ -91,4 +92,3 @@ class NewTripViewModel @Inject constructor(
         _createdTripId.value = -1
     }
 }
-

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.Geofence
@@ -17,10 +16,12 @@ import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import timber.log.Timber
 
 @Singleton
+@Suppress("unused")
 class GeofenceManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     private val geofencingClient: GeofencingClient = LocationServices.getGeofencingClient(context)
 
@@ -65,13 +66,19 @@ class GeofenceManager @Inject constructor(
             .addGeofence(geofence)
             .build()
 
-        // Nota: Verificare anche ACCESS_BACKGROUND_LOCATION per Android 10+ se si vuole ricevere eventi in background
+        // Verifico i permessi prima di procedere: per ricevere eventi in background
+        // su Android 10+ serve ACCESS_BACKGROUND_LOCATION: qui loggo se manca.
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Timber.w("Geofence: ACCESS_BACKGROUND_LOCATION non concesso; eventi in background potrebbero non arrivare")
+            }
+
             geofencingClient.addGeofences(request, geofencePendingIntent)
-                .addOnSuccessListener { Log.d("Geofence", "Aggiunto con successo") }
-                .addOnFailureListener { Log.e("Geofence", "Errore aggiunta", it) }
+                .addOnSuccessListener { Timber.d("Geofence: Aggiunto con successo") }
+                .addOnFailureListener { Timber.e(it, "Geofence: Errore aggiunta") }
         } else {
-            Log.w("Geofence", "Permesso ACCESS_FINE_LOCATION non concesso: impossibile aggiungere geofence")
+            Timber.w("Geofence: Permesso ACCESS_FINE_LOCATION non concesso: impossibile aggiungere geofence")
         }
     }
 

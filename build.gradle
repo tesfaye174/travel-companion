@@ -1,12 +1,24 @@
-
 plugins {
-    id 'com.android.application' version '8.9.1' apply false
-    id 'org.jetbrains.kotlin.android' version '2.0.21' apply false
-    id 'org.jetbrains.kotlin.plugin.compose' version '2.0.21' apply false
-    id 'com.google.dagger.hilt.android' version '2.51.1' apply false
+    id 'com.android.application' version '9.0.0' apply false
+    id 'org.jetbrains.kotlin.android' version '2.3.0' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.3.0' apply false
+    id 'com.google.dagger.hilt.android' version '2.59' apply false
+    id 'io.gitlab.arturbosch.detekt' version '1.23.8'
 }
 
 // Keep root project minimal — module-level build files configure the details.
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}
+
+detekt {
+    toolVersion = "1.23.8"
+    config = files("detekt.yml") // Usa un file di configurazione personalizzato se disponibile
+    buildUponDefaultConfig = true // Usa la configurazione di default come base
+    allRules = false // Attiva solo le regole specificate nel file di configurazione
+    reports {
+        html.required.set(true) // Genera un report HTML
+        txt.required.set(false)
+        xml.required.set(false)
+    }
 }

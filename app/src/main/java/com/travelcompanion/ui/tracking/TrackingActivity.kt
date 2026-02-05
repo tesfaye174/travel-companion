@@ -10,6 +10,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -44,6 +46,9 @@ class TrackingActivity : AppCompatActivity() {
     private var pendingPhotoUri: Uri? = null
     private var pendingPhotoFile: File? = null
 
+    // Launcher per catturare foto (inizializzato in onCreate)
+    private lateinit var capturePhotoLauncher: ActivityResultLauncher<Uri>
+
     private var trackingStartTime: Long = 0L
     private var timerJob: kotlinx.coroutines.Job? = null
 
@@ -72,6 +77,19 @@ class TrackingActivity : AppCompatActivity() {
         binding = ActivityTrackingJourneyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Inizializzo il launcher per la fotocamera
+        capturePhotoLauncher = registerForActivityResult<Uri, Boolean>(
+            ActivityResultContracts.TakePicture()
+        ) { success: Boolean ->
+            if (success) {
+                pendingPhotoFile?.let { promptAddPhotoNote(it) }
+            } else {
+                pendingPhotoFile?.delete()
+                pendingPhotoFile = null
+                pendingPhotoUri = null
+            }
+        }
+
         tripId = intent.getLongExtra(TrackingService.EXTRA_TRIP_ID, -1)
 
         setupToolbar()
@@ -85,8 +103,9 @@ class TrackingActivity : AppCompatActivity() {
 
     private fun setupMap() {
         // Configure osmdroid
-        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
-        Configuration.getInstance().userAgentValue = packageName
+        // Usa applicationContext per evitare warning di qualificatore ridondante
+        Configuration.getInstance().load(applicationContext, applicationContext.getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = applicationContext.packageName
 
         binding.mapTracking.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
         binding.mapTracking.setMultiTouchControls(true)
@@ -204,30 +223,8 @@ class TrackingActivity : AppCompatActivity() {
         pendingPhotoFile = file
         pendingPhotoUri = uri
 
-        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri)
-            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        @Suppress("DEPRECATION")
-        // This method is deprecated in AndroidX but retained for simplicity.
-        startActivityForResult(intent, 4001)
-    }
-
-    @Deprecated("Deprecated in AndroidX; kept for simplicity")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 4001) return
-        if (resultCode != RESULT_OK) {
-            pendingPhotoFile?.delete()
-            pendingPhotoFile = null
-            pendingPhotoUri = null
-            return
-        }
-
-        val file = pendingPhotoFile ?: return
-        promptAddPhotoNote(file)
+        // Uso ActivityResultContracts invece di startActivityForResult (moderno)
+        capturePhotoLauncher.launch(uri)
     }
 
     private fun promptAddPhotoNote(photoFile: File) {
@@ -288,8 +285,9 @@ class TrackingActivity : AppCompatActivity() {
                 IntentFilter(TrackingService.ACTION_LOCATION_UPDATE),
                 ContextCompat.RECEIVER_NOT_EXPORTED
             )
-        } catch (_: SecurityException) {
+        } catch (se: SecurityException) {
             // On some platform versions strict export checks can throw; avoid crashing the activity.
+            Timber.w(se, "ContextCompat.registerReceiver security exception")
         }
     }
 
@@ -297,8 +295,9 @@ class TrackingActivity : AppCompatActivity() {
         super.onStop()
         try {
             unregisterReceiver(locationUpdatesReceiver)
-        } catch (_: IllegalArgumentException) {
+        } catch (iae: IllegalArgumentException) {
             // receiver not registered or already unregistered
+            Timber.w(iae, "unregisterReceiver called but receiver not registered")
         }
     }
 

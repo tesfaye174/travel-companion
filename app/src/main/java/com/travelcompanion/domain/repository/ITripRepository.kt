@@ -14,7 +14,12 @@ import java.util.Date
 
 /**
  * Interfaccia del repository per accedere ai dati.
- * Flow per le liste che si aggiornano, suspend per operazioni singole.
+ *
+ * Nota (studente): qui definiamo solo i contratti — nessuna logica di implementazione.
+ * - Usiamo `Flow` per le liste osservabili (si aggiornano automaticamente)
+ * - Usiamo `suspend` per operazioni singole/transactional
+ *
+ * Mantieni i nomi dei metodi semplici e descrittivi, così è facile testare il comportamento.
  */
 interface ITripRepository {
 

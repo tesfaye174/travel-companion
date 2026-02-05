@@ -9,7 +9,9 @@
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
     app:strokeColor="@color/divider"
-    app:strokeWidth="1dp">
+    app:strokeWidth="1dp"
+    android:focusable="true"
+    android:importantForAccessibility="yes">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,8 +21,7 @@
             android:id="@+id/iv_destination"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/destination" />
+            android:scaleType="centerCrop" />
 
         <!-- Gradient overlay -->
         <View

@@ -44,8 +44,8 @@ class TripDetailsFragment : Fragment() {
 
     private val viewModel: TripDetailsViewModel by viewModels()
     private var mapViewRef: MapView? = null
-    private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+    // Nota: non mantenere formatter condivisi come campi, SimpleDateFormat non è thread-safe.
+    // Creo formatter locali al bisogno per evitare problemi con callback/background threads.
 
     private var currentPhotoUri: Uri? = null
     private var currentPhotoPath: String? = null
@@ -156,13 +156,13 @@ class TripDetailsFragment : Fragment() {
             )
             takePictureLauncher.launch(currentPhotoUri)
         } catch (e: SecurityException) {
-            Timber.e(e)
+            Timber.e(e, "TripDetailsFragment: camera permission denied in launchCamera")
             Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
-            Timber.e(e)
+            Timber.e(e, "TripDetailsFragment: IO error creating photo file")
             Toast.makeText(requireContext(), R.string.error_saving_trip, Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Timber.e(e)
+            Timber.e(e, "TripDetailsFragment: unexpected error in launchCamera")
             Toast.makeText(requireContext(), R.string.error_saving_trip, Toast.LENGTH_SHORT).show()
         }
     }
@@ -234,9 +234,11 @@ class TripDetailsFragment : Fragment() {
 
             val end = trip.endDate
             binding.tvDates.text = if (end != null) {
-                "${dateFormat.format(trip.startDate)} - ${dateFormat.format(end)}"
+                val df = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                "${df.format(trip.startDate)} - ${df.format(end)}"
             } else {
-                dateFormat.format(trip.startDate)
+                val df = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                df.format(trip.startDate)
             }
         }
 
@@ -264,10 +266,11 @@ class TripDetailsFragment : Fragment() {
         }
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
-            val items = notes.orEmpty().map {
+                val items = notes.orEmpty().map {
+                val dtf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
                 NoteItem(
                     content = it.content,
-                    date = dateTimeFormat.format(it.timestamp)
+                    date = dtf.format(it.timestamp)
                 )
             }
             noteAdapter.submitList(items)

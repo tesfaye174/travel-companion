@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -50,8 +51,10 @@ class ProfileFragment : Fragment() {
         try {
             val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
             binding.tvVersion.text = getString(R.string.version_info, packageInfo.versionName)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            // Non riesco a leggere la versione del pacchetto: uso valore di default e loggo.
             binding.tvVersion.text = getString(R.string.version_info, "1.0.0")
+            Timber.w(e, "ProfileFragment: failed to get package info")
         }
     }
 
@@ -102,7 +105,8 @@ class ProfileFragment : Fragment() {
                 android.net.Uri.parse("market://details?id=${requireContext().packageName}")
             )
             startActivity(intent)
-        } catch (_: android.content.ActivityNotFoundException) {
+        } catch (anfe: android.content.ActivityNotFoundException) {
+            Timber.w(anfe, "Play Store app not available, opening web fallback")
             val intent = android.content.Intent(
                 android.content.Intent.ACTION_VIEW,
                 android.net.Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")

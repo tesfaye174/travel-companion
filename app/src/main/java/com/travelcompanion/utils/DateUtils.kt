@@ -2,60 +2,76 @@ package com.travelcompanion.utils
 
 import java.text.SimpleDateFormat
 import java.util.*
+import timber.log.Timber
 
 /**
- * Utility object per la formattazione delle date nell'app.
+ * Oggetto di utilità per gestire le date nell'app.
  *
- * NOTA IMPORTANTE SULLA THREAD SAFETY:
- * SimpleDateFormat NON è thread-safe. Tuttavia, in questa app lo uso
- * principalmente dal main thread (UI), quindi non dovrebbero esserci problemi.
- *
- * Se in futuro usassi questi formatter da thread multipli (es. in coroutine
- * su Dispatchers.IO), dovrei:
- * - Creare un nuovo formatter ogni volta, oppure
- * - Usare ThreadLocal, oppure
- * - Migrare a java.time.format.DateTimeFormatter (API 26+ o con desugaring)
- *
- * Per ora ho scelto di riutilizzare le istanze per efficienza.
+ * Attenzione: SimpleDateFormat non è thread-safe! Qui lo uso solo nella UI, quindi va bene.
+ * Se dovessi usarlo in thread diversi, meglio crearne uno nuovo ogni volta o usare DateTimeFormatter.
+ * Per ora va bene così, tanto serve solo per mostrare le date all'utente.
  */
 object DateUtils {
+    // Nota per lo studente: SimpleDateFormat NON è thread-safe.
+    // Per evitare problemi (soprattutto con background thread) creo
+    // un formatter nuovo in ogni funzione. In progetti più grandi
+    // si preferisce usare java.time (DateTimeFormatter) o ThreadLocal.
 
-    // Formatter riutilizzabili - inizializzati una sola volta
-    val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+    // --- Funzioni per formattare le date ---
 
-    // ==================== FORMATTAZIONE DATE ====================
-
-    /** Formatta un timestamp Unix in stringa leggibile (es. "15 Gen 2024") */
+    /** Converte un timestamp in una stringa tipo "15 Gen 2024" */
     fun formatDate(timestamp: Long): String {
-        return dateFormat.format(Date(timestamp))
+        val df = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        return df.format(Date(timestamp))
     }
 
-    /** Overload che accetta direttamente un oggetto Date */
+    /** Stessa cosa ma prende direttamente una Date */
     fun formatDate(date: Date): String {
-        return dateFormat.format(date)
+        val df = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        return df.format(date)
     }
 
-    /** Formatta solo l'ora (es. "14:30") */
+    /** Restituisce solo l'ora, tipo "14:30" */
     fun formatTime(timestamp: Long): String {
-        return timeFormat.format(Date(timestamp))
+        val tf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return tf.format(Date(timestamp))
     }
 
-    /** Formatta data e ora insieme (es. "15 Gen 2024, 14:30") */
+    /** Data e ora insieme, tipo "15 Gen 2024, 14:30" */
     fun formatDateTime(timestamp: Long): String {
-        return dateTimeFormat.format(Date(timestamp))
+        val dtf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        return dtf.format(Date(timestamp))
     }
 
     fun formatDateTime(date: Date): String {
-        return dateTimeFormat.format(date)
+        val dtf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        return dtf.format(date)
     }
 
-    // ==================== RANGE DI DATE ====================
+    /** Parso una stringa nel formato usato dall'app ("dd MMM yyyy"). */
+    fun parseDate(text: String): Date? {
+        return try {
+            SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(text)
+        } catch (e: Exception) {
+            Timber.w(e, "DateUtils: parseDate failed for '%s'", text)
+            null
+        }
+    }
+
+    /** Parso data+ora nel formato "dd MMM yyyy, HH:mm". */
+    fun parseDateTime(text: String): Date? {
+        return try {
+            SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()).parse(text)
+        } catch (e: Exception) {
+            Timber.w(e, "DateUtils: parseDateTime failed for '%s'", text)
+            null
+        }
+    }
+
+    // --- Funzioni per intervalli di date ---
 
     /**
-     * Formatta un intervallo di date per la visualizzazione.
-     * Es: "15 Gen 2024 - 20 Gen 2024"
+     * Mostra un intervallo di date, tipo "15 Gen 2024 - 20 Gen 2024"
      */
     fun formatDateRange(startDate: Long, endDate: Long): String {
         val start = formatDate(startDate)
@@ -64,8 +80,7 @@ object DateUtils {
     }
 
     /**
-     * Versione che gestisce anche date di fine nulle (viaggio in corso).
-     * Se endDate è null, mostra solo la data di inizio.
+     * Se la data di fine è nulla (viaggio in corso), mostra solo la data di inizio.
      */
     fun formatDateRange(start: Date, end: Date?): String {
         return if (end == null) {
@@ -75,10 +90,10 @@ object DateUtils {
         }
     }
 
-    // ==================== CALCOLI ====================
+    // --- Calcoli sulle date ---
 
     /**
-     * Calcola il numero di giorni tra due date (inclusi).
+     * Calcola quanti giorni ci sono tra due date (inclusi).
      * Es: dal 1 al 3 Gennaio = 3 giorni
      */
     fun getDaysDifference(startDate: Long, endDate: Long): Int {
@@ -87,13 +102,9 @@ object DateUtils {
     }
 
     /**
-     * Formatta una durata in millisecondi in formato leggibile.
+     * Trasforma una durata in millisecondi in una stringa leggibile.
      * Es: 5400000 ms -> "1h 30m"
-     *
-     * Gestisce i casi limite:
-     * - Solo ore se i minuti sono 0 (es. "2h")
-     * - Solo minuti se meno di un'ora (es. "45m")
-     * - "0m" per durate nulle o negative
+     * Se la durata è zero o negativa, restituisce "0m"
      */
     fun formatDuration(durationMillis: Long): String {
         if (durationMillis <= 0) return "0m"
@@ -109,9 +120,11 @@ object DateUtils {
         }
     }
 
-    /** Overload di getDaysDifference che accetta oggetti Date */
+    /** Versione con oggetti Date */
     fun getDaysDifference(start: Date, end: Date): Int {
         val diff = end.time - start.time
         return (diff / (1000 * 60 * 60 * 24)).toInt() + 1
     }
+
+    // Nota: se cambi la lingua del telefono mentre l'app è aperta, i formatter non si aggiornano. In un'app seria bisognerebbe gestirlo meglio.
 }

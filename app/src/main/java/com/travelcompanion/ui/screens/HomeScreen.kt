@@ -89,7 +89,9 @@ fun AddTripDialog(onDismiss: () -> Unit, onConfirm: (String, String, TripType) -
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(value = dest, onValueChange = { dest = it }, label = { Text("Destinazione") })
                 Spacer(modifier = Modifier.height(8.dp))
-                // TODO: Add type selector (e.g., DropdownMenu) to pick TripType
+                // TODO: Implementare un selettore di tipo viaggio (es. DropdownMenu) per permettere all'utente di scegliere il TripType.
+                // Questo migliora l'usabilità e la flessibilità della schermata Home, facilitando la selezione e il filtraggio dei viaggi.
+                // Suggerimento: utilizzare un componente Material DropdownMenu e collegarlo al ViewModel per aggiornare la lista dei viaggi mostrati.
             }
         },
         confirmButton = { Button(onClick = { onConfirm(name, dest, type) }) { Text("Inizia") } },

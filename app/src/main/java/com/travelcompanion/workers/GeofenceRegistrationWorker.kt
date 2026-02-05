@@ -17,6 +17,10 @@ import timber.log.Timber
 
 class GeofenceRegistrationWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
 
+    // Nota: questo worker viene eseguito all'avvio del dispositivo per
+    // ri-registrare i geofence persistiti. Lo eseguiamo in foreground
+    // per aumentare la probabilità che completi l'operazione.
+
     companion object {
         const val CHANNEL_ID = "geofence_worker_channel"
         const val NOTIFICATION_ID = 9876

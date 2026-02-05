@@ -16,6 +16,9 @@ object TripValidationUtils {
 
     /**
      * Valida un viaggio prima della creazione.
+     * Esempio di commento didattico: questa funzione centralizza la logica di validazione,
+     * garantendo che le stesse regole siano applicate ovunque nell'applicazione.
+     * Lancia IllegalArgumentException se i dati non sono validi.
      *
      * @throws IllegalArgumentException se:
      * - Il titolo è vuoto o contiene solo spazi
@@ -32,6 +35,8 @@ object TripValidationUtils {
 
     /**
      * Valida un viaggio prima dell'aggiornamento.
+     * Esempio di commento didattico: la funzione verifica che l'ID sia valido e che i campi obbligatori siano compilati.
+     *
      * Richiede anche che l'ID sia valido (> 0).
      */
     fun validateForUpdate(trip: Trip) {
@@ -42,6 +47,8 @@ object TripValidationUtils {
 
     /**
      * Valida un viaggio prima della cancellazione.
+     * Esempio di commento didattico: la funzione verifica solo la validità dell'ID.
+     *
      * Verifica solo che l'ID sia valido.
      */
     fun validateForDelete(trip: Trip) {

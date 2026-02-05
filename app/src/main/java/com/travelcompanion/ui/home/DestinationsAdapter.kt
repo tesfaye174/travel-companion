@@ -49,72 +49,43 @@ class DestinationsAdapter(
             binding.tvDestinationName.text = destination.city
             binding.tvDestinationCountry.text = destination.country
 
-            Glide.with(binding.root.context)
-                .load(destination.imageResId)
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_image)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(binding.ivDestination)
+            // Accessibility: set content description on the image
+            binding.ivDestination.contentDescription = "${destination.city}, ${destination.country}"
+            // Transition name so shared element transitions can use it if needed
+            binding.ivDestination.transitionName = "destination_image_${destination.id}"
+
+            val ctx = binding.root.context
+
+            // Priorità: imageUrl (remoto) -> drawable locale (imageResName) -> placeholder
+            val imageUrl = destination.imageUrl
+            if (!imageUrl.isNullOrBlank()) {
+                Glide.with(ctx)
+                    .load(imageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(binding.ivDestination)
+                return
+            }
+
+            val resId = destination.imageResName?.let { name ->
+                ctx.resources.getIdentifier(name, "drawable", ctx.packageName)
+            } ?: 0
+
+            if (resId != 0) {
+                Glide.with(ctx)
+                    .load(resId)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_image)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(binding.ivDestination)
+            } else {
+                Glide.with(ctx)
+                    .load(R.drawable.placeholder_image)
+                    .centerCrop()
+                    .into(binding.ivDestination)
+            }
         }
     }
-}
-
-data class Destination(
-    val id: Int,
-    val city: String,
-    val country: String,
-    val imageResId: Int
-)
-
-object SuggestedDestinations {
-    val destinations = listOf(
-        Destination(
-            id = 1,
-            city = "New York",
-            country = "USA",
-            imageResId = R.drawable.destination_new_york
-        ),
-        Destination(
-            id = 2,
-            city = "Paris",
-            country = "France",
-            imageResId = R.drawable.destination_paris
-        ),
-        Destination(
-            id = 3,
-            city = "Torino",
-            country = "Italia",
-            imageResId = R.drawable.destination_turin
-        ),
-        Destination(
-            id = 4,
-            city = "Bologna",
-            country = "Italia",
-            imageResId = R.drawable.destination_emilia_romagna
-        ),
-        Destination(
-            id = 5,
-            city = "Madrid",
-            country = "Spain",
-            imageResId = R.drawable.destination_madrid
-        ),
-        Destination(
-            id = 6,
-            city = "Rome",
-            country = "Italia",
-            imageResId = R.drawable.destination_rome_colosseum
-        ),
-        Destination(
-            id = 7,
-            city = "London",
-            country = "UK",
-            imageResId = R.drawable.destination_dream_city
-        ),
-        Destination(
-            id = 8,
-            city = "Barcelona",
-            country = "Spain",
-            imageResId = R.drawable.destination_paris_arc
-        )
-    )
 }

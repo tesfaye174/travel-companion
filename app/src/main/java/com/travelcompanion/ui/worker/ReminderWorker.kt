@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.travelcompanion.data.db.AppDatabase
 import com.travelcompanion.utils.NotificationUtils
+import timber.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
@@ -13,6 +14,9 @@ class ReminderWorker(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
+
+    // Student note: ReminderWorker checks if the user hasn't created trips
+    // recently and sends a lightweight notification suggesting to record trips.
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
@@ -34,7 +38,8 @@ class ReminderWorker(
 
                 Result.success()
             } catch (e: Exception) {
-                // Restituisci il dettaglio dell'errore
+                Timber.e(e, "ReminderWorker: error while checking recent trips")
+                // Manteniamo il comportamento precedente: segnaliamo failure
                 Result.failure()
             }
         }

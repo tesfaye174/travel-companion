@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,12 +35,11 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
-    // Mostra un messaggio di errore nella UI
-    private fun showMapError(message: String) {
-        view?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
-        }
-    }
+
+    // ActivityResult launcher per i permessi di localizzazione
+    private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+
+    // Nota: per mostrare errori UI usiamo Snackbar direttamente con binding.root
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -64,9 +65,37 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inizializzo il permission launcher per richiedere fine+coarse
+        locationPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val granted = permissions.entries.all { it.value }
+            if (granted) {
+                // Quando concesso, centriamo la mappa
+                centerOnMyLocation()
+            } else {
+                val denied = permissions.filter { !it.value }.map { it.key }
+                val shouldShowRationale = denied.any { permission ->
+                    ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
+                }
+                if (shouldShowRationale) {
+                    PermissionUtils.showPermissionRationaleDialog(
+                        requireContext(),
+                        getString(R.string.location_permission_required),
+                        getString(R.string.location_permission_rationale),
+                        onConfirm = { locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) },
+                        onCancel = {}
+                    )
+                } else {
+                    // Utente ha negato senza rationale o ha disabilitato permanentemente: apri settings
+                    PermissionUtils.showSettingsDialog(requireContext())
+                }
+            }
+        }
+
         // Diagnostic logging: which fragment and which ViewModel provider factories are present
         try {
-            Timber.d("this=${this::class.java.name} defaultFactory=${defaultViewModelProviderFactory::class.java.name} activityFactory=${requireActivity().defaultViewModelProviderFactory::class.java.name}")
+            Timber.d("this=%s defaultFactory=%s activityFactory=%s", this::class.java.name, defaultViewModelProviderFactory::class.java.name, requireActivity().defaultViewModelProviderFactory::class.java.name)
         } catch (t: Throwable) {
             Timber.d(t, "failed to read factories")
         }
@@ -76,9 +105,10 @@ class MapFragment : Fragment() {
         mapView = binding.mapContainer
 
         // Required for OSMDroid to work
-        val sharedPreferences = requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
-        Configuration.getInstance().load(requireContext(), sharedPreferences)
-        Configuration.getInstance().userAgentValue = requireContext().packageName
+        val ctx = requireContext()
+        val sharedPreferences = ctx.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
+        Configuration.getInstance().load(ctx, sharedPreferences)
+        Configuration.getInstance().userAgentValue = ctx.packageName
 
         // Setup map with online tiles (MAPNIK from OpenStreetMap)
         mapView?.setTileSource(TileSourceFactory.MAPNIK)
@@ -136,9 +166,9 @@ class MapFragment : Fragment() {
                 }
                 Timber.d("Loaded ${pois.size} custom POI markers")
             }
-        } catch (e: java.io.FileNotFoundException) {
+        } catch (fnf: java.io.FileNotFoundException) {
             // No custom POI file - this is fine, map works without it
-            Timber.d("No custom POI file found (poi.osm) - using online map tiles only")
+            Timber.d(fnf, "No custom POI file found (poi.osm) - using online map tiles only")
         } catch (e: java.io.IOException) {
             Timber.w(e, "Could not read POI file: ${e.message}")
         } catch (e: Exception) {
@@ -226,47 +256,45 @@ class MapFragment : Fragment() {
 
     private fun centerOnMyLocation() {
         val map = mapView ?: return
-        val context = context ?: return
+        val ctx = context ?: return
 
-        if (!PermissionUtils.hasLocationPermissions(context)) {
-            Snackbar.make(binding.root, R.string.location_permission_required, Snackbar.LENGTH_LONG)
-                .setAction("Grant") {
-                    ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                        2001
-                    )
-                }
-                .show()
+        if (!PermissionUtils.hasLocationPermissions(ctx)) {
+            // Use modern ActivityResult API to request permissions
+            locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
             return
         }
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission check failed, do nothing (already requested above)
             return
         }
 
         // Mostra indicatore di caricamento
-        Snackbar.make(binding.root, "Getting your location...", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, getString(R.string.getting_location), Snackbar.LENGTH_SHORT).show()
 
         locationProvider.getCurrentLocation({ location ->
-            // Remove existing MyLocationNewOverlay (compatible with API 21+)
-            val iterator = map.overlays.iterator()
-            while (iterator.hasNext()) {
-                if (iterator.next() is MyLocationNewOverlay) {
-                    iterator.remove()
+            try {
+                // Remove existing MyLocationNewOverlay (compatible with API 21+)
+                val iterator = map.overlays.iterator()
+                while (iterator.hasNext()) {
+                    if (iterator.next() is MyLocationNewOverlay) {
+                        iterator.remove()
+                    }
                 }
-            }
-            val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), map)
-            myLocationOverlay.enableMyLocation()
-            map.overlays.add(myLocationOverlay)
+                val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), map)
+                myLocationOverlay.enableMyLocation()
+                map.overlays.add(myLocationOverlay)
 
-            val latLng = GeoPoint(location.latitude, location.longitude)
-            map.controller.animateTo(latLng)
-            map.controller.setZoom(15.0)
-            map.invalidate()
+                val latLng = GeoPoint(location.latitude, location.longitude)
+                map.controller.animateTo(latLng)
+                map.controller.setZoom(15.0)
+                map.invalidate()
+            } catch (e: Exception) {
+                Timber.w(e, "Error centering on user location")
+            }
         }, { error ->
-            Snackbar.make(binding.root, "Unable to get location. Please try again.", Snackbar.LENGTH_LONG)
-                .setAction("Retry") { centerOnMyLocation() }
+            Snackbar.make(binding.root, getString(R.string.unable_get_location), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.retry)) { centerOnMyLocation() }
                 .show()
             Timber.w(error, "Failed to get current location")
         })

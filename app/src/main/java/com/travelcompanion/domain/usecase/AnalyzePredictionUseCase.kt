@@ -15,11 +15,15 @@ class AnalyzePredictionUseCase {
         val totalKm = calculateTotalDistance(locations)
         val avgKmPerTrip = if (trips.isNotEmpty()) totalKm / trips.size else 0.0
 
-        // Algoritmo semplice: Previsione = Media * 1.2 (ottimismo)
+        // Algoritmo di previsione semplice: si calcola la media dei chilometri percorsi per viaggio e si applica un coefficiente di ottimismo (1.2).
+        // Questo serve a simulare una previsione personalizzata, come richiesto dal progetto, senza introdurre complessità statistica o machine learning.
+        // In una futura estensione si potrebbero usare modelli più avanzati (es. regressione, reti neurali) per una stima più accurata.
         val predicted = avgKmPerTrip * 1.2
 
+        // Messaggio motivazionale: se la previsione supera 100 km, si valorizza il comportamento dell'utente.
+        // Altrimenti si mostra una stima personalizzata per il prossimo periodo.
         val msg = if (predicted > 100) "Sei un viaggiatore instancabile!"
-        else "Il prossimo mese potresti fare ${String.format("%.1f", predicted)} km."
+        else "Il prossimo mese potresti fare ${String.format(java.util.Locale.getDefault(), "%.1f", predicted)} km."
 
         return PredictionResult(predicted, msg)
     }

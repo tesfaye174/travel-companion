@@ -119,14 +119,14 @@ class NewTripFragment : Fragment() {
                 binding.tilStartDate.error = null
             }
 
-            val startDate = runCatching { com.travelcompanion.utils.DateUtils.dateFormat.parse(startDateText) }.getOrNull()
+            val startDate = runCatching { com.travelcompanion.utils.DateUtils.parseDate(startDateText) }.getOrNull()
             if (startDate == null) {
                 binding.tilStartDate.error = getString(com.travelcompanion.R.string.invalid_date)
                 return@setOnClickListener
             }
 
             val endDateText = binding.etEndDate.text?.toString()?.trim().orEmpty()
-            val endDate = runCatching { com.travelcompanion.utils.DateUtils.dateFormat.parse(endDateText) }.getOrNull() ?: startDate
+            val endDate = runCatching { com.travelcompanion.utils.DateUtils.parseDate(endDateText) }.getOrNull() ?: startDate
 
             val tripType = when (binding.chipGroupType.checkedChipId) {
                 com.travelcompanion.R.id.chip_local -> TripType.LOCAL

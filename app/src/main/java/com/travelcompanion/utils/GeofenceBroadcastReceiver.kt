@@ -12,8 +12,8 @@ import com.travelcompanion.data.db.AppDatabase
 import com.travelcompanion.data.db.entities.GeofenceEventEntity
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
-import com.travelcompanion.utils.AppConstants
 import kotlinx.coroutines.CoroutineScope
+import timber.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -61,8 +61,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         )
                     )
                 }
-            } catch (_: Exception) {
-                // Catch generico: la persistenza è best-effort, la notifica utente è già stata inviata.
+            } catch (e: Exception) {
+                // La persistenza è best-effort: logghiamo l'errore ma non blocchiamo la notifica.
+                Timber.w(e, "GeofenceBroadcastReceiver: failed to persist geofence events")
             }
         }
     }
@@ -71,8 +72,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val channelId = "geofence_channel"
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channel = NotificationChannel(channelId, context.getString(R.string.location_alerts), NotificationManager.IMPORTANCE_HIGH)
-        manager.createNotificationChannel(channel)
+        // Fix: Crea il NotificationChannel solo su API >= 26
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, context.getString(R.string.location_alerts), NotificationManager.IMPORTANCE_HIGH)
+            manager.createNotificationChannel(channel)
+        }
 
         val action = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) {
             context.getString(R.string.geofence_entered, ids)
@@ -80,14 +84,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             context.getString(R.string.geofence_exited, ids)
         }
         val notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(context.getString(R.string.location_alert))
+            .setSmallIcon(R.drawable.ic_location) // ic_location_on non esiste, uso ic_location
+            .setContentTitle(context.getString(R.string.location_alerts))
             .setContentText(action)
-            .setSmallIcon(R.drawable.ic_map)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
-        
-        // Use unique notification ID based on geofence ID hash and timestamp
-        val notificationId = (ids.hashCode() + System.currentTimeMillis().toInt()) and 0x7FFFFFFF
-        manager.notify(notificationId, notification)
+        manager.notify(ids.hashCode(), notification)
     }
 }
-

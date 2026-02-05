@@ -33,9 +33,10 @@ import com.travelcompanion.data.db.entities.TripEntity
         PhotoNoteEntity::class,
         NoteEntity::class,
         GeofenceAreaEntity::class,
-        GeofenceEventEntity::class
+        GeofenceEventEntity::class,
+        PinEntity::class // AGGIUNTO
     ],
-    version = 2,
+    version = 3, // Incrementa la versione
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -46,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
     abstract fun geofenceAreaDao(): GeofenceAreaDao
     abstract fun geofenceEventDao(): GeofenceEventDao
+    abstract fun pinDao(): PinDao // AGGIUNTO
 
     companion object {
         @Volatile
@@ -55,10 +57,10 @@ abstract class AppDatabase : RoomDatabase() {
         // Adjust SQL if your original v1 schema differs. These ALTER TABLE statements
         // add nullable columns or columns with default values so existing rows are preserved.
         val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
+            override fun migrate(db: SupportSQLiteDatabase) {
                 // Helper per controllare se una colonna esiste
                 fun columnExists(table: String, column: String): Boolean {
-                    val cursor = database.query("PRAGMA table_info($table)")
+                    val cursor = db.query("PRAGMA table_info($table)")
                     cursor.use {
                         val idxName = it.getColumnIndex("name")
                         while (it.moveToNext()) {
@@ -72,23 +74,28 @@ abstract class AppDatabase : RoomDatabase() {
                 }
 
                 if (!columnExists("trips", "photo_count")) {
-                    database.execSQL("ALTER TABLE trips ADD COLUMN photo_count INTEGER NOT NULL DEFAULT 0")
+                    db.execSQL("ALTER TABLE trips ADD COLUMN photo_count INTEGER NOT NULL DEFAULT 0")
                 }
                 if (!columnExists("trips", "notes")) {
-                    database.execSQL("ALTER TABLE trips ADD COLUMN notes TEXT NOT NULL DEFAULT ''")
+                    db.execSQL("ALTER TABLE trips ADD COLUMN notes TEXT NOT NULL DEFAULT ''")
                 }
                 if (!columnExists("trips", "is_tracking")) {
-                    database.execSQL("ALTER TABLE trips ADD COLUMN is_tracking INTEGER NOT NULL DEFAULT 0")
+                    db.execSQL("ALTER TABLE trips ADD COLUMN is_tracking INTEGER NOT NULL DEFAULT 0")
                 }
                 if (!columnExists("trips", "destination_latitude")) {
-                    database.execSQL("ALTER TABLE trips ADD COLUMN destination_latitude REAL")
+                    db.execSQL("ALTER TABLE trips ADD COLUMN destination_latitude REAL")
                 }
                 if (!columnExists("trips", "destination_longitude")) {
-                    database.execSQL("ALTER TABLE trips ADD COLUMN destination_longitude REAL")
+                    db.execSQL("ALTER TABLE trips ADD COLUMN destination_longitude REAL")
                 }
             }
         }
 
+        /**
+         * Restituisce l'istanza singleton del database Room.
+         * Esempio di commento didattico: questa funzione garantisce che venga creata una sola istanza del database
+         * per tutto il ciclo di vita dell'applicazione, seguendo il pattern Singleton thread-safe.
+         */
         // singleton per i componenti che non supportano hilt
         // tipo broadcast receiver e worker
         fun getDatabase(context: Context): AppDatabase {
