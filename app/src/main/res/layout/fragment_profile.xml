@@ -7,38 +7,47 @@
     android:background="?attr/colorBackground"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/title_profile"
-            app:titleTextColor="@color/onPrimary" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:clipChildren="false"
+            android:orientation="vertical">
 
-            <!-- Profile Card -->
+            <!-- Gradient Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero_gradient_full"
+                android:paddingTop="16dp"
+                android:paddingBottom="40dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/title_profile"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Profile Card (overlapping the gradient) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="-28dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +55,6 @@
                     android:layout_height="wrap_content"
                     android:padding="20dp">
 
-                    <!-- Profile Image -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="80dp"
@@ -59,56 +67,57 @@
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                         app:tint="@color/onPrimary" />
 
-                    <!-- User Name -->
                     <TextView
                         android:id="@+id/tv_user_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineSmall"
+                        android:textAppearance="@style/TextAppearance.TravelCompanion.TitleLarge"
                         android:textColor="?attr/colorOnSurface"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_profile"
                         app:layout_constraintTop_toTopOf="@id/iv_profile"
                         tools:text="Traveler" />
 
-                    <!-- User Email -->
                     <TextView
                         android:id="@+id/tv_user_email"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="2dp"
                         android:textAppearance="@style/TextAppearance.TravelCompanion.BodyMedium"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_profile"
                         app:layout_constraintTop_toBottomOf="@id/tv_user_name"
                         tools:text="traveler@example.com" />
 
-                    <!-- Member Since -->
                     <TextView
                         android:id="@+id/tv_member_since"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="4dp"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_profile"
                         app:layout_constraintTop_toBottomOf="@id/tv_user_email"
                         tools:text="Member since January 2024" />
 
-                    <!-- Edit Profile Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_edit_profile"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="12dp"
                         android:text="@string/edit_profile"
+                        android:textSize="13sp"
                         app:cornerRadius="20dp"
+                        app:icon="@drawable/ic_edit"
+                        app:iconGravity="textStart"
+                        app:iconPadding="6dp"
+                        app:iconSize="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/iv_profile" />
 
@@ -116,35 +125,35 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Stats Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp"
-                android:text="@string/travel_stats"
-                android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium"
-                android:textColor="?attr/colorOnBackground" />
-
-            <!-- Stats Grid -->
+            <!-- Content Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/travel_stats"
+                    android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium"
+                    android:textColor="?attr/colorOnBackground" />
+
+                <!-- Stats Grid Row 1 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Total Trips -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_trips_bg">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -153,10 +162,21 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_icon_circle"
+                                android:backgroundTint="@color/stat_trips_icon"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_trip"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
                             <TextView
                                 android:id="@+id/tv_total_trips"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineMedium"
                                 android:textColor="@color/primary"
                                 tools:text="12" />
@@ -165,21 +185,21 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/total_trips"
-                                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                                android:textColor="@color/text_secondary" />
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Countries Visited -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_distance_bg">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -188,10 +208,21 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_icon_circle"
+                                android:backgroundTint="@color/stat_distance_icon"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_map"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
                             <TextView
                                 android:id="@+id/tv_countries_visited"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineMedium"
                                 android:textColor="@color/secondary"
                                 tools:text="5" />
@@ -200,8 +231,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/countries_visited"
-                                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                                android:textColor="@color/text_secondary" />
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
@@ -209,19 +240,21 @@
 
                 </LinearLayout>
 
+                <!-- Stats Grid Row 2 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:orientation="horizontal">
 
-                    <!-- Cities Visited -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_photos_bg">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -230,33 +263,44 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_icon_circle"
+                                android:backgroundTint="@color/stat_photos_icon"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_location"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
                             <TextView
                                 android:id="@+id/tv_cities_visited"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineMedium"
-                                android:textColor="@color/info"
+                                android:textColor="@color/stat_photos"
                                 tools:text="15" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/cities_visited"
-                                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                                android:textColor="@color/text_secondary" />
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Total Distance -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="4dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_time_bg">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -265,20 +309,31 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_icon_circle"
+                                android:backgroundTint="@color/stat_time_icon"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_road"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
                             <TextView
                                 android:id="@+id/tv_total_distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:textAppearance="@style/TextAppearance.TravelCompanion.HeadlineMedium"
-                                android:textColor="@color/success"
+                                android:textColor="@color/stat_time"
                                 tools:text="1,234 km" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/total_distance"
-                                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                                android:textColor="@color/text_secondary" />
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
@@ -286,216 +341,262 @@
 
                 </LinearLayout>
 
+                <!-- Menu Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/settings"
+                    android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium"
+                    android:textColor="?attr/colorOnBackground" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/surface_1"
+                    app:rippleColor="?attr/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_settings"
+                            app:tint="@color/primary"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/settings"
+                            android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="?attr/colorOnSurfaceVariant"
+                            android:contentDescription="@null" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/surface_1"
+                    app:rippleColor="?attr/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/primary"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/about_app"
+                            android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="?attr/colorOnSurfaceVariant"
+                            android:contentDescription="@null" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/surface_1"
+                    app:rippleColor="?attr/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_tips"
+                            app:tint="@color/primary"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/tips"
+                            android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="?attr/colorOnSurfaceVariant"
+                            android:contentDescription="@null" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Rate & Share Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_rate_app"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_distance_bg"
+                        app:rippleColor="?attr/colorSecondary">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_stats"
+                                app:tint="@color/secondary"
+                                android:contentDescription="@null" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="@string/rate_app"
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelMedium"
+                                android:textColor="?attr/colorOnSurface" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_share_app"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/stat_trips_bg"
+                        app:rippleColor="?attr/colorPrimary">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_share"
+                                app:tint="@color/primary"
+                                android:contentDescription="@null" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="@string/share_app"
+                                android:textAppearance="@style/TextAppearance.TravelCompanion.LabelMedium"
+                                android:textColor="?attr/colorOnSurface" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Version Info -->
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.TravelCompanion.LabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Version 1.0.0" />
+
+                <!-- Logout Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logout"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="100dp"
+                    android:text="@string/logout"
+                    android:textColor="@color/error"
+                    app:cornerRadius="24dp"
+                    app:strokeColor="@color/error" />
+
             </LinearLayout>
-
-            <!-- Settings Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp"
-                android:text="@string/settings"
-                android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium"
-                android:textColor="?attr/colorOnBackground" />
-
-            <!-- Settings Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_settings"
-                        app:tint="@color/primary"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/settings"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- About Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_info"
-                        app:tint="@color/primary"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/about_app"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Rate App Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_rate_app"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_stats"
-                        app:tint="@color/secondary"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/rate_app"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Share App Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_share_app"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_share"
-                        app:tint="@color/info"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/share_app"
-                        android:textAppearance="@style/TextAppearance.TravelCompanion.BodyLarge" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Version Info -->
-            <TextView
-                android:id="@+id/tv_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                android:textColor="@color/text_secondary"
-                tools:text="Version 1.0.0" />
-
-            <!-- Logout Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_logout"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="100dp"
-                android:text="@string/logout"
-                android:textColor="@color/error"
-                app:cornerRadius="24dp"
-                app:strokeColor="@color/error" />
 
         </LinearLayout>
 

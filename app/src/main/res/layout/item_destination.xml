@@ -1,62 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.TravelCompanion.Card"
-    android:layout_width="160dp"
-    android:layout_height="200dp"
-    android:layout_marginEnd="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
-    app:strokeColor="@color/divider"
-    app:strokeWidth="1dp">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.TravelCompanion.Card" android:layout_width="160dp" android:layout_height="200dp" android:layout_marginEnd="12dp" app:cardCornerRadius="16dp" app:cardElevation="4dp" app:strokeColor="?attr/colorOutlineVariant" app:strokeWidth="1dp">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_destination"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/destination" />
+        <ImageView android:id="@+id/iv_destination" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:contentDescription="@string/destination" />
 
         <!-- Gradient overlay -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/bg_gradient_card" />
+        <View android:layout_width="match_parent" android:layout_height="80dp" android:layout_gravity="bottom" android:background="@drawable/bg_gradient_card" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:padding="12dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="bottom" android:orientation="vertical" android:padding="12dp">
 
-            <TextView
-                android:id="@+id/tv_destination_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/paris"
-                android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
+            <TextView android:id="@+id/tv_destination_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="@string/paris" android:textAppearance="@style/TextAppearance.TravelCompanion.TitleMedium" android:textColor="?attr/colorOnPrimary" android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_destination_country"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/france"
-                android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall"
-                android:textColor="@android:color/white"
-                android:alpha="0.9" />
+            <TextView android:id="@+id/tv_destination_country" android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="@string/france" android:textAppearance="@style/TextAppearance.TravelCompanion.BodySmall" android:textColor="?attr/colorOnPrimary" android:alpha="0.9" />
 
         </LinearLayout>
 

@@ -11,6 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +21,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
+import com.travelcompanion.core.ui.safeNavigate
 import com.travelcompanion.databinding.FragmentTripsBinding
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-/**\n * Fragment showing list of all trips with search and filter.\n * Swipe left to delete (with undo).\n */
+/**
+ * Fragment showing list of all trips with search and filter.
+ * Swipe left to delete (with undo).
+ */
 @AndroidEntryPoint
 class TripsFragment : Fragment() {
 
@@ -48,6 +56,8 @@ class TripsFragment : Fragment() {
         setupSwipeToDelete()
         setupChips()
         setupSearch()
+        setupSortButton()
+        setupFab()
         observeViewModel()
     }
 
@@ -57,7 +67,7 @@ class TripsFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putLong("tripId", trip.id)
                 }
-                findNavController().navigate(R.id.navigation_trip_details, bundle)
+                findNavController().safeNavigate(R.id.action_trips_to_trip_details, bundle)
             },
             onTripLongClick = { /* long click handled by swipe to delete */ }
         )
@@ -70,7 +80,7 @@ class TripsFragment : Fragment() {
 
     private fun setupSwipeToDelete() {
         val swipeCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            private val deleteBackground = ColorDrawable(Color.parseColor("#F44336"))
+            private val deleteBackground = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.error))
             private val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
 
             override fun onMove(
@@ -163,6 +173,13 @@ class TripsFragment : Fragment() {
             }
             viewModel.setFilterType(type)
         }
+
+        binding.btnFilter.setOnClickListener {
+            binding.chipGroupFilter.check(R.id.chip_all)
+            binding.etSearch.text?.clear()
+            viewModel.setFilterType(null)
+            viewModel.setSearchQuery("")
+        }
     }
 
     private fun setupSearch() {
@@ -171,18 +188,52 @@ class TripsFragment : Fragment() {
         }
     }
 
+    private fun setupFab() {
+        binding.fabAddTrip.setOnClickListener {
+            findNavController().safeNavigate(R.id.action_trips_to_new_trip)
+        }
+    }
+
+    private fun setupSortButton() {
+        binding.btnSort.setOnClickListener {
+            val options = arrayOf(
+                getString(R.string.sort_date_newest),
+                getString(R.string.sort_date_oldest),
+                getString(R.string.sort_distance),
+                getString(R.string.sort_name)
+            )
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.sort_by)
+                .setItems(options) { _, which ->
+                    val order = when (which) {
+                        0 -> SortOrder.DATE_DESC
+                        1 -> SortOrder.DATE_ASC
+                        2 -> SortOrder.DISTANCE
+                        else -> SortOrder.NAME
+                    }
+                    viewModel.setSortOrder(order)
+                }
+                .show()
+        }
+    }
+
     private fun observeViewModel() {
-        viewModel.allTrips.observe(viewLifecycleOwner) { trips ->
-            tripAdapter.submitList(trips)
-            if (trips.isEmpty()) {
-                binding.layoutEmpty.root.visibility = View.VISIBLE
-                binding.rvTrips.visibility = View.GONE
-            } else {
-                binding.layoutEmpty.root.visibility = View.GONE
-                binding.rvTrips.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.allTrips.collect { trips ->
+                    tripAdapter.submitList(trips)
+                    binding.tvTripCount.text = getString(R.string.trips_count, trips.size)
+                    if (trips.isEmpty()) {
+                        binding.layoutEmpty.root.visibility = View.VISIBLE
+                        binding.rvTrips.visibility = View.GONE
+                    } else {
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.rvTrips.visibility = View.VISIBLE
+                    }
+                }
             }
         }
-        // Collega il pulsante 'Crea viaggio' dell'empty state al FAB
+        // Connect the empty state "Create Trip" button to the FAB
         binding.layoutEmpty.btnEmptyAction.setOnClickListener {
             binding.fabAddTrip.performClick()
         }

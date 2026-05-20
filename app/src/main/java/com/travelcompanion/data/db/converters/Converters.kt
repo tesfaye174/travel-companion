@@ -1,13 +1,21 @@
 package com.travelcompanion.data.db.converters
 
 import androidx.room.TypeConverter
+import com.travelcompanion.domain.model.Coordinate
 import com.travelcompanion.domain.model.TripType
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.Date
 
 class Converters {
-    private val gson = Gson()
+    private val moshi = Moshi.Builder()
+        .addLast(KotlinJsonAdapterFactory())
+        .build()
+
+    private val coordinateListAdapter = moshi.adapter<List<CoordinateJson>>(
+        Types.newParameterizedType(List::class.java, CoordinateJson::class.java)
+    )
 
     @TypeConverter
     fun fromTripType(tripType: TripType): String {
@@ -16,7 +24,11 @@ class Converters {
 
     @TypeConverter
     fun toTripType(name: String): TripType {
-        return TripType.valueOf(name)
+        return try {
+            TripType.valueOf(name)
+        } catch (e: IllegalArgumentException) {
+            TripType.OTHER
+        }
     }
 
     @TypeConverter
@@ -30,15 +42,30 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromCoordinatesJson(json: String?): List<com.travelcompanion.domain.model.Coordinate> {
+    fun fromCoordinatesJson(json: String?): List<Coordinate> {
         json ?: return emptyList()
-        val type = object : TypeToken<List<com.travelcompanion.domain.model.Coordinate>>() {}.type
-        return gson.fromJson(json, type)
+        return try {
+            coordinateListAdapter.fromJson(json)?.map {
+                Coordinate(it.latitude, it.longitude, Date(it.timestamp))
+            } ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     @TypeConverter
-    fun coordinatesToJson(coordinates: List<com.travelcompanion.domain.model.Coordinate>): String {
-        return gson.toJson(coordinates)
+    fun coordinatesToJson(coordinates: List<Coordinate>): String {
+        val jsonList = coordinates.map {
+            CoordinateJson(it.latitude, it.longitude, it.timestamp.time)
+        }
+        return coordinateListAdapter.toJson(jsonList)
     }
+
+    /** Internal JSON representation for Coordinate to avoid Date serialization issues */
+    private data class CoordinateJson(
+        val latitude: Double,
+        val longitude: Double,
+        val timestamp: Long
+    )
 }
 

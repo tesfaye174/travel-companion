@@ -35,8 +35,6 @@ A modern Android application for tracking, organizing, and reliving your travel 
 
 ### User Experience
 
-│   ├── map/               # Map UI (OSMDroid / offline OSM)
-
 - Persistent settings with DataStore
 - Modern Material Design 3 UI
 - Accessibility support
@@ -104,22 +102,23 @@ app/src/main/java/com/travelcompanion/
 
 | Category | Libraries |
 | -------- | --------- |
-| **Language** | Kotlin 1.9.21 |
+| **Language** | Kotlin 1.9.22 |
 | **Min SDK** | 26 (Android 8.0) |
 | **Target SDK** | 34 (Android 14) |
 | **Architecture** | Clean Architecture + MVVM |
-| **DI** | Hilt 2.48 |
+| **DI** | Hilt 2.50 |
 | **Database** | Room 2.6.1 |
 | **Preferences** | DataStore 1.0.0 |
-| **Async** | Coroutines + Flow |
-| **Navigation** | Navigation Component 2.7.6 |
-| **Maps** | OSMDroid (offline OSM files) |
+| **Async** | Coroutines 1.7.3 + Flow |
+| **Navigation** | Navigation Component 2.7.7 |
+| **Maps** | OSMDroid 6.1.18 (offline OSM files) |
 | **Location** | Fused Location Provider 21.1.0 |
 | **Camera** | CameraX 1.3.1 |
 | **Background** | WorkManager 2.9.0 |
 | **Charts** | MPAndroidChart 3.1.0 |
-| **Images** | Glide 4.15.1 |
+| **Images** | Glide 4.16.0 + Coil 2.5.0 |
 | **Logging** | Timber 5.0.1 |
+| **Build** | AGP 8.3.0, Gradle 8.11.1, KSP 1.9.22-1.0.17 |
 
 ## Getting Started
 
@@ -216,11 +215,19 @@ The app uses Room database with 6 tables:
 
 ## Testing
 
-The project includes:
+The project includes test dependencies for:
 
-- **Unit Tests**: ViewModel and Repository tests with Mockito
-- **Instrumented Tests**: Room database tests
-- **Test Utilities**: Custom dispatchers for coroutine testing
+- **Unit Tests**: JUnit 4, MockK, Turbine, Truth, Coroutines Test
+- **Instrumented Tests**: AndroidX Test, Espresso, Room Testing, Compose UI Test
+- **Test Utilities**: Custom `DispatcherProvider` for coroutine testing
+
+```bash
+# Unit tests
+./gradlew test
+
+# Instrumented tests (requires device/emulator)
+./gradlew connectedAndroidTest
+```
 
 ## License
 

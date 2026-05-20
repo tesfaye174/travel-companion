@@ -14,4 +14,16 @@ interface GeofenceEventDao {
 
     @Query("SELECT * FROM geofence_events ORDER BY timestamp DESC")
     fun getAll(): Flow<List<GeofenceEventEntity>>
+
+    @Query("SELECT * FROM geofence_events ORDER BY timestamp DESC LIMIT :limit")
+    fun getRecent(limit: Int = 100): Flow<List<GeofenceEventEntity>>
+
+    @Query("DELETE FROM geofence_events WHERE timestamp < :cutoffTimestamp")
+    suspend fun deleteOlderThan(cutoffTimestamp: Long): Int
+
+    @Query("DELETE FROM geofence_events WHERE id = :eventId")
+    suspend fun deleteById(eventId: Long)
+
+    @Query("DELETE FROM geofence_events")
+    suspend fun deleteAll()
 }

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Shimmer Trip Card 1 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Thumbnail placeholder -->
+            <View
+                android:id="@+id/shimmer_thumb"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Chip placeholder -->
+            <View
+                android:id="@+id/shimmer_chip"
+                android:layout_width="64dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Title placeholder -->
+            <View
+                android:id="@+id/shimmer_title"
+                android:layout_width="140dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_chip" />
+
+            <!-- Date placeholder -->
+            <View
+                android:id="@+id/shimmer_date"
+                android:layout_width="100dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_title" />
+
+            <!-- Stats placeholder -->
+            <View
+                android:id="@+id/shimmer_stats"
+                android:layout_width="120dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_date" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Shimmer Trip Card 2 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <View
+                android:id="@+id/shimmer_thumb2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="72dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/shimmer_title2"
+                android:layout_width="160dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="34dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/shimmer_date2"
+                android:layout_width="110dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb2"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_title2" />
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb2"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_date2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Shimmer Trip Card 3 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <View
+                android:id="@+id/shimmer_thumb3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="56dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/shimmer_title3"
+                android:layout_width="120dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="34dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/shimmer_date3"
+                android:layout_width="90dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shimmer_rounded"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb3"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_title3" />
+
+            <View
+                android:layout_width="130dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_shimmer_pill"
+                app:layout_constraintStart_toEndOf="@id/shimmer_thumb3"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_date3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

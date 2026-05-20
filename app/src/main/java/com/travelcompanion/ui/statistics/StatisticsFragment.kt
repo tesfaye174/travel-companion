@@ -2,21 +2,26 @@ package com.travelcompanion.ui.statistics
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.PieChart
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.travelcompanion.R
+import com.travelcompanion.databinding.FragmentStatisticsBinding
 import com.travelcompanion.domain.model.MonthlyStat
 import com.travelcompanion.domain.model.TripTypeStat
-import com.travelcompanion.databinding.FragmentStatisticsBinding
+import com.travelcompanion.domain.usecase.PredictionResult
+import com.travelcompanion.utils.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.text.DateFormatSymbols
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -24,7 +29,6 @@ class StatisticsFragment : Fragment() {
 
     private var _binding: FragmentStatisticsBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: StatisticsViewModel by viewModels()
 
     override fun onCreateView(
@@ -38,95 +42,94 @@ class StatisticsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupCharts()
+        setupPeriodChips()
         observeViewModel()
-        viewModel.loadStatistics()
+    }
+
+    private fun setupPeriodChips() {
+        val initialChipId = when (viewModel.initialPeriod) {
+            StatPeriod.THIS_MONTH -> R.id.chip_this_month
+            StatPeriod.ALL_TIME -> R.id.chip_all_time
+            StatPeriod.THIS_YEAR -> R.id.chip_this_year
+        }
+        binding.chipGroupPeriod.check(initialChipId)
+        binding.chipGroupPeriod.setOnCheckedStateChangeListener { group, _ ->
+            viewModel.setPeriod(
+                when (group.checkedChipId) {
+                    R.id.chip_this_month -> StatPeriod.THIS_MONTH
+                    R.id.chip_all_time -> StatPeriod.ALL_TIME
+                    else -> StatPeriod.THIS_YEAR
+                }
+            )
+        }
     }
 
     private fun setupCharts() {
-        setupBarChart(binding.chartBar)
-        setupPieChart(binding.chartPie)
-    }
-
-    private fun setupBarChart(chart: BarChart) {
-        chart.description.isEnabled = false
-        chart.setDrawGridBackground(false)
-        chart.setDrawBarShadow(false)
-
-        val xAxis = chart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawGridLines(false)
-        xAxis.granularity = 1f
-
-        val leftAxis = chart.axisLeft
-        leftAxis.setDrawGridLines(true)
-        leftAxis.axisMinimum = 0f
-
-        chart.axisRight.isEnabled = false
-        chart.legend.isEnabled = false
-        chart.animateY(1000)
-    }
-
-    private fun setupPieChart(chart: PieChart) {
-        chart.description.isEnabled = false
-        chart.setDrawHoleEnabled(true)
-        chart.holeRadius = 40f
-        chart.transparentCircleRadius = 45f
-        chart.setEntryLabelColor(Color.BLACK)
-        chart.setEntryLabelTextSize(12f)
-        chart.legend.isEnabled = true
-        chart.animateY(1000)
+        binding.chartBar.apply {
+            description.isEnabled = false
+            setDrawGridBackground(false)
+            setDrawBarShadow(false)
+            legend.isEnabled = false
+            axisRight.isEnabled = false
+            axisLeft.axisMinimum = 0f
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                granularity = 1f
+            }
+            animateY(1000)
+        }
+        binding.chartPie.apply {
+            description.isEnabled = false
+            setDrawHoleEnabled(true)
+            holeRadius = 40f
+            transparentCircleRadius = 45f
+            setEntryLabelColor(Color.BLACK)
+            setEntryLabelTextSize(12f)
+            legend.isEnabled = true
+            animateY(1000)
+        }
     }
 
     private fun observeViewModel() {
-        viewModel.totalTrips.observe(viewLifecycleOwner) { count ->
-            binding.tvTotalTrips.text = (count ?: 0).toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.totalTrips.collect { binding.tvTotalTrips.text = it.toString() } }
+                launch { viewModel.totalDistance.collect { binding.tvTotalDistance.text = String.format(Locale.getDefault(), "%.2f km", it) } }
+                launch { viewModel.totalPhotos.collect { binding.tvTotalPhotos.text = it.toString() } }
+                launch { viewModel.totalDuration.collect { binding.tvTotalDuration.text = DateUtils.formatDuration(it) } }
+                launch { viewModel.tripTypeStats.collect { updatePieChart(it) } }
+                launch { viewModel.monthlyStats.collect { updateBarChart(it) } }
+                launch { viewModel.prediction.collect { result -> result?.let { updatePredictionCard(it) } } }
+            }
         }
+    }
 
-        viewModel.totalDistance.observe(viewLifecycleOwner) { km ->
-            binding.tvTotalDistance.text = "%.2f km".format(Locale.getDefault(), km ?: 0f)
-        }
-
-        viewModel.totalPhotos.observe(viewLifecycleOwner) { count ->
-            binding.tvTotalPhotos.text = (count ?: 0).toString()
-        }
-
-        viewModel.totalDuration.observe(viewLifecycleOwner) { ms ->
-            // Not currently displayed in layout, but useful for future UI
-            ms ?: return@observe
-        }
-
-        viewModel.tripTypeStats.observe(viewLifecycleOwner) { stats ->
-            updatePieChart(stats.orEmpty())
-        }
-
-        viewModel.monthlyStats.observe(viewLifecycleOwner) { stats ->
-            updateBarChart(stats.orEmpty())
+    private fun updatePredictionCard(result: PredictionResult) {
+        if (result.predictedKm <= 0.0) {
+            binding.tvPredictionKm.text = getString(R.string.prediction_no_data)
+            binding.tvPredictionMessage.visibility = View.GONE
+        } else {
+            binding.tvPredictionKm.text = getString(R.string.prediction_km_format, result.predictedKm)
+            binding.tvPredictionMessage.text = result.message
+            binding.tvPredictionMessage.visibility = View.VISIBLE
         }
     }
 
     private fun updateBarChart(stats: List<MonthlyStat>) {
-        val entries = stats.mapIndexed { index, s ->
-            BarEntry(index.toFloat(), s.tripCount.toFloat())
-        }
+        val entries = stats.mapIndexed { i, s -> BarEntry(i.toFloat(), s.tripCount.toFloat()) }
+        binding.chartBar.data = BarData(
+            BarDataSet(entries, "").apply {
+                color = Color.parseColor("#3F51B5")
+                valueTextColor = Color.BLACK
+            }
+        ).apply { barWidth = 0.9f }
 
-        val dataSet = BarDataSet(entries, "Trips").apply {
-            color = Color.parseColor("#3F51B5")
-            valueTextColor = Color.BLACK
-        }
-
-        binding.chartBar.data = BarData(dataSet).apply {
-            barWidth = 0.9f
-        }
-
-        val labels = stats.map { monthNumberToLabel(it.month) }
-        binding.chartBar.xAxis.valueFormatter = IndexAxisValueFormatter(labels.toTypedArray())
-        binding.chartBar.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        binding.chartBar.xAxis.granularity = 1f
-        binding.chartBar.xAxis.setDrawGridLines(false)
-        binding.chartBar.axisLeft.axisMinimum = 0f
-        binding.chartBar.axisRight.isEnabled = false
+        val shortMonths = DateFormatSymbols.getInstance(Locale.getDefault()).shortMonths
+        binding.chartBar.xAxis.valueFormatter = IndexAxisValueFormatter(
+            stats.map { stat -> shortMonths.getOrNull(stat.month - 1) ?: stat.month.toString() }.toTypedArray()
+        )
         binding.chartBar.setFitBars(true)
         binding.chartBar.invalidate()
     }
@@ -134,41 +137,21 @@ class StatisticsFragment : Fragment() {
     private fun updatePieChart(stats: List<TripTypeStat>) {
         val entries = stats
             .filter { it.tripCount > 0 }
-            .map { s ->
-                PieEntry(s.tripCount.toFloat(), s.tripType.name.replace('_', ' '))
+            .map { PieEntry(it.tripCount.toFloat(), it.tripType.name.replace('_', ' ')) }
+
+        binding.chartPie.data = PieData(
+            PieDataSet(entries, "").apply {
+                colors = listOf(
+                    Color.parseColor("#4CAF50"),
+                    Color.parseColor("#FF9800"),
+                    Color.parseColor("#2196F3"),
+                    Color.parseColor("#9C27B0")
+                )
+                valueTextColor = Color.BLACK
+                valueTextSize = 12f
             }
-
-        val dataSet = PieDataSet(entries, "Trip types").apply {
-            colors = listOf(
-                Color.parseColor("#4CAF50"),
-                Color.parseColor("#FF9800"),
-                Color.parseColor("#2196F3"),
-                Color.parseColor("#9C27B0")
-            )
-            valueTextColor = Color.BLACK
-            valueTextSize = 12f
-        }
-
-        binding.chartPie.data = PieData(dataSet)
+        )
         binding.chartPie.invalidate()
-    }
-
-    private fun monthNumberToLabel(month: Int): String {
-        return when (month) {
-            1 -> "Jan"
-            2 -> "Feb"
-            3 -> "Mar"
-            4 -> "Apr"
-            5 -> "May"
-            6 -> "Jun"
-            7 -> "Jul"
-            8 -> "Aug"
-            9 -> "Sep"
-            10 -> "Oct"
-            11 -> "Nov"
-            12 -> "Dec"
-            else -> month.toString()
-        }
     }
 
     override fun onDestroyView() {
@@ -176,4 +159,3 @@ class StatisticsFragment : Fragment() {
         _binding = null
     }
 }
-

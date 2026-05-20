@@ -1,7 +1,5 @@
 package com.travelcompanion.ui.map
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.GeofenceArea
@@ -9,9 +7,15 @@ import com.travelcompanion.domain.model.GeofenceEvent
 import com.travelcompanion.domain.model.Journey
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
-import org.osmdroid.util.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,52 +23,30 @@ class MapViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    private val _trips = MutableLiveData<List<Trip>>()
-    val trips: LiveData<List<Trip>> = _trips
+    private val _currentLocation = MutableStateFlow<GeoPoint?>(null)
+    val currentLocation: StateFlow<GeoPoint?> = _currentLocation.asStateFlow()
 
-    private val _currentLocation = MutableLiveData<GeoPoint?>()
-    val currentLocation: LiveData<GeoPoint?> = _currentLocation
+    // Hot, reactive flows shared with the Fragment. WhileSubscribed(5000) stops
+    // collecting from Room when no observer is active (e.g. screen off) but keeps
+    // the cached value through brief unsubscribe windows like configuration changes.
+    val trips: StateFlow<List<Trip>> = repository.getAllTrips()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _journeys = MutableLiveData<List<Journey>>()
-    val journeys: LiveData<List<Journey>> = _journeys
+    val journeys: StateFlow<List<Journey>> = repository.getAllJourneys()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _geofenceAreas = MutableLiveData<List<GeofenceArea>>()
-    val geofenceAreas: LiveData<List<GeofenceArea>> = _geofenceAreas
+    val geofenceAreas: StateFlow<List<GeofenceArea>> = repository.getGeofenceAreas()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _geofenceEvents = MutableLiveData<List<GeofenceEvent>>()
-    val geofenceEvents: LiveData<List<GeofenceEvent>> = _geofenceEvents
+    val geofenceEvents: StateFlow<List<GeofenceEvent>> = repository.getGeofenceEvents()
+        .map { list -> list.sortedByDescending { it.timestamp } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun loadTripsForMap() {
-        viewModelScope.launch {
-            repository.getAllTrips().collect { tripsList ->
-                _trips.value = tripsList
-            }
-        }
-    }
-
-    fun loadJourneysForMap() {
-        viewModelScope.launch {
-            repository.getAllJourneys().collect { list ->
-                _journeys.value = list
-            }
-        }
-    }
-
-    fun loadGeofenceAreas() {
-        viewModelScope.launch {
-            repository.getGeofenceAreas().collect { list ->
-                _geofenceAreas.value = list
-            }
-        }
-    }
-
-    fun loadGeofenceEvents() {
-        viewModelScope.launch {
-            repository.getGeofenceEvents().collect { list ->
-                _geofenceEvents.value = list.sortedByDescending { it.timestamp }
-            }
-        }
-    }
+    // Kept as no-op callable entry points so existing Fragment code stays unchanged.
+    fun loadTripsForMap() = Unit
+    fun loadJourneysForMap() = Unit
+    fun loadGeofenceAreas() = Unit
+    fun loadGeofenceEvents() = Unit
 
     fun addGeofenceArea(id: String, name: String, lat: Double, lon: Double, radiusMeters: Float) {
         viewModelScope.launch {
@@ -72,7 +54,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun setCurrentLocation(latLng: GeoPoint) {
-        _currentLocation.value = latLng
+    fun updateCurrentLocation(lat: Double, lon: Double) {
+        _currentLocation.value = GeoPoint(lat, lon)
     }
 }

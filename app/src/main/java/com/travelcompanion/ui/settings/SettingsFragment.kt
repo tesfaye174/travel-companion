@@ -1,6 +1,7 @@
 
 package com.travelcompanion.ui.settings
 import java.io.IOException
+import org.json.JSONObject
 
 import android.content.ContentValues
 import android.os.Build
@@ -15,9 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.travelcompanion.R
 import com.travelcompanion.data.preferences.SettingsDataStore
 import com.travelcompanion.databinding.FragmentSettingsBinding
@@ -47,8 +47,6 @@ class SettingsFragment : Fragment() {
     @Inject
     lateinit var repository: ITripRepository
 
-    private val gson: Gson = GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +59,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         observeSettings()
         setupListeners()
     }
@@ -124,6 +123,22 @@ class SettingsFragment : Fragment() {
         binding.btnDeleteData.setOnClickListener {
             showDeleteConfirmation()
         }
+
+        // Contact support → open email composer (was a dead button)
+        binding.btnContactSupport.setOnClickListener {
+            val emailIntent = android.content.Intent(
+                android.content.Intent.ACTION_SENDTO,
+                android.net.Uri.parse("mailto:" + getString(R.string.support_email))
+            ).apply {
+                putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
+            }
+            val chooser = android.content.Intent.createChooser(emailIntent, getString(R.string.contact_support))
+            if (emailIntent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(chooser)
+            } else {
+                Toast.makeText(requireContext(), R.string.no_email_app, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showThemeDialog() {
@@ -164,13 +179,12 @@ class SettingsFragment : Fragment() {
     private fun exportData() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val exportData = withContext(Dispatchers.IO) {
-                    collectExportData()
+                // Build the entire JSON + write to disk on IO so the UI thread never blocks
+                withContext(Dispatchers.IO) {
+                    val exportData = collectExportData()
+                    val jsonContent = buildExportJson(exportData)
+                    saveToDownloads(jsonContent)
                 }
-
-                val jsonContent = gson.toJson(exportData)
-                saveToDownloads(jsonContent)
-
                 Toast.makeText(requireContext(), R.string.export_data_success, Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
                 Timber.e(e)
@@ -251,23 +265,13 @@ class SettingsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    // Delete all trips (cascades to related data due to Room foreign keys)
-                    val trips = repository.getAllTrips().first()
-                    trips.forEach { trip ->
-                        repository.deleteTrip(trip)
-                    }
-
-                    // Clear settings
+                    // Single bulk DELETE — cascades to journeys/photos/notes via Room FK
+                    repository.deleteAllTrips()
                     settingsDataStore.clearAll()
                 }
-
                 Toast.makeText(requireContext(), R.string.all_data_deleted, Toast.LENGTH_SHORT).show()
-            } catch (e: IOException) {
-                Timber.e(e)
-            } catch (e: SecurityException) {
-                Timber.e(e)
             } catch (e: Exception) {
-                Timber.e(e)
+                Timber.e(e, "deleteAllData failed")
             }
         }
     }
@@ -275,6 +279,30 @@ class SettingsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun buildExportJson(data: ExportData): String {
+        val sb = StringBuilder()
+        sb.appendLine("{")
+        sb.appendLine("  \"exportDate\": ${JSONObject.quote(data.exportDate)},")
+        sb.appendLine("  \"appVersion\": ${JSONObject.quote(data.appVersion)},")
+        sb.appendLine("  \"tripCount\": ${data.trips.size},")
+        sb.appendLine("  \"journeyCount\": ${data.journeys.size},")
+        sb.appendLine("  \"trips\": [")
+        data.trips.forEachIndexed { i, trip ->
+            val comma = if (i < data.trips.size - 1) "," else ""
+            sb.appendLine("    {\"id\": ${trip.id}, \"title\": ${JSONObject.quote(trip.title)}, \"destination\": ${JSONObject.quote(trip.destination)}, \"type\": ${JSONObject.quote(trip.tripType.name)}, \"distance\": ${trip.totalDistance}, \"duration\": ${trip.totalDuration}}$comma")
+        }
+        sb.appendLine("  ],")
+        sb.appendLine("  \"settings\": {")
+        data.settings.entries.forEachIndexed { i, (key, value) ->
+            val comma = if (i < data.settings.size - 1) "," else ""
+            val jsonValue = if (value is String) JSONObject.quote(value) else "$value"
+            sb.appendLine("    ${JSONObject.quote(key)}: $jsonValue$comma")
+        }
+        sb.appendLine("  }")
+        sb.appendLine("}")
+        return sb.toString()
     }
 
     // Data class for export

@@ -3,19 +3,27 @@ package com.travelcompanion.workers
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import androidx.work.ForegroundInfo
 import android.content.Context
-import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.*
+import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
+import androidx.work.WorkerParameters
+import com.travelcompanion.R
 import com.travelcompanion.data.db.AppDatabase
-import com.travelcompanion.location.PlayServicesGeofenceProvider
-import com.travelcompanion.location.PlatformGeofenceProvider
-import com.travelcompanion.utils.AppConstants
+import com.travelcompanion.location.GeofenceProvider
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
-class GeofenceRegistrationWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
+@HiltWorker
+class GeofenceRegistrationWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted params: WorkerParameters,
+    private val database: AppDatabase,
+    private val geofenceProvider: GeofenceProvider
+) : CoroutineWorker(appContext, params) {
 
     companion object {
         const val CHANNEL_ID = "geofence_worker_channel"
@@ -24,46 +32,37 @@ class GeofenceRegistrationWorker(appContext: Context, params: WorkerParameters) 
 
     private fun createNotification(): Notification {
         val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, "Geofence registration", NotificationManager.IMPORTANCE_LOW)
-            manager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            applicationContext.getString(R.string.geofence_registration_channel),
+            NotificationManager.IMPORTANCE_LOW
+        )
+        manager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle("Travel Companion")
-            .setContentText("Registering geofences...")
-            .setSmallIcon(com.travelcompanion.R.drawable.ic_map)
+            .setContentTitle(applicationContext.getString(R.string.app_name))
+            .setContentText(applicationContext.getString(R.string.geofence_registering))
+            .setSmallIcon(R.drawable.ic_map)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
     }
 
     override suspend fun doWork(): Result {
-        try {
-            // Run as foreground to increase likelihood of completion on boot
+        return try {
             setForeground(ForegroundInfo(NOTIFICATION_ID, createNotification()))
 
-            val db = AppDatabase.getDatabase(applicationContext)
-            val areas = db.geofenceAreaDao().getAll().first()
-
+            val areas = database.geofenceAreaDao().getAll().first()
             if (areas.isEmpty()) return Result.success()
 
-            if (com.travelcompanion.BuildConfig.USE_PLAY_SERVICES_LOCATION) {
-                val provider = PlayServicesGeofenceProvider(applicationContext)
-                areas.forEach { area ->
-                    provider.addGeofence(area.id, area.latitude, area.longitude, area.radiusMeters)
-                }
-            } else {
-                val provider = PlatformGeofenceProvider(applicationContext, db)
-                areas.forEach { area ->
-                    provider.addGeofence(area.id, area.latitude, area.longitude, area.radiusMeters)
-                }
+            areas.forEach { area ->
+                geofenceProvider.addGeofence(area.id, area.latitude, area.longitude, area.radiusMeters)
             }
 
             Timber.d("GeofenceRegistrationWorker re-registered ${areas.size} geofences")
-            return Result.success()
+            Result.success()
         } catch (e: Exception) {
             Timber.e(e, "Error re-registering geofences on boot")
-            return Result.retry()
+            Result.retry()
         }
     }
 }

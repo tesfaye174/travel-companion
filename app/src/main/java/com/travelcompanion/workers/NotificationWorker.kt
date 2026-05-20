@@ -1,35 +1,57 @@
 package com.travelcompanion.workers
 
-import android.app.Notification
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.travelcompanion.R
+import com.travelcompanion.utils.AppConstants
 import com.travelcompanion.MainActivity
+import com.travelcompanion.domain.repository.ITripRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
+import java.util.Date
 
 @HiltWorker
 class NotificationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
-    @Assisted params: WorkerParameters
+    @Assisted params: WorkerParameters,
+    private val repository: ITripRepository
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        // Logica: Controlla l'ultima attività. Se > 7 giorni, manda notifica
-        // Per ora, manda una notifica demo come richiesto
-        sendReminderNotification(context)
+        // Send reminder only if no trip in the last 7 days
+        val sevenDaysAgo = Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)
+        val recentTrips = repository.getTripsBetweenDates(sevenDaysAgo, Date()).first()
+        if (recentTrips.isEmpty()) {
+            sendReminderNotification(context)
+        }
         return Result.success()
     }
 
     private fun sendReminderNotification(ctx: Context) {
-        val channelId = "travel_reminders"
+        // Check POST_NOTIFICATIONS permission on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+        }
+
+        val channelId = AppConstants.NotificationChannels.REMINDERS
 
         val intent = Intent(ctx, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -37,8 +59,8 @@ class NotificationWorker @AssistedInject constructor(
         val pendingIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(ctx, channelId)
-            .setContentTitle("Non hai registrato viaggi recentemente!")
-            .setContentText("È ora di pianificare una nuova avventura?")
+            .setContentTitle(ctx.getString(R.string.time_to_travel_title))
+            .setContentText(ctx.getString(R.string.time_to_travel_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -46,8 +68,8 @@ class NotificationWorker @AssistedInject constructor(
 
         val manager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(
-            NotificationChannel(channelId, "Reminders", NotificationManager.IMPORTANCE_DEFAULT)
+            NotificationChannel(channelId, ctx.getString(R.string.notify_reminders), NotificationManager.IMPORTANCE_DEFAULT)
         )
-        manager.notify(100, notification)
+        manager.notify(AppConstants.NotificationIds.REMINDER, notification)
     }
 }

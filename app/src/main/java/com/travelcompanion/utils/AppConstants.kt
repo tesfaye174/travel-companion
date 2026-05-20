@@ -5,13 +5,27 @@ package com.travelcompanion.utils
  */
 object AppConstants {
 
+    // Notification IDs — centralized to avoid collisions
+    object NotificationIds {
+        const val TRACKING = 1001
+        const val GEOFENCE = 1002
+        const val REMINDER = 1003
+    }
+
+    // Notification Channel IDs
+    object NotificationChannels {
+        const val TRACKING = "tracking_channel"
+        const val GEOFENCE = "geofence_channel"
+        const val REMINDERS = "travel_reminders"
+    }
+
     // GPS tracking config
     object Tracking {
         const val LOCATION_UPDATE_INTERVAL_MS = 5000L   // 5 sec
         const val LOCATION_FASTEST_INTERVAL_MS = 2000L  // 2 sec min
         const val LOCATION_MIN_DISTANCE_METERS = 10f
-        const val TRACKING_NOTIFICATION_ID = 1
-        const val TRACKING_CHANNEL_ID = "tracking_channel"
+        const val TRACKING_NOTIFICATION_ID = NotificationIds.TRACKING
+        const val TRACKING_CHANNEL_ID = NotificationChannels.TRACKING
     }
 
     // Geofencing config
@@ -19,13 +33,13 @@ object AppConstants {
         const val DEFAULT_RADIUS_METERS = 100f
         const val MAX_GEOFENCES = 100
         const val LOITERING_DELAY_MS = 300000  // 5 min
-        const val GEOFENCE_CHANNEL_ID = "geofence_channel"
+        const val GEOFENCE_CHANNEL_ID = NotificationChannels.GEOFENCE
     }
 
     // Database
     object Database {
         const val DATABASE_NAME = "travel_companion_db"
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 4
     }
 
     // UI stuff

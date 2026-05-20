@@ -1,32 +1,25 @@
 package com.travelcompanion.di
 
+import android.app.NotificationManager
 import android.content.Context
 import androidx.room.Room
+import com.travelcompanion.BuildConfig
 import com.travelcompanion.data.db.AppDatabase
-import com.travelcompanion.utils.DispatcherProvider
-import com.travelcompanion.utils.DispatcherProviderImpl
+import com.travelcompanion.location.GeofenceProvider
+import com.travelcompanion.location.LocationProvider
+import com.travelcompanion.location.PlatformGeofenceProvider
+import com.travelcompanion.location.PlatformLocationProvider
+import com.travelcompanion.location.PlayServicesGeofenceProvider
+import com.travelcompanion.location.PlayServicesLocationProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
-import javax.inject.Qualifier
-
-import android.app.NotificationManager
-import com.travelcompanion.location.GeofenceProvider
-import com.travelcompanion.location.LocationProvider
-import com.travelcompanion.location.PlayServicesGeofenceProvider
-import com.travelcompanion.location.PlayServicesLocationProvider
-import com.travelcompanion.location.PlatformGeofenceProvider
-import com.travelcompanion.location.PlatformLocationProvider
-import com.travelcompanion.BuildConfig
 
 /**
- * Main Hilt module for dependency injection.
- * Provides database, repository, and dispatchers.
+ * Main Hilt module: database, system services, location/geofence providers.
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -44,30 +37,17 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "travel_companion_db"
+            AppDatabase.DATABASE_NAME
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4)
+            .apply {
+                // Destructive migration ONLY in debug builds to prevent data loss
+                if (BuildConfig.DEBUG) {
+                    fallbackToDestructiveMigration()
+                }
+            }
             .build()
     }
-
-
-    @Provides
-    @Singleton
-    fun provideDispatcherProvider(): DispatcherProvider {
-        return DispatcherProviderImpl()
-    }
-
-    @Provides
-    @IoDispatcher
-    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Provides
-    @MainDispatcher
-    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
-
-    @Provides
-    @DefaultDispatcher
-    fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
     fun provideLocationProvider(@ApplicationContext context: Context): LocationProvider {
@@ -87,17 +67,3 @@ object AppModule {
         }
     }
 }
-
-// dispatcher qualifiers for injection
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-annotation class IoDispatcher
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-annotation class MainDispatcher
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-annotation class DefaultDispatcher
-

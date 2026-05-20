@@ -1,20 +1,20 @@
 package com.travelcompanion.ui.tripdetails
 
-import android.app.Dialog
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.travelcompanion.R
-import com.travelcompanion.databinding.DialogEditTripBinding
+import com.travelcompanion.databinding.BottomSheetEditTripBinding
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 
-class EditTripDialogFragment : DialogFragment() {
+class EditTripDialogFragment : BottomSheetDialogFragment() {
 
-    private var _binding: DialogEditTripBinding? = null
+    private var _binding: BottomSheetEditTripBinding? = null
     private val binding get() = _binding!!
 
     private var trip: Trip? = null
@@ -53,8 +53,17 @@ class EditTripDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogEditTripBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = BottomSheetEditTripBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { args ->
             trip = Trip(
@@ -74,14 +83,8 @@ class EditTripDialogFragment : DialogFragment() {
 
         populateFields()
 
-        return MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.edit_trip)
-            .setView(binding.root)
-            .setPositiveButton(R.string.save) { _, _ ->
-                saveTrip()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .create()
+        binding.btnCancel.setOnClickListener { dismiss() }
+        binding.btnSave.setOnClickListener { saveTrip() }
     }
 
     private fun populateFields() {
@@ -130,6 +133,7 @@ class EditTripDialogFragment : DialogFragment() {
             )
             onTripUpdated?.invoke(updatedTrip)
         }
+        dismiss()
     }
 
     override fun onDestroyView() {

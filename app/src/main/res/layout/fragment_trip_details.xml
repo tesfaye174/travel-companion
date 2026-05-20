@@ -4,13 +4,13 @@
 
     <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@android:color/transparent" app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:navigationIcon="@drawable/ic_back" app:title="@string/trip_details" app:titleTextAppearance="@style/TextAppearance.TravelCompanion.Headline6" />
+        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:navigationIcon="@drawable/ic_back" app:title="@string/trip_details" app:titleTextAppearance="@style/TextAppearance.TravelCompanion.HeadlineSmall" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingTop="16dp" android:paddingBottom="80dp">
 
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" style="@style/Widget.TravelCompanion.Card.Elevated">
 
@@ -20,13 +20,13 @@
 
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                            <TextView android:id="@+id/tv_destination" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roma, Italia" style="@style/TextAppearance.TravelCompanion.Headline5" />
+                            <TextView android:id="@+id/tv_destination" android:layout_width="wrap_content" android:layout_height="wrap_content" style="@style/TextAppearance.TravelCompanion.HeadlineMedium" />
 
-                            <TextView android:id="@+id/tv_dates" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Jan 15-20, 2026" android:drawableStart="@drawable/ic_calendar" android:drawablePadding="8dp" style="@style/TextAppearance.TravelCompanion.Body2" android:textColor="?attr/colorOnSurfaceVariant" />
+                            <TextView android:id="@+id/tv_dates" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:drawableStart="@drawable/ic_calendar" android:drawablePadding="8dp" style="@style/TextAppearance.TravelCompanion.BodyMedium" android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
-                        <com.google.android.material.chip.Chip android:id="@+id/chip_trip_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Multi-day" app:chipBackgroundColor="@color/md_theme_light_primaryContainer" android:textColor="@color/md_theme_light_onPrimaryContainer" app:chipStrokeWidth="0dp" />
+                        <com.google.android.material.chip.Chip android:id="@+id/chip_trip_type" android:layout_width="wrap_content" android:layout_height="wrap_content" app:chipBackgroundColor="?attr/colorPrimaryContainer" android:textColor="?attr/colorOnPrimaryContainer" app:chipStrokeWidth="0dp" />
 
                     </LinearLayout>
 
@@ -42,9 +42,9 @@
 
                             </FrameLayout>
 
-                            <TextView android:id="@+id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="120.5 km" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                            <TextView android:id="@+id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/distance" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/distance" style="@style/TextAppearance.TravelCompanion.LabelSmall" android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
@@ -56,9 +56,9 @@
 
                             </FrameLayout>
 
-                            <TextView android:id="@+id/tv_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="8h 2min" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                            <TextView android:id="@+id/tv_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/duration" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/duration" style="@style/TextAppearance.TravelCompanion.LabelSmall" android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
@@ -70,9 +70,9 @@
 
                             </FrameLayout>
 
-                            <TextView android:id="@+id/tv_photo_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="24" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                            <TextView android:id="@+id/tv_photo_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/photos" style="@style/TextAppearance.TravelCompanion.Caption" android:textColor="?attr/colorOnSurfaceVariant" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/photos" style="@style/TextAppearance.TravelCompanion.LabelSmall" android:textColor="?attr/colorOnSurfaceVariant" />
 
                         </LinearLayout>
 
@@ -82,17 +82,17 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/route_map" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/route_map" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" style="@style/Widget.TravelCompanion.Card.Elevated">
 
-                <org.osmdroid.views.MapView android:id="@+id/map_details" android:layout_width="match_parent" android:layout_height="200dp" />
+                <org.osmdroid.views.MapView android:id="@+id/map_details" android:layout_width="match_parent" android:layout_height="260dp" />
 
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
 
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/photos" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/photos" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
                 <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_photo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/add_photo" app:icon="@drawable/ic_add" style="@style/Widget.TravelCompanion.Button.Text" />
 
@@ -102,7 +102,7 @@
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
 
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/notes" style="@style/TextAppearance.TravelCompanion.Subtitle1" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/notes" style="@style/TextAppearance.TravelCompanion.TitleMedium" />
 
                 <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_note" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/add_note" app:icon="@drawable/ic_add" style="@style/Widget.TravelCompanion.Button.Text" />
 
@@ -116,7 +116,7 @@
 
                     <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_note" app:tint="?attr/colorOutline" android:alpha="0.5" />
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/no_notes_yet" style="@style/TextAppearance.TravelCompanion.Body2" android:textColor="?attr/colorOnSurfaceVariant" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/no_notes_yet" style="@style/TextAppearance.TravelCompanion.BodyMedium" android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -126,6 +126,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_edit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:contentDescription="@string/edit_trip" android:src="@drawable/ic_edit" style="@style/Widget.TravelCompanion.FAB" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_edit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_margin="16dp" android:contentDescription="@string/edit_trip" android:src="@drawable/ic_edit" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

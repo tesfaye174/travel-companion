@@ -1,5 +1,4 @@
 package com.travelcompanion.ui.tripdetails
-import java.io.IOException
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -15,21 +14,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.travelcompanion.location.LocationProvider
-import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Polyline
 import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
 import com.travelcompanion.databinding.FragmentTripDetailsBinding
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.ui.map.MapManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -94,12 +96,12 @@ class TripDetailsFragment : Fragment() {
 
         val tripId = arguments?.getLong("tripId", -1L) ?: -1L
         if (tripId <= 0L) {
-            binding.tvDestination.text = "Invalid trip"
+            binding.tvDestination.text = getString(R.string.invalid_trip)
             binding.chipTripType.text = ""
             binding.tvDates.text = ""
             binding.tvDistance.text = ""
             binding.tvDuration.text = ""
-            Snackbar.make(binding.root, "Missing tripId - open a trip from the list", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, R.string.missing_trip_id, Snackbar.LENGTH_LONG).show()
             return
         }
         viewModel.setTripId(tripId)
@@ -112,7 +114,7 @@ class TripDetailsFragment : Fragment() {
             currentTrip?.let { trip ->
                 EditTripDialogFragment.newInstance(trip) { updatedTrip ->
                     viewModel.updateTrip(updatedTrip)
-                    Snackbar.make(binding.root, R.string.settings_saved, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, R.string.trip_updated, Snackbar.LENGTH_SHORT).show()
                 }.show(childFragmentManager, "EditTripDialog")
             }
         }
@@ -121,7 +123,7 @@ class TripDetailsFragment : Fragment() {
         binding.btnAddNote.setOnClickListener {
             AddNoteDialogFragment.newInstance { content ->
                 viewModel.addNote(content)
-                Snackbar.make(binding.root, R.string.settings_saved, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.note_added, Snackbar.LENGTH_SHORT).show()
             }.show(childFragmentManager, "AddNoteDialog")
         }
 
@@ -183,14 +185,14 @@ class TripDetailsFragment : Fragment() {
                     latitude = location.latitude,
                     longitude = location.longitude
                 )
-                Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.photo_saved, Snackbar.LENGTH_SHORT).show()
             }, { _ ->
                 viewModel.addPhotoNote(imagePath, "", null, null)
-                Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, R.string.photo_saved, Snackbar.LENGTH_SHORT).show()
             })
         } else {
             viewModel.addPhotoNote(imagePath, "", null, null)
-            Snackbar.make(binding.root, R.string.add_photo_title, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, R.string.photo_saved, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -201,12 +203,14 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun setupMap() {
-        // Configure osmdroid
-        Configuration.getInstance().load(requireContext(), requireContext().getSharedPreferences("osmdroid", android.content.Context.MODE_PRIVATE))
-        Configuration.getInstance().userAgentValue = requireContext().packageName
+        // osmdroid Configuration is initialized once in TravelCompanionApplication.onCreate()
         val mapView = binding.mapDetails
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
+        // Default to a sensible zoom so the map doesn't render at zoom 0 (whole world tiled)
+        // when the trip has no journey points yet.
+        mapView.controller.setZoom(5.0)
+        mapView.controller.setCenter(GeoPoint(41.9028, 12.4964))
         mapViewRef = mapView
     }
 
@@ -225,56 +229,75 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.trip.observe(viewLifecycleOwner) { trip ->
-            if (trip == null) return@observe
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.trip.collect { trip ->
+                        if (trip == null) return@collect
 
-            currentTrip = trip
-            binding.tvDestination.text = trip.destination
-            binding.chipTripType.text = trip.tripType.name.replace('_', ' ').lowercase().replaceFirstChar { it.titlecase() }
+                        currentTrip = trip
+                        binding.tvDestination.text = trip.destination
+                        binding.chipTripType.text = when (trip.tripType.name) {
+                            "LOCAL" -> getString(R.string.trip_type_local)
+                            "DAY_TRIP" -> getString(R.string.trip_type_day_trip)
+                            "MULTI_DAY" -> getString(R.string.trip_type_multi_day)
+                            "ADVENTURE" -> getString(R.string.trip_type_adventure)
+                            else -> trip.tripType.name.replace('_', ' ').lowercase().replaceFirstChar { it.titlecase() }
+                        }
 
-            val end = trip.endDate
-            binding.tvDates.text = if (end != null) {
-                "${dateFormat.format(trip.startDate)} - ${dateFormat.format(end)}"
-            } else {
-                dateFormat.format(trip.startDate)
+                        val end = trip.endDate
+                        binding.tvDates.text = if (end != null) {
+                            "${dateFormat.format(trip.startDate)} - ${dateFormat.format(end)}"
+                        } else {
+                            dateFormat.format(trip.startDate)
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.totalDistanceKm.collect { km ->
+                        binding.tvDistance.text = getString(R.string.distance_format, km)
+                    }
+                }
+
+                launch {
+                    viewModel.totalDurationMs.collect { ms ->
+                        val durationText = DateUtils.formatElapsedTime(ms / 1000L)
+                        binding.tvDuration.text = durationText
+                    }
+                }
+
+                launch {
+                    viewModel.photoNotes.collect { photos ->
+                        val items = photos.map {
+                            PhotoItem(
+                                imageUrl = it.imagePath,
+                                caption = it.note.ifBlank { getString(R.string.photo_description) }
+                            )
+                        }
+                        photoAdapter.submitList(items)
+                        binding.tvPhotoCount.text = photos.size.toString()
+                    }
+                }
+
+                launch {
+                    viewModel.notes.collect { notes ->
+                        val items = notes.map {
+                            NoteItem(
+                                content = it.content,
+                                date = dateTimeFormat.format(it.timestamp)
+                            )
+                        }
+                        noteAdapter.submitList(items)
+                    }
+                }
+
+                launch {
+                    viewModel.journeys.collect { journeys ->
+                        renderRoute(journeys)
+                    }
+                }
             }
-        }
-
-        viewModel.totalDistanceKm.observe(viewLifecycleOwner) { km ->
-            binding.tvDistance.text = "Distanza: %.2f km".format(km ?: 0.0)
-        }
-
-        viewModel.totalDurationMs.observe(viewLifecycleOwner) { ms ->
-            val durationText = DateUtils.formatElapsedTime(((ms ?: 0L) / 1000L))
-            binding.tvDuration.text = "Durata: $durationText"
-        }
-
-        viewModel.photoNotes.observe(viewLifecycleOwner) { photos ->
-            val photoList = photos.orEmpty()
-            val items = photoList.map {
-                PhotoItem(
-                    imageUrl = it.imagePath,
-                    caption = it.note.ifBlank { "Foto" }
-                )
-            }
-            photoAdapter.submitList(items)
-
-            // Update photo count
-            binding.tvPhotoCount.text = photoList.size.toString()
-        }
-
-        viewModel.notes.observe(viewLifecycleOwner) { notes ->
-            val items = notes.orEmpty().map {
-                NoteItem(
-                    content = it.content,
-                    date = dateTimeFormat.format(it.timestamp)
-                )
-            }
-            noteAdapter.submitList(items)
-        }
-
-        viewModel.journeys.observe(viewLifecycleOwner) { journeys ->
-            renderRoute(journeys.orEmpty())
         }
     }
 

@@ -21,6 +21,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/bg_icon_circle"
+            android:backgroundTint="@color/stat_trips_bg"
             android:padding="12dp"
             android:src="@drawable/ic_info"
             android:contentDescription="@null"

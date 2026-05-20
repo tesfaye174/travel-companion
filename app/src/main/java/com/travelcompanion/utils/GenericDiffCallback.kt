@@ -3,9 +3,14 @@ package com.travelcompanion.utils
 import androidx.recyclerview.widget.DiffUtil
 
 class GenericDiffCallback<T : Any>(
-    private val areItemsTheSame: (T, T) -> Boolean,
-    private val areContentsTheSame: (T, T) -> Boolean
+    areItemsTheSame: (T, T) -> Boolean,
+    areContentsTheSame: (T, T) -> Boolean
 ) : DiffUtil.ItemCallback<T>() {
-    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean = areItemsTheSame(oldItem, newItem)
-    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean = areContentsTheSame(oldItem, newItem)
+    // Store with distinct private names to avoid infinite recursion when the
+    // override calls a lambda that has the same name as the overridden method.
+    private val itemsTheSame = areItemsTheSame
+    private val contentsTheSame = areContentsTheSame
+
+    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean = itemsTheSame(oldItem, newItem)
+    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean = contentsTheSame(oldItem, newItem)
 }

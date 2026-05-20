@@ -1,15 +1,26 @@
 package com.travelcompanion.ui.profile
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.travelcompanion.R
+import com.travelcompanion.core.ui.safeNavigate
 import com.travelcompanion.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -39,14 +50,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // Set user info (would come from repository in real app)
-        binding.tvUserName.text = getString(R.string.user_name)
-        binding.tvUserEmail.text = getString(R.string.user_email)
-
         val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
-        binding.tvMemberSince.text = getString(R.string.member_since, dateFormat.format(Date()))
+        // Load persisted first-launch timestamp instead of "today"
+        viewLifecycleOwner.lifecycleScope.launch {
+            val ts = viewModel.getMemberSince()
+            binding.tvMemberSince.text = getString(R.string.member_since, dateFormat.format(Date(ts)))
+        }
 
-        // App version
         try {
             val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
             binding.tvVersion.text = getString(R.string.version_info, packageInfo.versionName)
@@ -57,48 +67,144 @@ class ProfileFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnEditProfile.setOnClickListener {
-            // Navigate to edit profile
+            showEditProfileDialog()
         }
 
         binding.cardSettings.setOnClickListener {
-            findNavController().navigate(R.id.navigation_settings)
+            findNavController().safeNavigate(R.id.action_profile_to_settings)
+        }
+
+        binding.cardTips.setOnClickListener {
+            findNavController().safeNavigate(R.id.action_profile_to_tips)
         }
 
         binding.cardAbout.setOnClickListener {
-            // Show about dialog
+            showAboutDialog()
         }
 
         binding.cardRateApp.setOnClickListener {
-            // Open Play Store
+            openPlayStore()
         }
 
         binding.cardShareApp.setOnClickListener {
-            // Share app
             shareApp()
         }
 
         binding.btnLogout.setOnClickListener {
-            // Handle logout
+            showLogoutConfirmation()
         }
     }
 
     private fun observeViewModel() {
-        viewModel.profileStats.observe(viewLifecycleOwner) { stats ->
-            binding.tvTotalTrips.text = stats.totalTrips.toString()
-            binding.tvCountriesVisited.text = stats.countriesVisited.toString()
-            binding.tvCitiesVisited.text = stats.citiesVisited.toString()
-            binding.tvTotalDistance.text = getString(R.string.total_distance_val, stats.totalDistance)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.profileStats.collect { stats ->
+                        stats?.let {
+                            binding.tvTotalTrips.text = it.totalTrips.toString()
+                            binding.tvCountriesVisited.text = it.countriesVisited.toString()
+                            binding.tvCitiesVisited.text = it.citiesVisited.toString()
+                            binding.tvTotalDistance.text = getString(R.string.total_distance_val, it.totalDistance)
+                        }
+                    }
+                }
+                launch {
+                    viewModel.userName.collect { name ->
+                        binding.tvUserName.text = name.ifEmpty { getString(R.string.user_name) }
+                    }
+                }
+                launch {
+                    viewModel.userEmail.collect { email ->
+                        binding.tvUserEmail.text = email.ifEmpty { getString(R.string.user_email) }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showEditProfileDialog() {
+        val currentName = viewModel.userName.value
+        val currentEmail = viewModel.userEmail.value
+
+        val nameInput = EditText(requireContext()).apply {
+            hint = getString(R.string.user_name)
+            setText(currentName)
+            setSingleLine()
+        }
+        val emailInput = EditText(requireContext()).apply {
+            hint = getString(R.string.user_email)
+            setText(currentEmail)
+            inputType = android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            setSingleLine()
+        }
+
+        val layout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            val pad = (16 * resources.displayMetrics.density).toInt()
+            setPadding(pad, pad / 2, pad, 0)
+            addView(nameInput)
+            addView(emailInput)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.edit_profile)
+            .setView(layout)
+            .setPositiveButton(R.string.save) { _, _ ->
+                val newName = nameInput.text.toString().trim()
+                val newEmail = emailInput.text.toString().trim()
+                viewModel.updateProfile(newName, newEmail)
+                Snackbar.make(binding.root, R.string.profile_updated, Snackbar.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showAboutDialog() {
+        val version = try {
+            requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName
+        } catch (e: Exception) {
+            "1.0.0"
+        }
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.about_app)
+            .setMessage(getString(R.string.about_app_message, version))
+            .setPositiveButton(R.string.ok, null)
+            .show()
+    }
+
+    private fun openPlayStore() {
+        val packageName = requireContext().packageName
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: Exception) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                )
+            )
         }
     }
 
     private fun shareApp() {
-        val shareIntent = android.content.Intent().apply {
-            action = android.content.Intent.ACTION_SEND
-            putExtra(android.content.Intent.EXTRA_TEXT,
-                "Check out Travel Companion - the best app for tracking your travels!")
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
             type = "text/plain"
         }
-        startActivity(android.content.Intent.createChooser(shareIntent, getString(R.string.share_app)))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app)))
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.logout)
+            .setMessage(R.string.logout_confirmation_message)
+            .setPositiveButton(R.string.logout) { _, _ ->
+                viewModel.clearProfile()
+                Snackbar.make(binding.root, R.string.logged_out, Snackbar.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     override fun onDestroyView() {

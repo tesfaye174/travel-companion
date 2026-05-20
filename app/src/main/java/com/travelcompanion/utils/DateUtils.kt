@@ -1,21 +1,21 @@
 package com.travelcompanion.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Date formatting utilities.
- * 
- * Note: SimpleDateFormat isn't thread-safe but should be fine here
- * since we're only using it on main thread mostly.
- * Could switch to java.time API later (requires API 26+ or desugaring)
+ *
+ * Note: SimpleDateFormat isn't thread-safe — these are accessed only from the main thread
+ * or from coroutines that don't share the instance. Computed properties re-read
+ * Locale.getDefault() each call so the app stays correct after a runtime locale change.
  */
 object DateUtils {
 
-    // keep formatters as instance vars for reuse
-    val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    private val dateTimeFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+    val dateFormat: SimpleDateFormat get() = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    private val timeFormat: SimpleDateFormat get() = SimpleDateFormat("HH:mm", Locale.getDefault())
+    private val dateTimeFormat: SimpleDateFormat get() = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
 
     fun formatDate(timestamp: Long): String {
         return dateFormat.format(Date(timestamp))
@@ -71,6 +71,16 @@ object DateUtils {
     fun getDaysDifference(start: Date, end: Date): Int {
         val diff = end.time - start.time
         return (diff / (1000 * 60 * 60 * 24)).toInt() + 1
+    }
+
+    /**
+     * Formats distance in meters to human-readable format.
+     */
+    fun formatDistance(meters: Float): String {
+        return when {
+            meters >= 1000 -> String.format(Locale.getDefault(), "%.2f km", meters / 1000)
+            else -> String.format(Locale.getDefault(), "%.0f m", meters)
+        }
     }
 }
 

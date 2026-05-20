@@ -1,24 +1,26 @@
 package com.travelcompanion.ui.tripdetails
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.travelcompanion.domain.model.Journey
 import com.travelcompanion.domain.model.Note
 import com.travelcompanion.domain.model.PhotoNote
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-// ViewModel for trip details screen - handles trip data, journeys, photos, notes
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class TripDetailsViewModel @Inject constructor(
@@ -31,45 +33,41 @@ class TripDetailsViewModel @Inject constructor(
         tripIdFlow.value = id
     }
 
-    val trip = tripIdFlow
+    val trip: StateFlow<Trip?> = tripIdFlow
         .filter { it > 0 }
-        .flatMapLatest { id -> flow { emit(repository.getTripById(id)) } }
-        .asLiveData()
+        .flatMapLatest { id -> repository.getTripByIdFlow(id) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val journeys = tripIdFlow
+    val journeys: StateFlow<List<Journey>> = tripIdFlow
         .filter { it > 0 }
         .flatMapLatest { id -> repository.getJourneysByTripId(id) }
-        .asLiveData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val photoNotes = tripIdFlow
+    val photoNotes: StateFlow<List<PhotoNote>> = tripIdFlow
         .filter { it > 0 }
         .flatMapLatest { id -> repository.getPhotoNotesByTripId(id) }
-        .asLiveData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val notes = tripIdFlow
+    val notes: StateFlow<List<Note>> = tripIdFlow
         .filter { it > 0 }
         .flatMapLatest { id -> repository.getNotesByTripId(id) }
-        .asLiveData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val totalDistanceKm = tripIdFlow
-        .filter { it > 0 }
-        .flatMapLatest { id -> repository.getJourneysByTripId(id) }
-        .map { list ->
-            // Summing up distances from the list to calculate the total distance.
-            list.sumOf { it.distance.toDouble() } }
-        .asLiveData()
+    // Journey-derived distance (meters from TrackingService). Falls back to Trip.totalDistance
+    // (treated as km) when no journey points have been recorded yet.
+    val totalDistanceKm: StateFlow<Double> = combine(journeys, trip) { js, t ->
+        val fromJourneys = js.sumOf { it.distance.toDouble() } / 1000.0
+        if (fromJourneys > 0.0) fromJourneys else (t?.totalDistance?.toDouble() ?: 0.0)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
-    val totalDurationMs = tripIdFlow
-        .filter { it > 0 }
-        .flatMapLatest { id -> repository.getJourneysByTripId(id) }
-        .map { list ->
-            list.sumOf { j ->
-                val end = j.endTime?.time ?: return@sumOf 0L
-                val start = j.startTime.time
-                (end - start).coerceAtLeast(0L)
-            }
+    val totalDurationMs: StateFlow<Long> = combine(journeys, trip) { js, t ->
+        val fromJourneys = js.sumOf { j ->
+            val end = j.endTime?.time ?: return@sumOf 0L
+            val start = j.startTime.time
+            (end - start).coerceAtLeast(0L)
         }
-        .asLiveData()
+        if (fromJourneys > 0L) fromJourneys else (t?.totalDuration ?: 0L)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0L)
 
     fun updateTrip(trip: Trip) {
         viewModelScope.launch {
@@ -105,13 +103,16 @@ class TripDetailsViewModel @Inject constructor(
                 timestamp = Date()
             )
             repository.insertPhotoNote(photoNote)
-            
-            // Update photo count on trip
+
             val currentTrip = repository.getTripById(tripId)
             currentTrip?.let {
                 repository.updateTrip(it.copy(photoCount = it.photoCount + 1))
             }
         }
     }
-}
 
+    override fun onCleared() {
+        super.onCleared()
+        Timber.d("TripDetailsViewModel cleared")
+    }
+}

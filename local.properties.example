@@ -1,0 +1,9 @@
+# Android SDK location (set automatically by Android Studio)
+sdk.dir=/path/to/Android/Sdk
+
+# Release signing config (required for ./gradlew assembleRelease)
+# Generate a keystore: keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias travel_companion
+RELEASE_STORE_FILE=path/to/release.jks
+RELEASE_STORE_PASSWORD=your_store_password
+RELEASE_KEY_ALIAS=travel_companion
+RELEASE_KEY_PASSWORD=your_key_password

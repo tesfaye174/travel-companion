@@ -1,10 +1,10 @@
 package com.travelcompanion.data.db
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.travelcompanion.data.db.converters.Converters
 import com.travelcompanion.data.db.dao.JourneyDao
 import com.travelcompanion.data.db.dao.GeofenceAreaDao
@@ -21,7 +21,10 @@ import com.travelcompanion.data.db.entities.TripEntity
 
 /**
  * Room database with all DAOs.
- * Using Hilt for injection - see AppModule.
+ * Using Hilt for injection - see DatabaseModule.
+ *
+ * Schema export enabled for migration tracking.
+ * Version 2: Current schema
  */
 @Database(
     entities = [
@@ -32,8 +35,8 @@ import com.travelcompanion.data.db.entities.TripEntity
         GeofenceAreaEntity::class,
         GeofenceEventEntity::class
     ],
-    version = 2,
-    exportSchema = false
+    version = 4,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -45,21 +48,26 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun geofenceEventDao(): GeofenceEventDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
+        const val DATABASE_NAME = "travel_companion_db"
 
-        // For non-Hilt components like Workers and BroadcastReceivers
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "travel_companion_db"
-                )
-                    .fallbackToDestructiveMigration()
-                    .build()
-                INSTANCE = instance
-                instance
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Schema was already at version 2 in earlier releases; no DDL needed.
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE INDEX IF NOT EXISTS `idx_trip_start_date` ON `trips` (`start_date`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `idx_trip_type` ON `trips` (`trip_type`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `idx_trip_is_tracking` ON `trips` (`is_tracking`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `idx_trip_destination` ON `trips` (`destination`)")
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `notes` ADD COLUMN `title` TEXT NOT NULL DEFAULT ''")
             }
         }
     }

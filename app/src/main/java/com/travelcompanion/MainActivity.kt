@@ -8,33 +8,18 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.travelcompanion.data.preferences.SettingsDataStore
 import com.travelcompanion.databinding.ActivityMainBinding
 import com.travelcompanion.R
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-        @javax.inject.Inject
-        lateinit var settingsDataStore: com.travelcompanion.data.preferences.SettingsDataStore
 
     private lateinit var binding: ActivityMainBinding
-
-    private fun applySavedTheme() {
-        // Applica il tema salvato in DataStore
-        lifecycleScope.launch {
-            val mode = settingsDataStore.settingsFlow.first()
-            when (mode.themeMode) {
-                "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-        }
-    }
 
     private fun setupNavigation() {
         val navView = binding.bottomNavigation
@@ -44,15 +29,26 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navView.setupWithNavController(navController)
 
+        val topLevelDestinations = setOf(
+            R.id.navigation_home,
+            R.id.navigation_trips,
+            R.id.navigation_map,
+            R.id.navigation_statistics,
+            R.id.navigation_profile
+        )
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            navView.isVisible = destination.id in topLevelDestinations
+        }
+
         val vibrator = getVibratorCompat()
         navView.setOnItemSelectedListener { item ->
-            vibrator?.let {
-                if (it.hasVibrator()) {
-                    it.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+            // Best-effort haptic; swallow failures (emulators / devices without vibrator)
+            try {
+                if (vibrator != null && vibrator.hasVibrator()) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
-            }
+            } catch (_: Exception) { /* ignore */ }
             androidx.navigation.ui.NavigationUI.onNavDestinationSelected(item, navController)
-            true
         }
     }
 
@@ -67,17 +63,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply theme BEFORE super.onCreate() to prevent activity recreation
+        applyThemeBeforeCreate()
         super.onCreate(savedInstanceState)
-        // Applica il tema scelto dall'utente prima di setContentView
-        // Per ora usa il tema di sistema come default
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupNavigation()
+    }
 
-        // Applica il tema salvato in background
-        applySavedTheme()
+    private fun applyThemeBeforeCreate() {
+        // Read theme directly from SharedPreferences (doesn't need Hilt injection)
+        val prefs = getSharedPreferences(SettingsDataStore.THEME_PREFS, MODE_PRIVATE)
+        val themeMode = prefs.getString(
+            SettingsDataStore.THEME_PREFS_KEY,
+            "system"
+        ) ?: "system"
+
+        val targetMode = when (themeMode) {
+            "light" -> AppCompatDelegate.MODE_NIGHT_NO
+            "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> return
+        }
+        if (AppCompatDelegate.getDefaultNightMode() != targetMode) {
+            AppCompatDelegate.setDefaultNightMode(targetMode)
+        }
     }
 }

@@ -1,13 +1,15 @@
 package com.travelcompanion.ui.newtrip
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -17,14 +19,17 @@ class NewTripViewModel @Inject constructor(
     private val repository: ITripRepository
 ) : ViewModel() {
 
-    private val _isTracking = MutableLiveData(false)
-    val isTracking: LiveData<Boolean> = _isTracking
+    private val _isTracking = MutableStateFlow(false)
+    val isTracking: StateFlow<Boolean> = _isTracking.asStateFlow()
 
-    private val _tripSaved = MutableLiveData<Boolean>()
-    val tripSaved: LiveData<Boolean> = _tripSaved
+    private val _tripSaved = MutableStateFlow(false)
+    val tripSaved: StateFlow<Boolean> = _tripSaved.asStateFlow()
 
-    private val _createdTripId = MutableLiveData<Long>()
-    val createdTripId: LiveData<Long> = _createdTripId
+    private val _createdTripId = MutableStateFlow(-1L)
+    val createdTripId: StateFlow<Long> = _createdTripId.asStateFlow()
+
+    private val _validationError = MutableStateFlow<String?>(null)
+    val validationError: StateFlow<String?> = _validationError.asStateFlow()
 
     private var currentTripId: Long = -1
 
@@ -36,6 +41,7 @@ class NewTripViewModel @Inject constructor(
         endDate: Date,
         notes: String = ""
     ) {
+        // Caller (NewTripFragment) already validates title and destination are non-blank.
         viewModelScope.launch {
             val trip = Trip(
                 title = title,
@@ -54,25 +60,23 @@ class NewTripViewModel @Inject constructor(
 
     fun startTracking() {
         _isTracking.value = true
-        // Here you would start the GPS tracking service
     }
 
     fun stopTracking() {
         _isTracking.value = false
-        // Here you would stop the GPS tracking service
-    }
-
-    fun addPhoto() {
-        // Implement photo capture
-    }
-
-    fun addNote() {
-        // Implement note addition
     }
 
     fun resetSaveState() {
         _tripSaved.value = false
         _createdTripId.value = -1
     }
-}
 
+    fun clearValidationError() {
+        _validationError.value = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.d("NewTripViewModel cleared")
+    }
+}

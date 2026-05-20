@@ -34,8 +34,6 @@ class NoteAdapter : ListAdapter<NoteItem, NoteAdapter.NoteViewHolder>(
         holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = currentList.size
-
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

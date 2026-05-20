@@ -10,14 +10,17 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary">
+        android:background="@drawable/bg_hero_gradient">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/title_tips"
-            app:titleTextColor="@color/onPrimary" />
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/white"
+            app:navigationContentDescription="@string/back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -66,7 +69,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_all"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -74,35 +77,35 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_packing"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tip_category_packing" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_safety"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tip_category_safety" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_budget"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tip_category_budget" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_culture"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tip_category_culture" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_transport"
-                    style="@style/Widget.TravelCompanion.Chip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tip_category_transport" />

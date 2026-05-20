@@ -2,14 +2,16 @@ package com.travelcompanion.ui.tracking
 
 import android.Manifest
 import com.travelcompanion.service.TrackingService
-import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Build
+import android.os.IBinder
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,9 +26,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,11 +48,32 @@ class TrackingActivity : AppCompatActivity() {
     private var pendingPhotoUri: Uri? = null
     private var pendingPhotoFile: File? = null
 
-    private val locationUpdatesReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action != TrackingService.ACTION_LOCATION_UPDATE) return
-            lastLat = intent.getDoubleExtra("lat", Double.NaN).takeIf { !it.isNaN() }
-            lastLon = intent.getDoubleExtra("lon", Double.NaN).takeIf { !it.isNaN() }
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            val file = pendingPhotoFile ?: return@registerForActivityResult
+            promptAddPhotoNote(file)
+        } else {
+            pendingPhotoFile?.delete()
+            pendingPhotoFile = null
+            pendingPhotoUri = null
+        }
+    }
+
+    // Service binding
+    private var trackingService: TrackingService? = null
+    private var serviceBound = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            val localBinder = binder as? TrackingService.LocalBinder ?: return
+            trackingService = localBinder.getService()
+            serviceBound = true
+            observeTrackingState()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            trackingService = null
+            serviceBound = false
         }
     }
 
@@ -78,7 +103,6 @@ class TrackingActivity : AppCompatActivity() {
             finish()
         }
 
-        // `fragment_tracking` is included in the activity layout; find its buttons by id
         val btnAddPhoto = findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_add_photo)
         val btnAddNote = findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_add_note)
 
@@ -108,8 +132,50 @@ class TrackingActivity : AppCompatActivity() {
         ContextCompat.startForegroundService(this, intent)
     }
 
+    private fun observeTrackingState() {
+        val service = trackingService ?: return
+
+        lifecycleScope.launch {
+            service.trackingState.collectLatest { state ->
+                when (state) {
+                    is TrackingService.TrackingState.Active -> {
+                        binding.tvTrackingTime.text = formatTrackingTime(state.duration)
+                        binding.tvDistance.text = String.format(Locale.getDefault(), "%.1f", state.distance / 1000f)
+                    }
+                    is TrackingService.TrackingState.Stopped -> {
+                        finish()
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            service.currentLocation.collectLatest { location ->
+                location?.let {
+                    lastLat = it.latitude
+                    lastLon = it.longitude
+                    val speedKmh = it.speed * 3.6f
+                    binding.tvSpeed.text = String.format(Locale.getDefault(), "%.0f", speedKmh)
+                }
+            }
+        }
+    }
+
+    private fun formatTrackingTime(millis: Long): String {
+        val totalSeconds = millis / 1000
+        val hours = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
     private fun stopTracking() {
-        stopService(Intent(this, TrackingService::class.java))
+        if (serviceBound) {
+            trackingService?.stopTracking()
+        } else {
+            stopService(Intent(this, TrackingService::class.java))
+        }
     }
 
     private fun ensureNotificationPermissionIfNeeded() {
@@ -120,7 +186,7 @@ class TrackingActivity : AppCompatActivity() {
         }
     }
 
-    private fun capturePhoto() {
+    internal fun capturePhoto() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 3003)
             return
@@ -132,30 +198,7 @@ class TrackingActivity : AppCompatActivity() {
         pendingPhotoFile = file
         pendingPhotoUri = uri
 
-        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri)
-            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        @Suppress("DEPRECATION")
-        // This method is deprecated in AndroidX but retained for simplicity.
-        startActivityForResult(intent, 4001)
-    }
-
-    @Deprecated("Deprecated in AndroidX; kept for simplicity")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 4001) return
-        if (resultCode != RESULT_OK) {
-            pendingPhotoFile?.delete()
-            pendingPhotoFile = null
-            pendingPhotoUri = null
-            return
-        }
-
-        val file = pendingPhotoFile ?: return
-        promptAddPhotoNote(file)
+        takePictureLauncher.launch(uri)
     }
 
     private fun promptAddPhotoNote(photoFile: File) {
@@ -183,7 +226,7 @@ class TrackingActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun promptAddNote() {
+    internal fun promptAddNote() {
         if (tripId <= 0) return
         val input = TextInputEditText(this).apply { hint = getString(R.string.write_note_hint) }
         MaterialAlertDialogBuilder(this)
@@ -209,24 +252,15 @@ class TrackingActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        try {
-            ContextCompat.registerReceiver(
-                this,
-                locationUpdatesReceiver,
-                IntentFilter(TrackingService.ACTION_LOCATION_UPDATE),
-                ContextCompat.RECEIVER_NOT_EXPORTED
-            )
-        } catch (ex: SecurityException) {
-            // On some platform versions strict export checks can throw; avoid crashing the activity.
-        }
+        val intent = Intent(this, TrackingService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
         super.onStop()
-        try {
-            unregisterReceiver(locationUpdatesReceiver)
-        } catch (ex: IllegalArgumentException) {
-            // receiver not registered or already unregistered
+        if (serviceBound) {
+            unbindService(serviceConnection)
+            serviceBound = false
         }
     }
 
@@ -235,4 +269,3 @@ class TrackingActivity : AppCompatActivity() {
         return true
     }
 }
-

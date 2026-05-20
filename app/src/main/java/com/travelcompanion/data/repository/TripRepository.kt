@@ -28,16 +28,12 @@ import javax.inject.Inject
  * Repository implementation using Room.
  * Handles all database operations and entity-to-domain mapping.
  *
- * Includes in-memory caching for frequently accessed data like all trips.
+ * All operations return Flow for reactive updates or use suspend for one-time operations.
+ * Error handling is delegated to the calling layer (ViewModels/UseCases).
  */
-
 class TripRepository @Inject constructor(
     private val database: AppDatabase
 ) : ITripRepository {
-
-    // Semplice cache in memoria per getAllTrips
-    private var cachedTrips: List<Trip>? = null
-    private var cacheValid: Boolean = false
 
     private val tripDao: TripDao = database.tripDao()
     private val journeyDao: JourneyDao = database.journeyDao()
@@ -46,39 +42,38 @@ class TripRepository @Inject constructor(
     private val geofenceAreaDao: GeofenceAreaDao = database.geofenceAreaDao()
     private val geofenceEventDao: GeofenceEventDao = database.geofenceEventDao()
 
+    // Single converter instance to avoid repeated instantiation
+    private val converters = Converters()
+
     override suspend fun insertTrip(trip: Trip): Long {
-        val entity = trip.toEntity()
-        val result = tripDao.insertTrip(entity)
-        cacheValid = false
-        return result
+        return tripDao.insertTrip(trip.toEntity())
     }
 
     override suspend fun updateTrip(trip: Trip) {
         tripDao.updateTrip(trip.toEntity())
-        cacheValid = false
     }
 
     override suspend fun deleteTrip(trip: Trip) {
         tripDao.deleteTrip(trip.toEntity())
-        cacheValid = false
+    }
+
+    override suspend fun deleteAllTrips() {
+        tripDao.deleteAllTrips()
     }
 
     override suspend fun getTripById(id: Long): Trip? {
-        val entity = tripDao.getTripByIdFlow(id).first()
-        return entity?.toDomain()
+        return withContext(Dispatchers.IO) {
+            tripDao.getTripByIdFlow(id).first()?.toDomain()
+        }
+    }
+
+    override fun getTripByIdFlow(id: Long): Flow<Trip?> {
+        return tripDao.getTripByIdFlow(id).map { it?.toDomain() }
     }
 
     override fun getAllTrips(): Flow<List<Trip>> {
-        return tripDao.getAllTripsFlow().map { entities ->
-            if (cacheValid && cachedTrips != null) {
-                cachedTrips!!
-            } else {
-                val trips = entities.map { it.toDomain() }
-                cachedTrips = trips
-                cacheValid = true
-                trips
-            }
-        }
+        return tripDao.getAllTripsFlow()
+            .map { entities -> entities.map { it.toDomain() } }
     }
 
     override fun getTripsByType(type: TripType): Flow<List<Trip>> {
@@ -178,51 +173,41 @@ class TripRepository @Inject constructor(
     }
 
     override suspend fun getTotalDistance(): Float {
-        return withContext(Dispatchers.IO) {
-            tripDao.getTotalDistance() ?: 0f
-        }
+        return tripDao.getTotalDistance() ?: 0f
     }
 
     override suspend fun getTotalDuration(): Long {
-        return withContext(Dispatchers.IO) {
-            tripDao.getTotalDuration() ?: 0L
-        }
+        return tripDao.getTotalDuration() ?: 0L
     }
 
     override suspend fun getTripCount(): Int {
-        return withContext(Dispatchers.IO) {
-            tripDao.getTripCount()
-        }
+        return tripDao.getTripCount()
     }
 
     override suspend fun getMonthlyStats(): List<com.travelcompanion.domain.model.MonthlyStat> {
-        return withContext(Dispatchers.IO) {
-            tripDao.getMonthlyStats().map { stat ->
-                com.travelcompanion.domain.model.MonthlyStat(
-                    month = stat.month,
-                    tripCount = stat.tripCount,
-                    totalDistance = stat.totalDistance,
-                    totalDuration = stat.totalDuration
-                )
-            }
+        return tripDao.getMonthlyStats().map { stat ->
+            com.travelcompanion.domain.model.MonthlyStat(
+                month = stat.month,
+                tripCount = stat.tripCount,
+                totalDistance = stat.totalDistance,
+                totalDuration = stat.totalDuration
+            )
         }
     }
 
     override suspend fun getTripTypeStats(): List<com.travelcompanion.domain.model.TripTypeStat> {
-        return withContext(Dispatchers.IO) {
-            tripDao.getTripTypeStats().map { stat ->
-                val tripType = try {
-                    com.travelcompanion.domain.model.TripType.valueOf(stat.tripType)
-                } catch (ex: Exception) {
-                    com.travelcompanion.domain.model.TripType.OTHER
-                }
-                com.travelcompanion.domain.model.TripTypeStat(
-                    tripType = tripType,
-                    totalDistance = stat.totalDistance,
-                    totalDuration = stat.totalDuration,
-                    tripCount = stat.tripCount
-                )
+        return tripDao.getTripTypeStats().map { stat ->
+            val tripType = try {
+                com.travelcompanion.domain.model.TripType.valueOf(stat.tripType)
+            } catch (ex: Exception) {
+                com.travelcompanion.domain.model.TripType.OTHER
             }
+            com.travelcompanion.domain.model.TripTypeStat(
+                tripType = tripType,
+                totalDistance = stat.totalDistance,
+                totalDuration = stat.totalDuration,
+                tripCount = stat.tripCount
+            )
         }
     }
 
@@ -234,7 +219,7 @@ class TripRepository @Inject constructor(
             destination = destination,
             tripType = tripType,
             startDate = startDate.time,
-            endDate = endDate?.time ?: startDate.time,
+            endDate = endDate?.time ?: 0L,
             totalDistance = totalDistance,
             totalDuration = totalDuration,
             photoCount = photoCount,
@@ -244,7 +229,7 @@ class TripRepository @Inject constructor(
     }
 
     private fun TripEntity.toDomain(): Trip {
-        val endDateDomain = if (endDate == startDate) null else Date(endDate)
+        val endDateDomain = if (endDate == 0L || endDate == startDate) null else Date(endDate)
         return Trip(
             id = id,
             title = title,
@@ -267,7 +252,7 @@ class TripRepository @Inject constructor(
             startTime = startTime.time,
             endTime = endTime?.time ?: 0L,
             distance = distance,
-            coordinatesJson = Converters().coordinatesToJson(coordinates)
+            coordinatesJson = converters.coordinatesToJson(coordinates)
         )
     }
 
@@ -278,7 +263,7 @@ class TripRepository @Inject constructor(
             startTime = Date(startTime),
             endTime = if (endTime > 0L) Date(endTime) else null,
             distance = distance,
-            coordinates = Converters().fromCoordinatesJson(coordinatesJson)
+            coordinates = converters.fromCoordinatesJson(coordinatesJson)
         )
     }
 
@@ -310,6 +295,7 @@ class TripRepository @Inject constructor(
         return NoteEntity(
             id = id,
             tripId = tripId,
+            title = title,
             content = content,
             latitude = latitude,
             longitude = longitude,
@@ -321,7 +307,7 @@ class TripRepository @Inject constructor(
         return Note(
             id = id,
             tripId = tripId,
-            title = "",
+            title = title,
             content = content,
             latitude = latitude,
             longitude = longitude,

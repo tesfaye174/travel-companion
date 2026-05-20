@@ -1,19 +1,55 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permessi Fondamentali -->
+    <!-- Permessi di Rete -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permessi di Localizzazione -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Permesso Background Location (Android 10+) -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Permessi per Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <!-- Permesso per Notifiche (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Permesso per Vibrazione -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Permesso per Camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Permesso per Storage (Scoped Storage compliant) -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <!-- Permesso per Boot Completed (ri-registrazione geofences) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Feature declarations -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
 
     <application
         android:name=".TravelCompanionApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Travel Companion"
+        android:supportsRtl="true"
         android:theme="@style/Theme.TravelCompanion"
         tools:targetApi="31">
 
@@ -27,6 +63,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.tracking.TrackingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TravelCompanion" />
+
         <!-- Servizio di Tracking in Background -->
         <service
             android:name=".service.TrackingService"
@@ -38,6 +79,38 @@
         <receiver
             android:name=".utils.GeofenceBroadcastReceiver"
             android:exported="false" />
+
+        <!-- BroadcastReceiver per Boot Completed (ri-registra geofences) -->
+        <receiver
+            android:name=".boot.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- FileProvider for sharing photo files via camera intent -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Disable WorkManager's default initializer so we can provide a HiltWorkerFactory via Configuration.Provider -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
     </application>
 </manifest>

@@ -28,7 +28,7 @@
             android:layout_margin="4dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Foto al Colosseo"
+            android:text=""
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="12sp" />
 

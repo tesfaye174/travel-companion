@@ -2,6 +2,7 @@ package com.travelcompanion.domain.usecase
 
 import com.travelcompanion.domain.model.LocationPoint
 import com.travelcompanion.domain.model.Trip
+import java.util.Locale
 
 data class PredictionResult(
     val predictedKm: Double,
@@ -9,42 +10,17 @@ data class PredictionResult(
 )
 
 class AnalyzePredictionUseCase {
-    fun execute(trips: List<Trip>, locations: List<LocationPoint>): PredictionResult {
-        if (trips.isEmpty()) return PredictionResult(0.0, "Non ci sono dati sufficienti.")
+    fun execute(trips: List<Trip>, @Suppress("UNUSED_PARAMETER") locations: List<LocationPoint>): PredictionResult {
+        if (trips.isEmpty()) return PredictionResult(0.0, "Not enough data available.")
 
-        val totalKm = calculateTotalDistance(locations)
-        val avgKmPerTrip = if (trips.isNotEmpty()) totalKm / trips.size else 0.0
+        val totalKm = trips.sumOf { it.totalDistance.toDouble() }
+        val avgKmPerTrip = totalKm / trips.size
 
-        // Algoritmo semplice: Previsione = Media * 1.2 (ottimismo)
         val predicted = avgKmPerTrip * 1.2
 
-        val msg = if (predicted > 100) "Sei un viaggiatore instancabile!"
-        else "Il prossimo mese potresti fare ${String.format("%.1f", predicted)} km."
+        val msg = if (predicted > 100) "You're a tireless traveler!"
+        else "Next month you could travel ${String.format(Locale.getDefault(), "%.1f", predicted)} km."
 
         return PredictionResult(predicted, msg)
-    }
-
-    private fun calculateTotalDistance(locations: List<LocationPoint>): Double {
-        if (locations.size < 2) return 0.0
-        var dist = 0.0
-        for (i in 0 until locations.size - 1) {
-            dist += haversine(
-                locations[i].latitude, locations[i].longitude,
-                locations[i + 1].latitude, locations[i + 1].longitude
-            )
-        }
-        return dist
-    }
-
-    private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val r = 6371.0 // Earth radius in km
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        return r * c
     }
 }

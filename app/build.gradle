@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
-    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.devtools.ksp' version '1.9.22-1.0.17'
     id 'kotlin-parcelize'
 }
 
@@ -13,107 +13,173 @@ android {
 
     defaultConfig {
         applicationId "com.travelcompanion"
-        minSdk 21
+        minSdk 26
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
-        // BuildConfig field for location provider selection
+        // BuildConfig fields
         buildConfigField "boolean", "USE_PLAY_SERVICES_LOCATION", "true"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    // Release signing config — reads values from local.properties (not committed)
+    // To configure, add these lines to local.properties:
+    //   RELEASE_STORE_FILE=path/to/keystore.jks
+    //   RELEASE_STORE_PASSWORD=your_store_password
+    //   RELEASE_KEY_ALIAS=your_key_alias
+    //   RELEASE_KEY_PASSWORD=your_key_password
+    signingConfigs {
+        release {
+            def props = new Properties()
+            def propsFile = rootProject.file('local.properties')
+            if (propsFile.exists()) {
+                props.load(new FileInputStream(propsFile))
+            }
+            storeFile props['RELEASE_STORE_FILE'] ? file(props['RELEASE_STORE_FILE']) : null
+            storePassword props['RELEASE_STORE_PASSWORD'] ?: ''
+            keyAlias props['RELEASE_KEY_ALIAS'] ?: ''
+            keyPassword props['RELEASE_KEY_PASSWORD'] ?: ''
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
+        }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        // Abilita desugaring per supporto API moderne su Android più vecchi
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
         jvmTarget = '17'
+        freeCompilerArgs += [
+            '-opt-in=kotlin.RequiresOptIn',
+            '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
+            '-opt-in=kotlinx.coroutines.FlowPreview'
+        ]
     }
 
     buildFeatures {
-        compose true
         viewBinding true
         buildConfig true
     }
 
-    composeOptions {
-        // This version should match the Compose compiler for your Kotlin version.
-        kotlinCompilerExtensionVersion '1.5.10'
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+    // Room schema export location
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
 
 dependencies {
-    // --- Core ---
+    // --- Core AndroidX ---
     implementation "androidx.core:core-ktx:1.12.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
-    implementation "androidx.activity:activity-compose:1.8.2"
-    implementation platform('androidx.compose:compose-bom:2024.02.00')
-    implementation "androidx.compose.ui:ui"
-    implementation "androidx.compose.material3:material3"
-    // AppCompat (necessario per Theme.AppCompat)
     implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.6"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation "com.google.android.material:material:1.11.0"
+    implementation "androidx.recyclerview:recyclerview:1.3.2"
 
-    // --- DI ---
-    implementation "com.google.dagger:hilt-android:2.50"
-    kapt "com.google.dagger:hilt-compiler:2.50"
-    implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
+    // --- Lifecycle ---
+    def lifecycleVersion = "2.7.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
+    // --- Navigation ---
+    def navVersion = "2.7.7"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
+
+    // --- Dependency Injection (Hilt) ---
+    def hiltVersion = "2.50"
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    ksp "com.google.dagger:hilt-compiler:$hiltVersion"
     implementation "androidx.hilt:hilt-work:1.1.0"
-    kapt "androidx.hilt:hilt-compiler:1.1.0"
+    ksp "androidx.hilt:hilt-compiler:1.1.0"
 
-    // --- DB ---
+    // --- Room Database ---
     def roomVersion = '2.6.1'
-    implementation "androidx.room:room-runtime:${roomVersion}"
-    implementation "androidx.room:room-ktx:${roomVersion}"
-    kapt "androidx.room:room-compiler:${roomVersion}"
-    implementation "androidx.room:room-paging:${roomVersion}"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    ksp "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-paging:$roomVersion"
 
-    // --- Network (API) ---
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    // --- JSON (Moshi — used by Room Converters for coordinate serialization) ---
     implementation "com.squareup.moshi:moshi:1.15.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.15.0"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.15.0"
 
-    // --- Gson (for JSON serialization) ---
-    implementation "com.google.code.gson:gson:2.10.1"
-
-    // --- DataStore Preferences ---
+    // --- DataStore (Key-Value Storage) ---
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-    // --- Compose Runtime for LiveData ---
-    implementation "androidx.compose.runtime:runtime-livedata"
+    // --- Coroutines ---
+    def coroutinesVersion = "1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
 
     // --- Location & Maps ---
     implementation "com.google.android.gms:play-services-location:21.1.0"
     implementation "com.google.android.gms:play-services-maps:18.2.0"
-    implementation "org.osmdroid:osmdroid-android:6.1.18"
+    implementation "com.google.maps.android:android-maps-utils:3.8.2"  // Per heatmap
 
-    // Material Components (needed for styles referenced in resources)
-    implementation "com.google.android.material:material:1.11.0"
-
-    // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:1.3.2"
-
-    // --- Background & Work ---
+    // --- Background Work ---
     implementation "androidx.work:work-runtime-ktx:2.9.0"
 
-    // --- Charts ---
+    // --- Charts (MPAndroidChart) ---
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
 
     // --- Image Loading ---
     implementation "com.github.bumptech.glide:glide:4.16.0"
-    kapt "com.github.bumptech.glide:compiler:4.16.0"
+    ksp "com.github.bumptech.glide:ksp:4.16.0"
+
+    // --- OSMDroid (OpenStreetMap) ---
+    implementation "org.osmdroid:osmdroid-android:6.1.18"
 
     // --- CameraX ---
-    def camerax_version = "1.3.1"
-    implementation "androidx.camera:camera-core:${camerax_version}"
-    implementation "androidx.camera:camera-camera2:${camerax_version}"
-    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
-    implementation "androidx.camera:camera-view:${camerax_version}"
+    def cameraxVersion = "1.3.1"
+    implementation "androidx.camera:camera-core:$cameraxVersion"
+    implementation "androidx.camera:camera-camera2:$cameraxVersion"
+    implementation "androidx.camera:camera-lifecycle:$cameraxVersion"
+    implementation "androidx.camera:camera-view:$cameraxVersion"
 
-    // --- Logging ---
+    // --- Logging (Timber) ---
     implementation "com.jakewharton.timber:timber:5.0.1"
+
+    // --- UI Polish ---
+    implementation "com.facebook.shimmer:shimmer:0.5.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // --- Java 8+ API desugaring ---
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
+
+    // --- Testing ---
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "app.cash.turbine:turbine:1.0.0"
+    testImplementation "com.google.truth:truth:1.4.0"
+    testImplementation "io.mockk:mockk:1.13.9"
+
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
 }

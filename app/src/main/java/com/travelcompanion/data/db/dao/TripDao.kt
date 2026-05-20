@@ -23,6 +23,9 @@ interface TripDao {
     @Query("DELETE FROM trips WHERE id = :tripId")
     suspend fun deleteTripById(tripId: Long): Int
 
+    @Query("DELETE FROM trips")
+    suspend fun deleteAllTrips()
+
     // Queries with Flow
     @Query("SELECT * FROM trips WHERE id = :id")
     fun getTripByIdFlow(id: Long): Flow<TripEntity?>
@@ -112,13 +115,13 @@ interface TripDao {
 
     // Aggregate / statistics helpers
     @Query("SELECT SUM(total_distance) FROM trips")
-    fun getTotalDistance(): Float?
+    suspend fun getTotalDistance(): Float?
 
     @Query("SELECT SUM(total_duration) FROM trips")
-    fun getTotalDuration(): Long?
+    suspend fun getTotalDuration(): Long?
 
     @Query("SELECT COUNT(*) FROM trips")
-    fun getTripCount(): Int
+    suspend fun getTripCount(): Int
 
     @Query("""
         SELECT strftime('%m', datetime(start_date / 1000, 'unixepoch')) as month,
@@ -129,7 +132,7 @@ interface TripDao {
         GROUP BY month
         ORDER BY month
     """)
-    fun getMonthlyStats(): List<MonthlyStat>
+    suspend fun getMonthlyStats(): List<MonthlyStat>
 
     @Query("""
         SELECT trip_type as tripType,
@@ -139,7 +142,7 @@ interface TripDao {
         FROM trips
         GROUP BY trip_type
     """)
-    fun getTripTypeStats(): List<TripTypeStatEntity>
+    suspend fun getTripTypeStats(): List<TripTypeStatEntity>
 
     // Projection for trip type statistics returned by the above query
     data class TripTypeStatEntity(

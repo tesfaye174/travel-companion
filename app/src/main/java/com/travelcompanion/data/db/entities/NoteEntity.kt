@@ -23,6 +23,9 @@ data class NoteEntity(
     @ColumnInfo(name = "trip_id", index = true)
     val tripId: Long,
 
+    @ColumnInfo(name = "title", defaultValue = "")
+    val title: String = "",
+
     @ColumnInfo(name = "content")
     val content: String,
 

@@ -1,36 +1,108 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ProGuard rules for Travel Companion
+# Optimized for production release with R8
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ===== Keep debugging info =====
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ===== Kotlin =====
+-keep class kotlin.** { *; }
+-keep class kotlin.Metadata { *; }
+-dontwarn kotlin.**
+-keepclassmembers class **$WhenMappings { <fields>; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Coroutines
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembers class kotlinx.coroutines.** { volatile <fields>; }
 
-# Keep Room database classes
+# ===== Room Database =====
 -keep class * extends androidx.room.RoomDatabase
 -keep @androidx.room.Entity class *
-
-# Keep data classes
+-keep @androidx.room.Database class *
 -keep class com.travelcompanion.data.db.entities.** { *; }
+-keep interface com.travelcompanion.data.db.dao.** { *; }
+-dontwarn androidx.room.paging.**
+
+# ===== Hilt / Dagger =====
+-keep class dagger.** { *; }
+-keep class javax.inject.** { *; }
+-keep class dagger.hilt.** { *; }
+-keep class **_HiltModules { *; }
+-keep class **_Factory { *; }
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+-dontwarn com.google.errorprone.annotations.**
+
+# ===== ViewModels =====
+-keep class * extends androidx.lifecycle.ViewModel { <init>(...); }
+
+# ===== Moshi (used by Room Converters) =====
+-keepattributes Signature, *Annotation*
+-keep class com.squareup.moshi.** { *; }
+-keep class **JsonAdapter { <init>(...); <fields>; }
+
+# ===== Google Play Services =====
+-keep class com.google.android.gms.maps.** { *; }
+-keep class com.google.android.gms.location.** { *; }
+-keep class com.google.maps.android.** { *; }
+-dontwarn com.google.android.gms.**
+
+# ===== CameraX =====
+-keep class androidx.camera.** { *; }
+-dontwarn androidx.camera.**
+
+# ===== Glide =====
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule { <init>(...); }
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder { *** rewind(); }
+-dontwarn com.bumptech.glide.**
+
+# ===== OSMDroid =====
+-keep class org.osmdroid.** { *; }
+-dontwarn org.osmdroid.**
+
+# ===== MPAndroidChart =====
+-keep class com.github.mikephil.charting.** { *; }
+
+# ===== Timber =====
+-assumenosideeffects class timber.log.Timber* {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+}
+
+# ===== Shimmer =====
+-keep class com.facebook.shimmer.** { *; }
+
+# ===== WorkManager =====
+-keep class * extends androidx.work.Worker
+-keep class * extends androidx.work.ListenableWorker { public <init>(...); }
+
+# ===== Domain Layer =====
 -keep class com.travelcompanion.domain.model.** { *; }
+-keep interface com.travelcompanion.domain.repository.** { *; }
+-keep class com.travelcompanion.domain.usecase.** { *; }
 
-# Keep ViewModels
--keep class * extends androidx.lifecycle.ViewModel { *; }
+# ===== Services & Receivers =====
+-keep class com.travelcompanion.service.** { *; }
+-keep class * extends android.content.BroadcastReceiver { <init>(...); }
 
-# Keep WorkManager
--keep class androidx.work.** { *; }
--dontwarn androidx.work.**
+# ===== DataStore =====
+-keep class androidx.datastore.** { *; }
+-keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite { <fields>; }
+
+# ===== Remove Logging in Release =====
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+}
+
+# ===== General =====
+-keepattributes RuntimeVisibleAnnotations, Exceptions, InnerClasses
+-keepclasseswithmembernames class * { native <methods>; }
+-keepclassmembers class * { void set*(***); *** get*(); }
+-dontwarn java.lang.invoke.**

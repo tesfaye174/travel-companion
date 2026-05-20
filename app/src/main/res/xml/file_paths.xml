@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path
-        name="external_root"
-        path="." />
-
-    <files-path
-        name="files_root"
-        path="." />
-
+    <!-- Camera temp captures land here (TrackingActivity) -->
     <cache-path
-        name="cache_root"
+        name="camera_cache"
         path="." />
 
+    <!-- Trip photos saved by TripDetailsFragment go to external Pictures dir -->
     <external-files-path
-        name="external_files_root"
-        path="." />
-
-    <external-cache-path
-        name="external_cache_root"
-        path="." />
+        name="trip_photos"
+        path="Pictures/" />
 </paths>

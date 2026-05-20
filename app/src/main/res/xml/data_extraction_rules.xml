@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
     <cloud-backup>
-        <include domain="file" path="."/>
+        <!-- Only user preferences go to cloud. GPS history (DB) is excluded for privacy. -->
+        <include domain="sharedpref" path="theme_prefs.xml" />
+        <include domain="file" path="datastore/settings.preferences_pb" />
     </cloud-backup>
+
     <device-transfer>
-        <include domain="file" path="."/>
+        <!-- Device-to-device transfer is user-initiated; the DB is OK to include. -->
+        <include domain="database" path="travel_companion_db" />
+        <include domain="sharedpref" path="theme_prefs.xml" />
+        <include domain="file" path="datastore/settings.preferences_pb" />
+        <include domain="external" path="Android/data/com.travelcompanion/files/" />
     </device-transfer>
 </data-extraction-rules>
