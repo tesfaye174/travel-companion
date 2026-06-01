@@ -184,33 +184,6 @@ class TripRepository @Inject constructor(
         return tripDao.getTripCount()
     }
 
-    override suspend fun getMonthlyStats(): List<com.travelcompanion.domain.model.MonthlyStat> {
-        return tripDao.getMonthlyStats().map { stat ->
-            com.travelcompanion.domain.model.MonthlyStat(
-                month = stat.month,
-                tripCount = stat.tripCount,
-                totalDistance = stat.totalDistance,
-                totalDuration = stat.totalDuration
-            )
-        }
-    }
-
-    override suspend fun getTripTypeStats(): List<com.travelcompanion.domain.model.TripTypeStat> {
-        return tripDao.getTripTypeStats().map { stat ->
-            val tripType = try {
-                com.travelcompanion.domain.model.TripType.valueOf(stat.tripType)
-            } catch (ex: Exception) {
-                com.travelcompanion.domain.model.TripType.OTHER
-            }
-            com.travelcompanion.domain.model.TripTypeStat(
-                tripType = tripType,
-                totalDistance = stat.totalDistance,
-                totalDuration = stat.totalDuration,
-                tripCount = stat.tripCount
-            )
-        }
-    }
-
     // Extension functions for conversion
     private fun Trip.toEntity(): TripEntity {
         return TripEntity(
@@ -299,7 +272,8 @@ class TripRepository @Inject constructor(
             content = content,
             latitude = latitude,
             longitude = longitude,
-            timestamp = timestamp.time
+            timestamp = timestamp.time,
+            photoPath = photoPath
         )
     }
 
@@ -312,7 +286,7 @@ class TripRepository @Inject constructor(
             latitude = latitude,
             longitude = longitude,
             timestamp = Date(timestamp),
-            photoPath = null
+            photoPath = photoPath
         )
     }
 

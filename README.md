@@ -1,188 +1,214 @@
 # Travel Companion
 
-[![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
-[![Kotlin](https://img.shields.io/badge/Language-Kotlin-blue.svg)](https://kotlinlang.org)
+[![Piattaforma](https://img.shields.io/badge/Piattaforma-Android-green.svg)](https://developer.android.com)
+[![Linguaggio](https://img.shields.io/badge/Linguaggio-Kotlin-blue.svg)](https://kotlinlang.org)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg)](https://android-arsenal.com/api?level=26)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Licenza](https://img.shields.io/badge/Licenza-MIT-yellow.svg)](LICENSE)
 
-A modern Android application for tracking, organizing, and reliving your travel memories. Built with Clean Architecture, MVVM pattern, and Jetpack libraries.
+Travel Companion è un'applicazione Android, scritta in Kotlin, che permette
+all'utente di tracciare i propri viaggi, organizzarli e rivivere i ricordi
+attraverso foto e annotazioni. L'app è stata sviluppata seguendo i principi
+della Clean Architecture, con il pattern MVVM nello strato di presentazione e
+le librerie di Android Jetpack.
 
-## Screenshots
+## Schermate
 
-| Home | Trips | Map | Statistics |
+| Home | Viaggi | Mappa | Statistiche |
 | ---- | ----- | --- | ---------- |
-| ![Home](docs/screenshots/home.png) | ![Trips](docs/screenshots/trips.png) | ![Map](docs/screenshots/map.png) | ![Stats](docs/screenshots/stats.png) |
+| ![Home](docs/screenshots/home.png) | ![Viaggi](docs/screenshots/trips.png) | ![Mappa](docs/screenshots/map.png) | ![Stat](docs/screenshots/stats.png) |
 
-## Features
+## Funzionalità
 
-### Core Features
+### Funzionalità principali
 
-- **GPS Tracking** - Real-time location tracking with foreground service
-- **Google Maps Integration** - View routes with polylines and markers
-- **Map Integration (OSM)** - View routes with polylines and markers using offline OSM and OSMDroid
-- **Photo Capture** - Take geotagged photos during trips using CameraX
-- **Notes** - Add text notes to document your journey
-- **Statistics** - Visualize travel data with charts (MPAndroidChart)
-- **Geofencing** - Get notified when entering/exiting saved locations
+- **Tracciamento GPS** in tempo reale tramite foreground service.
+- **Visualizzazione su mappa** dei percorsi con polilinee e marker (OpenStreetMap via OSMDroid, supporto offline).
+- **Foto geolocalizzate** scattate con CameraX e associate al viaggio.
+- **Note testuali** per documentare il viaggio.
+- **Statistiche** sui viaggi con grafici (MPAndroidChart).
+- **Geofencing**: notifiche di ingresso/uscita dalle aree salvate.
 
-### Trip Management
+### Gestione viaggi
 
-- Create, edit, and delete trips
-- Search and filter trips by type
-- Swipe-to-delete with undo
-- Export data to JSON
-- Delete all data option
+- Creazione, modifica ed eliminazione dei viaggi.
+- Ricerca e filtraggio per tipo.
+- Eliminazione con swipe e possibilità di annullare.
+- Esportazione dei dati in formato JSON.
+- Cancellazione totale dei dati.
 
-### User Experience
+### Esperienza utente
 
-- Persistent settings with DataStore
-- Modern Material Design 3 UI
-- Accessibility support
+- Preferenze persistenti con DataStore.
+- Interfaccia Material Design 3 (tema chiaro e scuro).
+- Supporto all'accessibilità.
 
-## Architecture
+## Architettura
 
-This project follows **Clean Architecture** principles with **MVVM** pattern:
+Il progetto segue i principi della **Clean Architecture** con pattern **MVVM**
+nella presentazione.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                        │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Fragments  │  │  ViewModels │  │  Adapters/Bindings  │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                  PRESENTAZIONE (UI)                          │
+│  Fragment · ViewModel · Adapter · ViewBinding                │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      DOMAIN LAYER                            │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  Use Cases  │  │   Models    │  │  Repository (I/F)   │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                       DOMINIO                                │
+│  Casi d'uso · Modelli · Interfacce repository                │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                       DATA LAYER                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │ Repository  │  │    DAOs     │  │      Entities       │  │
-│  │   (Impl)    │  │   (Room)    │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                         DATI                                 │
+│  Repository (impl) · DAO Room · DataStore · LocationProvider │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Project Structure
+### Struttura del progetto
 
 ```text
 app/src/main/java/com/travelcompanion/
 ├── data/
 │   ├── db/
-│   │   ├── dao/           # Room DAOs (6 DAOs)
-│   │   ├── entities/      # Room Entities (6 tables)
-│   │   ├── converters/    # Type converters
+│   │   ├── dao/           # DAO Room (6 file)
+│   │   ├── entities/      # Entità Room (6 tabelle)
+│   │   ├── converters/    # Type converter
 │   │   └── AppDatabase.kt
-│   ├── preferences/       # DataStore preferences
-│   └── repository/        # Repository implementations
-├── di/                    # Hilt dependency injection
+│   ├── preferences/       # Preferenze DataStore
+│   └── repository/        # Implementazione repository
+├── di/                    # Moduli Hilt
 ├── domain/
-│   ├── model/             # Domain models
-│   ├── repository/        # Repository interfaces
-│   └── usecase/           # Use cases (business logic)
+│   ├── model/             # Modelli di dominio
+│   ├── repository/        # Interfacce repository
+│   └── usecase/           # Casi d'uso
 ├── ui/
-│   ├── home/              # Home screen
-│   ├── trips/             # Trips list
-│   ├── tripdetails/       # Trip details
-│   ├── newtrip/           # Create trip
-│   ├── tracking/          # GPS tracking (Activity + Service)
-│   ├── map/               # Google Maps
-│   ├── statistics/        # Charts and stats
-│   └── settings/          # App settings
-└── utils/                 # Utility classes
+│   ├── home/              # Home
+│   ├── trips/             # Elenco viaggi
+│   ├── tripdetails/       # Dettagli viaggio
+│   ├── newtrip/           # Nuovo viaggio
+│   ├── tracking/          # Tracciamento GPS (Activity + Service)
+│   ├── map/               # Mappa OSM
+│   ├── statistics/        # Statistiche e grafici
+│   └── settings/          # Impostazioni
+└── utils/                 # Classi di utilità
 ```
 
-## Tech Stack
+## Tecnologie utilizzate
 
-| Category | Libraries |
+| Categoria | Libreria / versione |
 | -------- | --------- |
-| **Language** | Kotlin 1.9.22 |
-| **Min SDK** | 26 (Android 8.0) |
-| **Target SDK** | 34 (Android 14) |
-| **Architecture** | Clean Architecture + MVVM |
+| **Linguaggio** | Kotlin 1.9.22 |
+| **API minima** | 26 (Android 8.0) |
+| **API target** | 34 (Android 14) |
+| **Architettura** | Clean Architecture + MVVM |
 | **DI** | Hilt 2.50 |
 | **Database** | Room 2.6.1 |
-| **Preferences** | DataStore 1.0.0 |
-| **Async** | Coroutines 1.7.3 + Flow |
-| **Navigation** | Navigation Component 2.7.7 |
-| **Maps** | OSMDroid 6.1.18 (offline OSM files) |
-| **Location** | Fused Location Provider 21.1.0 |
-| **Camera** | CameraX 1.3.1 |
+| **Preferenze** | DataStore 1.0.0 |
+| **Asincronia** | Coroutines 1.7.3 + Flow |
+| **Navigazione** | Navigation Component 2.7.7 |
+| **Mappe** | OSMDroid 6.1.18 (file OSM offline) |
+| **Posizione** | Fused Location Provider 21.1.0 |
+| **Fotocamera** | CameraX 1.3.1 |
 | **Background** | WorkManager 2.9.0 |
-| **Charts** | MPAndroidChart 3.1.0 |
-| **Images** | Glide 4.16.0 + Coil 2.5.0 |
+| **Grafici** | MPAndroidChart 3.1.0 |
+| **Immagini** | Glide 4.16.0 |
 | **Logging** | Timber 5.0.1 |
 | **Build** | AGP 8.3.0, Gradle 8.11.1, KSP 1.9.22-1.0.17 |
 
-## Getting Started
+## Come iniziare
 
-### Prerequisites
+### Prerequisiti
 
-- Android Studio Hedgehog (2023.1.1) or newer
+- Android Studio Hedgehog (2023.1.1) o successivo
 - JDK 17
 - Android SDK 34
 
-### Setup
+### Configurazione iniziale
 
-1. **Clone the repository**
+1. **Clonare il repository**
 
    ```bash
    git clone https://github.com/tesfaye174/travel-companion.git
    cd travel-companion
    ```
 
-2. **Provide offline OSM data**
+2. **Configurare `local.properties`**
 
-   Place your OSM XML file in `app/src/main/assets/map.osm`. The app's map UI (OSMDroid) will load `assets/map.osm` at runtime. Replace this file with your provided OSM export.
+   ```bash
+   cp local.properties.example local.properties
+   ```
 
-3. **Build the project**
+   Modificare il file impostando `sdk.dir` (path dell'SDK Android) e,
+   opzionalmente, le chiavi per la firma della build di release.
+
+3. **(Facoltativo) Aggiornare il file OSM**
+
+   Per il supporto offline alla mappa, il file `app/src/main/assets/map.osm`
+   viene caricato da OSMDroid all'avvio. Può essere sostituito con un export
+   personalizzato di OpenStreetMap.
+
+4. **Compilare il progetto**
 
    ```bash
    ./gradlew assembleDebug
    ```
 
-4. **Run on device/emulator**
+5. **Installare su dispositivo o emulatore**
 
    ```bash
    ./gradlew installDebug
    ```
 
-### Running Tests
+### Esecuzione dei test
 
 ```bash
-# Unit tests
+# Test unitari
 ./gradlew test
 
-# Instrumented tests (requires device/emulator)
+# Test strumentati (richiede dispositivo o emulatore)
 ./gradlew connectedAndroidTest
 ```
 
-## Database Schema
+## Schema del database
 
-## Platform vs Play Services (location & geofencing)
+L'app utilizza Room con sei tabelle:
 
-This project supports two interchangeable implementations for location and geofencing:
+| Tabella | Descrizione |
+| ----- | ----------- |
+| `trips` | Informazioni principali del viaggio |
+| `journeys` | Segmenti GPS registrati |
+| `photo_notes` | Foto con nota opzionale |
+| `notes` | Note testuali |
+| `geofence_areas` | Aree di interesse salvate |
+| `geofence_events` | Eventi di ingresso/uscita dalle geofence |
 
-- **Play Services (default)**: uses Google Play Services `FusedLocationProviderClient` and the Play Services Geofencing API. This provides more accurate location fixes and a robust geofencing service.
-- **Platform (fallback)**: uses Android `LocationManager` for location and a polling-based geofence detector implemented by the app. This mode is intended for environments without Google Play Services, but has limitations (see below).
+Lo schema corrente è alla versione 4. I file `app/schemas/*/3.json` e
+`app/schemas/*/4.json` sono versionati per tracciare le migrazioni.
 
-How to switch:
+## Modalità Play Services vs Platform
 
-- The app exposes a build-time flag in `app/build.gradle` called `USE_PLAY_SERVICES_LOCATION` (default: `true`). To use platform providers, set it to `false` and rebuild.
+Il progetto supporta due implementazioni intercambiabili per posizione e
+geofencing:
 
-Limitations of Platform mode:
+- **Play Services (default)**: utilizza `FusedLocationProviderClient` e la
+  Geofencing API. Garantisce maggiore accuratezza e affidabilità in
+  background.
+- **Platform (fallback)**: utilizza `LocationManager` di Android e un
+  rilevatore di geofence basato su polling. Pensata per dispositivi senza
+  Google Play Services.
 
-- Geofencing is implemented via periodic location updates and distance checks (battery- and accuracy-sensitive).
-- Platform geofencing does not persist across device reboots and may miss fast enter/exit transitions.
-- For production-level geofencing (reliable background delivery, device restarts), prefer the Play Services implementation.
+Per cambiare modalità, modificare il flag `USE_PLAY_SERVICES_LOCATION` in
+`app/build.gradle` e ricompilare. Limitazioni della modalità Platform:
 
-Files of interest:
+- il geofencing è realizzato tramite aggiornamenti periodici della posizione
+  e controllo della distanza, quindi è sensibile alla batteria;
+- non è garantita la persistenza delle geofence dopo un riavvio del
+  dispositivo;
+- transizioni rapide di ingresso/uscita possono andare perse.
+
+File rilevanti:
 
 - `app/src/main/java/com/travelcompanion/location/PlayServicesLocationProvider.kt`
 - `app/src/main/java/com/travelcompanion/location/PlatformLocationProvider.kt`
@@ -190,56 +216,38 @@ Files of interest:
 - `app/src/main/java/com/travelcompanion/location/PlatformGeofenceProvider.kt`
 - `app/src/main/java/com/travelcompanion/utils/GeofenceBroadcastReceiver.kt`
 
-If you want, I can extend the platform provider to persist geofences across reboots and add battery optimizations.
+## Permessi richiesti
 
-The app uses Room database with 6 tables:
-
-| Table | Description |
-| ----- | ----------- |
-| `trips` | Main trip information |
-| `journeys` | GPS tracked segments |
-| `photo_notes` | Photos with optional notes |
-| `notes` | Text notes |
-| `geofence_areas` | Saved geofence locations |
-| `geofence_events` | Geofence enter/exit events |
-
-## Permissions
-
-| Permission | Usage |
+| Permesso | Motivo |
 | ---------- | ----- |
-| `ACCESS_FINE_LOCATION` | GPS tracking |
-| `ACCESS_BACKGROUND_LOCATION` | Geofencing |
-| `CAMERA` | Photo capture |
-| `POST_NOTIFICATIONS` | Tracking & geofence alerts |
-| `FOREGROUND_SERVICE_LOCATION` | Background tracking |
+| `ACCESS_FINE_LOCATION` | Tracciamento GPS |
+| `ACCESS_BACKGROUND_LOCATION` | Geofencing in background |
+| `CAMERA` | Scatto delle foto |
+| `POST_NOTIFICATIONS` | Notifiche di tracciamento e geofence |
+| `FOREGROUND_SERVICE_LOCATION` | Tracciamento in foreground service |
 
-## Testing
+## Test
 
-The project includes test dependencies for:
+Il progetto include tre suite di test unitari:
 
-- **Unit Tests**: JUnit 4, MockK, Turbine, Truth, Coroutines Test
-- **Instrumented Tests**: AndroidX Test, Espresso, Room Testing, Compose UI Test
-- **Test Utilities**: Custom `DispatcherProvider` for coroutine testing
+- `TripValidationUtilsTest` — validazione date e titolo del viaggio.
+- `AnalyzePredictionUseCaseTest` — caso d'uso di analisi predittiva.
+- `HomeViewModelTest` — stato della Home e flussi `StateFlow`.
 
-```bash
-# Unit tests
-./gradlew test
+Le dipendenze di test comprendono JUnit 4, MockK, Turbine, Truth e
+`coroutines-test`. Per i test strumentati sono dichiarate (anche se non
+ancora utilizzate diffusamente) AndroidX Test, Espresso e Room Testing.
 
-# Instrumented tests (requires device/emulator)
-./gradlew connectedAndroidTest
-```
+## Licenza
 
-## License
+Il progetto è rilasciato sotto licenza MIT. Si veda il file [LICENSE](LICENSE)
+per i dettagli.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Autore
 
-## Author
+**Tesfaye** — [@tesfaye174](https://github.com/tesfaye174)
 
-### Tesfaye
-
-- GitHub: [@tesfaye174](https://github.com/tesfaye174)
-
-## Acknowledgments
+## Ringraziamenti
 
 - [OSMDroid](https://github.com/osmdroid/osmdroid)
 - [Material Design](https://material.io)

@@ -451,8 +451,5 @@ class TrackingService : Service() {
 
         // Intent extras
         const val EXTRA_TRIP_ID = "extra_trip_id"
-        const val ACTION_START_TRACKING = "com.travelcompanion.START_TRACKING"
-        const val ACTION_STOP_TRACKING = "com.travelcompanion.STOP_TRACKING"
-        const val ACTION_LOCATION_UPDATE = "com.travelcompanion.LOCATION_UPDATE"
     }
 }

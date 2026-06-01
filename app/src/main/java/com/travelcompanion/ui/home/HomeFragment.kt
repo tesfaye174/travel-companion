@@ -178,17 +178,20 @@ class HomeFragment : Fragment() {
                     viewModel.quickStatsState.collect { state ->
                         when (state) {
                             is UiState.Idle -> {
-                                binding.tvTotalTrips.text = getString(R.string.total_trips_val, 0)
+                                binding.tvTotalTrips.text =
+                                    resources.getQuantityString(R.plurals.trips_count_plural, 0, 0)
                                 binding.tvTotalDistance.text = getString(R.string.total_distance_val, 0f)
                             }
                             is UiState.Success -> {
                                 val stats = state.data
-                                binding.tvTotalTrips.text = getString(R.string.total_trips_val, stats.totalTrips)
+                                binding.tvTotalTrips.text =
+                                    resources.getQuantityString(R.plurals.trips_count_plural, stats.totalTrips, stats.totalTrips)
                                 binding.tvTotalDistance.text = getString(R.string.total_distance_val, stats.totalDistance)
                             }
                             is UiState.Loading -> { /* keep current values visible */ }
                             is UiState.Error -> {
-                                binding.tvTotalTrips.text = getString(R.string.total_trips_val, 0)
+                                binding.tvTotalTrips.text =
+                                    resources.getQuantityString(R.plurals.trips_count_plural, 0, 0)
                                 binding.tvTotalDistance.text = getString(R.string.total_distance_val, 0f)
                             }
                         }

@@ -6,7 +6,6 @@ import com.travelcompanion.data.preferences.SettingsDataStore
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import com.travelcompanion.domain.repository.ITripRepository
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -58,9 +57,6 @@ class HomeViewModelTest {
             )
         }
         every { repository.getAllTrips() } returns flowOf(trips)
-        coEvery { repository.getTripCount() } returns 5
-        coEvery { repository.getTotalDistance() } returns 100f
-        coEvery { repository.getTotalDuration() } returns 5000L
 
         viewModel = HomeViewModel(repository, settingsDataStore)
 
@@ -80,11 +76,23 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `quickStatsState emits correct stats`() = runTest {
-        every { repository.getAllTrips() } returns flowOf(emptyList())
-        coEvery { repository.getTripCount() } returns 10
-        coEvery { repository.getTotalDistance() } returns 250.5f
-        coEvery { repository.getTotalDuration() } returns 86400000L
+    fun `quickStatsState derives count distance and duration from a single trips snapshot`() = runTest {
+        // Regression for the race where trip count and total distance were read in
+        // separate non-atomic queries and could disagree (e.g. "0 trips" / "57.3 km").
+        // Mirrors the demo data: two trips, 12.3 + 45.0 km, 2h + 4h.
+        val trips = listOf(
+            Trip(
+                id = 1, title = "Roma", destination = "Rome, IT", tripType = TripType.LOCAL,
+                startDate = Date(7_000_000L), endDate = null,
+                totalDistance = 12.3f, totalDuration = 2 * 60 * 60 * 1000L
+            ),
+            Trip(
+                id = 2, title = "Torino", destination = "Torino, IT", tripType = TripType.DAY_TRIP,
+                startDate = Date(3_000_000L), endDate = null,
+                totalDistance = 45.0f, totalDuration = 4 * 60 * 60 * 1000L
+            )
+        )
+        every { repository.getAllTrips() } returns flowOf(trips)
 
         viewModel = HomeViewModel(repository, settingsDataStore)
 
@@ -96,9 +104,28 @@ class HomeViewModelTest {
             }
             assertTrue(item is UiState.Success)
             val stats = (item as UiState.Success).data
-            assertEquals(10, stats.totalTrips)
-            assertEquals(250.5f, stats.totalDistance, 0.01f)
-            assertEquals(86400000L, stats.totalDuration)
+            // Count and distance come from the SAME list => always consistent.
+            assertEquals(2, stats.totalTrips)
+            assertEquals(57.3f, stats.totalDistance, 0.01f)
+            assertEquals(6 * 60 * 60 * 1000L, stats.totalDuration)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `quickStatsState reports zero for an empty database`() = runTest {
+        every { repository.getAllTrips() } returns flowOf(emptyList())
+
+        viewModel = HomeViewModel(repository, settingsDataStore)
+
+        viewModel.quickStatsState.test {
+            var item = awaitItem()
+            if (item is UiState.Loading) item = awaitItem()
+            assertTrue(item is UiState.Success)
+            val stats = (item as UiState.Success).data
+            assertEquals(0, stats.totalTrips)
+            assertEquals(0f, stats.totalDistance, 0.01f)
+            assertEquals(0L, stats.totalDuration)
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -106,9 +133,6 @@ class HomeViewModelTest {
     @Test
     fun `userName flow emits from DataStore`() = runTest {
         every { repository.getAllTrips() } returns flowOf(emptyList())
-        coEvery { repository.getTripCount() } returns 0
-        coEvery { repository.getTotalDistance() } returns 0f
-        coEvery { repository.getTotalDuration() } returns 0L
 
         viewModel = HomeViewModel(repository, settingsDataStore)
 

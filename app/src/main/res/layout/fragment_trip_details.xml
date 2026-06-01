@@ -38,7 +38,7 @@
 
                             <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/stat_distance_bg">
 
-                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_distance" app:tint="@color/stat_distance" />
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_distance" app:tint="@color/stat_distance" android:contentDescription="@null" />
 
                             </FrameLayout>
 
@@ -52,7 +52,7 @@
 
                             <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/stat_time_bg">
 
-                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_time" app:tint="@color/stat_time" />
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_time" app:tint="@color/stat_time" android:contentDescription="@null" />
 
                             </FrameLayout>
 
@@ -66,7 +66,7 @@
 
                             <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_icon_circle" android:backgroundTint="@color/stat_photos_bg">
 
-                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_photo" app:tint="@color/stat_photos" />
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_photo" app:tint="@color/stat_photos" android:contentDescription="@null" />
 
                             </FrameLayout>
 
@@ -114,7 +114,7 @@
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:padding="24dp">
 
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_note" app:tint="?attr/colorOutline" android:alpha="0.5" />
+                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_note" app:tint="?attr/colorOutline" android:alpha="0.5" android:contentDescription="@null" />
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/no_notes_yet" style="@style/TextAppearance.TravelCompanion.BodyMedium" android:textColor="?attr/colorOnSurfaceVariant" />
 

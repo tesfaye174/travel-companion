@@ -39,8 +39,13 @@
     <!-- Quick stats -->
     <string name="total_trips">Total Trips</string>
     <string name="total_distance">Total Distance</string>
-    <string name="total_trips_val">%d trips</string>
     <string name="total_distance_val">%.1f km</string>
+
+    <!-- Trip count (grammatically correct for singular/plural) -->
+    <plurals name="trips_count_plural">
+        <item quantity="one">%d trip</item>
+        <item quantity="other">%d trips</item>
+    </plurals>
 
     <!-- Trip management -->
     <string name="create_trip">Create Trip</string>
@@ -73,7 +78,6 @@
     <!-- Trips list -->
     <string name="filter">Filter</string>
     <string name="all">All</string>
-    <string name="trips_count">%d trips</string>
     <string name="sort">Sort</string>
     <string name="no_trips_yet">No trips yet</string>
     <string name="no_trips_yet_message">Start your first adventure by creating a new trip!</string>
@@ -119,6 +123,7 @@
     <string name="recording">Recording</string>
     <string name="tracking_location">Tracking location</string>
     <string name="tracking_active">Tracking Active</string>
+    <string name="stop_tracking">Stop tracking</string>
     <string name="tracking_stats">%1$s \u2022 %2$s \u2022 %3$d pts</string>
     <string name="tracking_channel_name">Trip Tracking</string>
     <string name="tracking_channel_description">Shows tracking status during active trips</string>

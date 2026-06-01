@@ -90,6 +90,13 @@ android {
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
+
+    // Make exported Room schemas available to instrumented migration tests
+    sourceSets {
+        androidTest {
+            assets.srcDirs += files("$projectDir/schemas")
+        }
+    }
 }
 
 dependencies {

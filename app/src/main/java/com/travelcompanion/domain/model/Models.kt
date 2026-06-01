@@ -91,9 +91,8 @@ data class TripDetails(
     val locationPoints: List<LocationPoint> = emptyList()
 )
 
-// type aliases for backwards compat
+// type alias kept for readability where PhotoNote is used as a "photo"
 typealias Photo = PhotoNote
-typealias Point = LocationPoint
 
 data class GeofenceArea(
     val id: String,

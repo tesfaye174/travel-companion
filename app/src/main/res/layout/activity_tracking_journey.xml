@@ -81,7 +81,7 @@
 
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_photo" style="@style/Widget.TravelCompanion.Button.Tonal" android:layout_width="56dp" android:layout_height="56dp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="28dp" app:icon="@drawable/ic_camera" app:iconGravity="textStart" app:iconPadding="0dp" app:iconSize="24dp" />
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_stop_tracking" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginHorizontal="24dp" android:backgroundTint="?attr/colorError" app:fabCustomSize="72dp" app:maxImageSize="32dp" app:srcCompat="@drawable/ic_stop" app:tint="?attr/colorOnError" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_stop_tracking" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginHorizontal="24dp" android:backgroundTint="?attr/colorError" app:fabCustomSize="72dp" app:maxImageSize="32dp" app:srcCompat="@drawable/ic_stop" app:tint="?attr/colorOnError" android:contentDescription="@string/stop_tracking" />
 
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_note" style="@style/Widget.TravelCompanion.Button.Tonal" android:layout_width="56dp" android:layout_height="56dp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="28dp" app:icon="@drawable/ic_note" app:iconGravity="textStart" app:iconPadding="0dp" app:iconSize="24dp" />
 

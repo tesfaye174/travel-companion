@@ -28,9 +28,6 @@ class NewTripViewModel @Inject constructor(
     private val _createdTripId = MutableStateFlow(-1L)
     val createdTripId: StateFlow<Long> = _createdTripId.asStateFlow()
 
-    private val _validationError = MutableStateFlow<String?>(null)
-    val validationError: StateFlow<String?> = _validationError.asStateFlow()
-
     private var currentTripId: Long = -1
 
     fun createTrip(
@@ -69,10 +66,6 @@ class NewTripViewModel @Inject constructor(
     fun resetSaveState() {
         _tripSaved.value = false
         _createdTripId.value = -1
-    }
-
-    fun clearValidationError() {
-        _validationError.value = null
     }
 
     override fun onCleared() {

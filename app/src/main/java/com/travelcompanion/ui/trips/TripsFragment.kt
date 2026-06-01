@@ -222,7 +222,8 @@ class TripsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.allTrips.collect { trips ->
                     tripAdapter.submitList(trips)
-                    binding.tvTripCount.text = getString(R.string.trips_count, trips.size)
+                    binding.tvTripCount.text =
+                        resources.getQuantityString(R.plurals.trips_count_plural, trips.size, trips.size)
                     if (trips.isEmpty()) {
                         binding.layoutEmpty.root.visibility = View.VISIBLE
                         binding.rvTrips.visibility = View.GONE

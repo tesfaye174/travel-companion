@@ -36,5 +36,8 @@ data class NoteEntity(
     val longitude: Double? = null,
 
     @ColumnInfo(name = "timestamp")
-    val timestamp: Long
+    val timestamp: Long,
+
+    @ColumnInfo(name = "photo_path")
+    val photoPath: String? = null
 )

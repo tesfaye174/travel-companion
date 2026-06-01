@@ -9,8 +9,6 @@ import com.travelcompanion.domain.repository.ITripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -39,45 +37,38 @@ class HomeViewModel @Inject constructor(
             initialValue = UiState.Loading
         )
 
-    // UI State for quick stats
-    private val _quickStatsState = MutableStateFlow<UiState<QuickStats>>(UiState.Loading)
-    val quickStatsState: StateFlow<UiState<QuickStats>> = _quickStatsState.asStateFlow()
-
-    init {
-        loadQuickStats()
-    }
-
-    /**
-     * Loads quick statistics (trip count, total distance).
-     */
-    private fun loadQuickStats() {
-        viewModelScope.launch {
-            _quickStatsState.value = UiState.Loading
-            try {
-                val tripCount = repository.getTripCount()
-                val totalDistance = repository.getTotalDistance()
-                val totalDuration = repository.getTotalDuration()
-
-                _quickStatsState.value = UiState.Success(
-                    QuickStats(
-                        totalTrips = tripCount,
-                        totalDistance = totalDistance,
-                        totalDuration = totalDuration
-                    )
+    // UI State for quick stats. Derived from a SINGLE trips snapshot so trip count,
+    // distance and duration are always mutually consistent (previously three separate
+    // suspend reads could observe different DB states — e.g. demo seeding landing
+    // between the count and the sum — yielding "0 trips" next to a non-zero distance).
+    // Being Flow-based it also refreshes automatically when trips change.
+    val quickStatsState: StateFlow<UiState<QuickStats>> = repository.getAllTrips()
+        .map<List<Trip>, UiState<QuickStats>> { trips ->
+            UiState.Success(
+                QuickStats(
+                    totalTrips = trips.size,
+                    totalDistance = trips.sumOf { it.totalDistance.toDouble() }.toFloat(),
+                    totalDuration = trips.sumOf { it.totalDuration }
                 )
-            } catch (e: Exception) {
-                Timber.e(e, "Error loading quick stats")
-                _quickStatsState.value = UiState.Error(e, "Failed to load statistics")
-            }
+            )
         }
-    }
+        .flowOn(Dispatchers.Default)
+        .catch { e ->
+            Timber.e(e, "Error loading quick stats")
+            emit(UiState.Error(e, "Failed to load statistics"))
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = UiState.Loading
+        )
 
     /**
-     * Refreshes all data (recent trips and quick stats).
+     * Kept for the swipe-to-refresh gesture. Recent trips and quick stats are now both
+     * reactive Flows backed by Room, so they refresh automatically — no manual reload needed.
      */
     fun refresh() {
-        loadQuickStats()
-        // Recent trips refresh automatically via Flow
+        // No-op: data is reactive. Method retained for the UI's pull-to-refresh callback.
     }
 
     /**
@@ -89,5 +80,3 @@ class HomeViewModel @Inject constructor(
         val totalDuration: Long
     )
 }
-
-

@@ -19,7 +19,9 @@
     <color name="onSurface">#0F172A</color>
 
     <!-- ========== TEXT COLORS ========== -->
+    <color name="text_primary">#0F172A</color>
     <color name="text_secondary">#64748B</color>
+    <color name="text_hint">#94A3B8</color>
 
     <!-- ========== MATERIAL3 LIGHT TOKENS (unified blue) ========== -->
     <color name="md_theme_light_primary">#2563EB</color>

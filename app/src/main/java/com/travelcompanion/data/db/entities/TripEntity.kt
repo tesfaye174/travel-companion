@@ -40,7 +40,7 @@ data class TripEntity(
     val endDate: Long, // timestamp in milliseconds
 
     @ColumnInfo(name = "total_distance")
-    val totalDistance: Float = 0f, // in meters
+    val totalDistance: Float = 0f, // in kilometers — TrackingService stores totalDistance/1000; UI formats it as "%.1f km"
 
     @ColumnInfo(name = "total_duration")
     val totalDuration: Long = 0, // in milliseconds

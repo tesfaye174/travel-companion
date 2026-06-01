@@ -7,8 +7,6 @@ import com.travelcompanion.domain.model.PhotoNote
 import com.travelcompanion.domain.model.Note
 import com.travelcompanion.domain.model.GeofenceArea
 import com.travelcompanion.domain.model.GeofenceEvent
-import com.travelcompanion.domain.model.MonthlyStat
-import com.travelcompanion.domain.model.TripTypeStat
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -63,6 +61,4 @@ interface ITripRepository {
     suspend fun getTotalDistance(): Float
     suspend fun getTotalDuration(): Long
     suspend fun getTripCount(): Int
-    suspend fun getMonthlyStats(): List<MonthlyStat>
-    suspend fun getTripTypeStats(): List<TripTypeStat>
 }

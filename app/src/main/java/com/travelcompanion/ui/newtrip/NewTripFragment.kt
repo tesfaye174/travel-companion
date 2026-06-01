@@ -165,14 +165,6 @@ class NewTripFragment : Fragment() {
                         findNavController().popBackStack()
                     }
                 }
-                launch {
-                    viewModel.validationError.collect { error ->
-                        error?.let {
-                            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
-                            viewModel.clearValidationError()
-                        }
-                    }
-                }
             }
         }
     }

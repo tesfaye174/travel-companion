@@ -123,3 +123,9 @@ __TO_DELETE__/
 # ===== Crashlytics =====
 crashlytics-build.properties
 fabric.properties
+
+# ===== Delivery / consegna artifacts =====
+travel-companion-consegna-*.zip
+delivery_package/
+hs_err_pid*.log
+replay_pid*.log

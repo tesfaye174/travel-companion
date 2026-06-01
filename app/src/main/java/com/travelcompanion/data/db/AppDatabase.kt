@@ -24,7 +24,7 @@ import com.travelcompanion.data.db.entities.TripEntity
  * Using Hilt for injection - see DatabaseModule.
  *
  * Schema export enabled for migration tracking.
- * Version 2: Current schema
+ * Version 5: adds notes.photo_path
  */
 @Database(
     entities = [
@@ -35,7 +35,7 @@ import com.travelcompanion.data.db.entities.TripEntity
         GeofenceAreaEntity::class,
         GeofenceEventEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -68,6 +68,12 @@ abstract class AppDatabase : RoomDatabase() {
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `notes` ADD COLUMN `title` TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `notes` ADD COLUMN `photo_path` TEXT")
             }
         }
     }

@@ -39,7 +39,7 @@ object AppConstants {
     // Database
     object Database {
         const val DATABASE_NAME = "travel_companion_db"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
     }
 
     // UI stuff
