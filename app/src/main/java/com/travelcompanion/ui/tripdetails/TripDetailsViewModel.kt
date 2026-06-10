@@ -53,8 +53,8 @@ class TripDetailsViewModel @Inject constructor(
         .flatMapLatest { id -> repository.getNotesByTripId(id) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Journey-derived distance (meters from TrackingService). Falls back to Trip.totalDistance
-    // (treated as km) when no journey points have been recorded yet.
+    // Distanza calcolata dai Journey (in metri). Fallback alla Trip.totalDistance (in km)
+    // se non ci sono ancora punti tracciati
     val totalDistanceKm: StateFlow<Double> = combine(journeys, trip) { js, t ->
         val fromJourneys = js.sumOf { it.distance.toDouble() } / 1000.0
         if (fromJourneys > 0.0) fromJourneys else (t?.totalDistance?.toDouble() ?: 0.0)

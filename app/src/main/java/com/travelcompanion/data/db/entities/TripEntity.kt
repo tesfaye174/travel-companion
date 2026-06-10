@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 import com.travelcompanion.domain.model.TripType
 
 /**
- * Trip entity representing a travel trip in the database.
- * Includes indices for optimized query performance.
+ * Entity di una viaggio con indici per ottimizzare le query.
  */
 @Entity(
     tableName = "trips",
@@ -40,10 +39,10 @@ data class TripEntity(
     val endDate: Long, // timestamp in milliseconds
 
     @ColumnInfo(name = "total_distance")
-    val totalDistance: Float = 0f, // in kilometers — TrackingService stores totalDistance/1000; UI formats it as "%.1f km"
+    val totalDistance: Float = 0f,
 
     @ColumnInfo(name = "total_duration")
-    val totalDuration: Long = 0, // in milliseconds
+    val totalDuration: Long = 0,
 
     @ColumnInfo(name = "photo_count")
     val photoCount: Int = 0,

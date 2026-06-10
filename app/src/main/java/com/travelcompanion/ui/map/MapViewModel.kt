@@ -26,9 +26,9 @@ class MapViewModel @Inject constructor(
     private val _currentLocation = MutableStateFlow<GeoPoint?>(null)
     val currentLocation: StateFlow<GeoPoint?> = _currentLocation.asStateFlow()
 
-    // Hot, reactive flows shared with the Fragment. WhileSubscribed(5000) stops
-    // collecting from Room when no observer is active (e.g. screen off) but keeps
-    // the cached value through brief unsubscribe windows like configuration changes.
+    // StateFlow hot condivisi con il Fragment. WhileSubscribed(5000) sospende la raccolta
+    // da Room quando non ci sono osservatori (es. schermo spento), ma mantiene il valore
+    // cached durante brevi interruzioni come i cambi di configurazione.
     val trips: StateFlow<List<Trip>> = repository.getAllTrips()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -42,7 +42,7 @@ class MapViewModel @Inject constructor(
         .map { list -> list.sortedByDescending { it.timestamp } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Kept as no-op callable entry points so existing Fragment code stays unchanged.
+    // Metodi no-op mantenuti per compatibilità con il Fragment esistente (i dati arrivano dai StateFlow)
     fun loadTripsForMap() = Unit
     fun loadJourneysForMap() = Unit
     fun loadGeofenceAreas() = Unit

@@ -17,6 +17,7 @@ import com.travelcompanion.R
 import com.travelcompanion.databinding.FragmentStatisticsBinding
 import com.travelcompanion.domain.model.MonthlyStat
 import com.travelcompanion.domain.model.TripTypeStat
+import com.travelcompanion.domain.usecase.PredictionMessage
 import com.travelcompanion.domain.usecase.PredictionResult
 import com.travelcompanion.utils.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -112,7 +113,11 @@ class StatisticsFragment : Fragment() {
             binding.tvPredictionMessage.visibility = View.GONE
         } else {
             binding.tvPredictionKm.text = getString(R.string.prediction_km_format, result.predictedKm)
-            binding.tvPredictionMessage.text = result.message
+            // il use case restituisce solo il tipo di messaggio, il testo lo prendiamo qui dalle risorse
+            binding.tvPredictionMessage.text = when (result.message) {
+                PredictionMessage.TIRELESS_TRAVELER -> getString(R.string.prediction_msg_tireless)
+                else -> getString(R.string.prediction_msg_next_month, result.predictedKm)
+            }
             binding.tvPredictionMessage.visibility = View.VISIBLE
         }
     }
@@ -159,3 +164,4 @@ class StatisticsFragment : Fragment() {
         _binding = null
     }
 }
+

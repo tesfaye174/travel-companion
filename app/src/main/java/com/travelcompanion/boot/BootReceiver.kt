@@ -15,7 +15,6 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             Timber.d("BootReceiver received BOOT_COMPLETED, scheduling geofence re-registration")
 
-            // Skip background re-registration in Debug/demo runs to avoid overhead
             if (com.travelcompanion.BuildConfig.DEBUG) return
 
             val constraints = Constraints.Builder()

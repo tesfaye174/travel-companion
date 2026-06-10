@@ -29,14 +29,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
- * Fragment showing list of all trips with search and filter.
- * Swipe left to delete (with undo).
+ * Mostra tutti i trip con ricerca e filtri.
  */
 @AndroidEntryPoint
 class TripsFragment : Fragment() {
 
     private var _binding: FragmentTripsBinding? = null
-    private val binding get() = _binding!!  // safe to use after onCreateView
+    private val binding get() = _binding!!
     private val viewModel: TripViewModel by viewModels()
     private lateinit var tripAdapter: TripsAdapter
 
@@ -69,7 +68,7 @@ class TripsFragment : Fragment() {
                 }
                 findNavController().safeNavigate(R.id.action_trips_to_trip_details, bundle)
             },
-            onTripLongClick = { /* long click handled by swipe to delete */ }
+            onTripLongClick = { }
         )
 
         binding.rvTrips.apply {
@@ -109,7 +108,6 @@ class TripsFragment : Fragment() {
                 val iconMargin = (itemView.height - (deleteIcon?.intrinsicHeight ?: 0)) / 2
 
                 if (dX < 0) {
-                    // Swiping left
                     deleteBackground.setBounds(
                         itemView.right + dX.toInt(),
                         itemView.top,
@@ -144,11 +142,9 @@ class TripsFragment : Fragment() {
                 deleteTrip(trip)
             }
             .setNegativeButton(R.string.cancel) { _, _ ->
-                // Restore the item in the adapter
                 tripAdapter.notifyItemChanged(position)
             }
             .setOnCancelListener {
-                // Restore the item if dialog is cancelled
                 tripAdapter.notifyItemChanged(position)
             }
             .show()
@@ -234,7 +230,7 @@ class TripsFragment : Fragment() {
                 }
             }
         }
-        // Connect the empty state "Create Trip" button to the FAB
+        // Collega il pulsante della lista vuota al FAB
         binding.layoutEmpty.btnEmptyAction.setOnClickListener {
             binding.fabAddTrip.performClick()
         }
@@ -245,4 +241,3 @@ class TripsFragment : Fragment() {
         _binding = null
     }
 }
-

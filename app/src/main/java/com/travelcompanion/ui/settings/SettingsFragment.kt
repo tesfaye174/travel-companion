@@ -67,21 +67,18 @@ class SettingsFragment : Fragment() {
     private fun observeSettings() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Observe POI notifications setting
                 launch {
                     settingsDataStore.notifyPoiFlow.collect { enabled ->
                         binding.switchPoi.isChecked = enabled
                     }
                 }
 
-                // Observe reminders setting
                 launch {
                     settingsDataStore.notifyRemindersFlow.collect { enabled ->
                         binding.switchReminders.isChecked = enabled
                     }
                 }
 
-                // Observe auto tracking setting
                 launch {
                     settingsDataStore.autoTrackingFlow.collect { enabled ->
                         binding.switchAutoTracking.isChecked = enabled
@@ -92,7 +89,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        // Switch listeners
         binding.switchPoi.setOnCheckedChangeListener { _, isChecked ->
             viewLifecycleOwner.lifecycleScope.launch {
                 settingsDataStore.setNotifyPoi(isChecked)
@@ -111,20 +107,19 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        // Theme mode button
         binding.btnThemeMode.setOnClickListener {
             showThemeDialog()
         }
-        // Export data button
+
         binding.btnExportData.setOnClickListener {
             exportData()
         }
-        // Delete all data button
+
         binding.btnDeleteData.setOnClickListener {
             showDeleteConfirmation()
         }
 
-        // Contact support → open email composer (was a dead button)
+        // Contatta il supporto: apre il client di posta
         binding.btnContactSupport.setOnClickListener {
             val emailIntent = android.content.Intent(
                 android.content.Intent.ACTION_SENDTO,
@@ -179,7 +174,7 @@ class SettingsFragment : Fragment() {
     private fun exportData() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // Build the entire JSON + write to disk on IO so the UI thread never blocks
+                // Costruisce il JSON e scrive su disco in background
                 withContext(Dispatchers.IO) {
                     val exportData = collectExportData()
                     val jsonContent = buildExportJson(exportData)
@@ -224,7 +219,7 @@ class SettingsFragment : Fragment() {
             val fileName = "travel_companion_export_${System.currentTimeMillis()}.json"
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Use MediaStore for Android 10+
+                // Android 10+: usa MediaStore
                 val contentValues = ContentValues().apply {
                     put(MediaStore.Downloads.DISPLAY_NAME, fileName)
                     put(MediaStore.Downloads.MIME_TYPE, "application/json")
@@ -239,7 +234,7 @@ class SettingsFragment : Fragment() {
                     outputStream.write(content.toByteArray())
                 }
             } else {
-                // Legacy approach for older Android versions
+                // Android pre-10: accesso diretto alla cartella Download
                 @Suppress("DEPRECATION")
                 val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 val file = File(downloadsDir, fileName)
@@ -265,7 +260,7 @@ class SettingsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    // Single bulk DELETE — cascades to journeys/photos/notes via Room FK
+                    // Un'unica eliminazione in cascata grazie alle Foreign Key di Room
                     repository.deleteAllTrips()
                     settingsDataStore.clearAll()
                 }
@@ -305,7 +300,6 @@ class SettingsFragment : Fragment() {
         return sb.toString()
     }
 
-    // Data class for export
     data class ExportData(
         val exportDate: String,
         val appVersion: String,

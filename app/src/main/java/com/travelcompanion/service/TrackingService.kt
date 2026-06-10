@@ -39,15 +39,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * Foreground service for GPS tracking.
- * Consolidates all tracking logic in a single service.
- *
- * Features:
- * - Runtime permission checks
- * - Periodic database persistence
- * - StateFlow for reactive updates (no BroadcastReceiver)
- * - Memory-efficient coordinate buffering
- * - Real-time notification updates
+ * Foreground service per il tracking GPS del viaggio.
+ * Gestisce il ciclo di vita del tracciamento, il buffering delle coordinate
+ * e la persistenza periodica sul database.
  */
 @AndroidEntryPoint
 class TrackingService : Service() {
@@ -60,23 +54,22 @@ class TrackingService : Service() {
     private lateinit var locationCallback: LocationCallback
     private lateinit var notificationManager: NotificationManager
 
-    // Background thread for location updates
+    // Thread dedicato ai callback GPS: tenerli fuori dal main thread evita jank nell'UI
     private var locationHandlerThread: HandlerThread? = null
     private var locationHandler: Handler? = null
 
-    // State management
     private var currentTripId: Long = 0
     private var startTime: Long = 0
     private var totalDistance: Float = 0f
     private var lastLocation: Location? = null
 
-    // Coordinate buffer (flush every BUFFER_SIZE points or FLUSH_INTERVAL_MS).
-    // Guarded by bufferMutex because handleLocationUpdate appends from one IO coroutine
-    // while flushCoordinatesToDatabase may iterate/clear from another.
+    // Buffer in memoria: viene svuotato ogni 50 punti oppure ogni 60 secondi.
+    // Il Mutex è necessario perché handleLocationUpdate (coroutine IO) e
+    // flushCoordinatesToDatabase possono accedere al buffer in concorrenza.
     private val coordinateBuffer = mutableListOf<Coordinate>()
     private val bufferMutex = Mutex()
 
-    // StateFlow for reactive updates (replaces BroadcastReceiver)
+    // StateFlow al posto del BroadcastReceiver: i consumer osservano direttamente tramite binder
     private val _trackingState = MutableStateFlow<TrackingState>(TrackingState.Idle)
     val trackingState: StateFlow<TrackingState> = _trackingState.asStateFlow()
 
@@ -109,7 +102,7 @@ class TrackingService : Service() {
     @Suppress("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val tripId = intent?.getLongExtra(EXTRA_TRIP_ID, -1L) ?: -1L
-        // Allow restart from any non-active state so a new trip after Stopped/Error works.
+        // Si permette il restart da qualsiasi stato non-Active, così un nuovo viaggio dopo Stopped/Error funziona
         val canStart = _trackingState.value !is TrackingState.Active
         if (tripId > 0 && hasLocationPermission() && canStart) {
             startTracking(tripId)
@@ -118,12 +111,11 @@ class TrackingService : Service() {
     }
 
     /**
-     * Starts GPS tracking for the given trip.
-     * Requires ACCESS_FINE_LOCATION permission.
+     * Avvia il tracking GPS per il viaggio indicato.
+     * Richiede il permesso ACCESS_FINE_LOCATION.
      */
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     fun startTracking(tripId: Long) {
-        // Runtime permission check
         if (!hasLocationPermission()) {
             Timber.e("Location permission not granted, cannot start tracking")
             _trackingState.value = TrackingState.Error("Location permission denied")
@@ -151,22 +143,23 @@ class TrackingService : Service() {
     }
 
     /**
-     * Stops GPS tracking and persists remaining data.
+     * Ferma il tracking e persiste i dati rimanenti nel database.
      */
     fun stopTracking() {
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
 
-            // Snapshot before launching: currentTripId/startTime/totalDistance are mutated
-            // in handleLocationUpdate and could change before the IO coroutine reads them.
+            // Si fa lo snapshot dei valori prima di lanciare la coroutine: currentTripId,
+            // startTime e totalDistance vengono scritti da handleLocationUpdate e potrebbero
+            // cambiare prima che la coroutine IO li legga.
             val finalTripId = currentTripId
             val finalDistanceKm = totalDistance / 1000f
             val finalDurationMs = (System.currentTimeMillis() - startTime).coerceAtLeast(0L)
 
             _trackingState.value = TrackingState.Stopped
 
-            // Use Application-tied scope so stopSelf() doesn't cancel the writeback.
-            // serviceScope is cancelled in onDestroy(); flushing inside it loses data.
+            // Si usa ApplicationScope invece di serviceScope perché onDestroy() cancella
+            // serviceScope prima che il flush finisca, causando perdita di dati.
             ApplicationScope.scope.launch {
                 try {
                     flushCoordinatesToDatabase()
@@ -199,7 +192,8 @@ class TrackingService : Service() {
         }
     }
 
-    // Process-lifetime scope so DB writes survive stopSelf().
+    // Scope legato al processo (non al Service) per garantire che le scritture su DB
+    // sopravvivano alla chiamata stopSelf().
     private object ApplicationScope {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
@@ -228,7 +222,7 @@ class TrackingService : Service() {
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private fun requestLocationUpdates() {
-        // Reuse the handler thread on restart to avoid leaking a thread per startTracking call
+        // Il thread viene riutilizzato se esiste già, per evitare un leak a ogni restart del tracking
         if (locationHandlerThread == null) {
             locationHandlerThread = HandlerThread("LocationUpdateThread").apply { start() }
             locationHandler = Handler(locationHandlerThread!!.looper)
@@ -244,7 +238,7 @@ class TrackingService : Service() {
             fusedLocationClient.requestLocationUpdates(
                 request,
                 locationCallback,
-                locationHandler!!.looper  // Use background thread instead of main looper
+                locationHandler!!.looper  // callback su thread di background, non sul main looper
             )
         } catch (e: SecurityException) {
             Timber.e(e, "Security exception requesting location updates")
@@ -255,7 +249,7 @@ class TrackingService : Service() {
 
     private fun handleLocationUpdate(location: Location) {
         _currentLocation.value = location
-        // No broadcast: observers should collect currentLocation StateFlow via the binder.
+        // Gli observer raccolgono currentLocation direttamente tramite binder, senza broadcast
 
         serviceScope.launch {
             try {
@@ -297,7 +291,7 @@ class TrackingService : Service() {
         }
     }
 
-    // Caller must hold bufferMutex.
+    // Deve essere chiamata con bufferMutex già acquisito.
     private fun shouldFlushBufferLocked(): Boolean {
         return coordinateBuffer.size >= BUFFER_SIZE ||
                 (coordinateBuffer.isNotEmpty() &&
@@ -305,6 +299,8 @@ class TrackingService : Service() {
     }
 
     private suspend fun flushCoordinatesToDatabase() {
+        // Si copia il buffer e lo si svuota dentro il lock, poi si scrive fuori: in questo modo
+        // il Mutex viene tenuto per il minor tempo possibile e nuovi punti non vengono bloccati.
         val snapshot = bufferMutex.withLock {
             if (coordinateBuffer.isEmpty()) return
             val copy = coordinateBuffer.toList()
@@ -325,7 +321,8 @@ class TrackingService : Service() {
             database.journeyDao().insertJourney(journey)
             Timber.d("Flushed ${snapshot.size} coordinates to database")
         } catch (e: Exception) {
-            // Re-queue the snapshot so we don't lose points on transient failure
+            // In caso di errore transitorio si re-inseriscono i punti in testa al buffer
+            // per non perderli al prossimo flush
             bufferMutex.withLock { coordinateBuffer.addAll(0, snapshot) }
             Timber.e(e, "Error flushing coordinates to database; re-queued ${snapshot.size} points")
         }
@@ -359,7 +356,7 @@ class TrackingService : Service() {
     }
 
     private fun updateNotification(duration: Long, distance: Float, pointCount: Int) {
-        // Check POST_NOTIFICATIONS permission on Android 13+
+        // Su Android 13+ il permesso POST_NOTIFICATIONS deve essere controllato esplicitamente
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -393,7 +390,7 @@ class TrackingService : Service() {
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        // On Android 10+ (Q), background location is required for foreground service
+        // Da Android 10 (Q) in poi, ACCESS_BACKGROUND_LOCATION è richiesto per i foreground service
         val backgroundLocation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContextCompat.checkSelfPermission(
                 this,
@@ -414,7 +411,7 @@ class TrackingService : Service() {
         super.onDestroy()
         serviceScope.cancel()
 
-        // Clean up location handler thread
+        // quitSafely() attende il completamento dei messaggi già in coda prima di fermarsi
         locationHandlerThread?.quitSafely()
         locationHandlerThread = null
         locationHandler = null
@@ -422,9 +419,7 @@ class TrackingService : Service() {
         Timber.d("TrackingService destroyed")
     }
 
-    /**
-     * Sealed class representing tracking states.
-     */
+    /** Stati possibili del tracking, esposti come StateFlow ai client del binder. */
     sealed class TrackingState {
         object Idle : TrackingState()
         data class Active(
@@ -441,15 +436,14 @@ class TrackingService : Service() {
         private const val CHANNEL_ID = AppConstants.NotificationChannels.TRACKING
         private const val NOTIFICATION_ID = AppConstants.NotificationIds.TRACKING
 
-        // Location tracking parameters
-        private const val UPDATE_INTERVAL_MS = 10_000L // 10 seconds
+        // Aggiornamento posizione ogni 10 secondi, con distanza minima di 10 metri
+        private const val UPDATE_INTERVAL_MS = 10_000L
         private const val MIN_DISTANCE_METERS = 10f
 
-        // Buffer parameters
-        private const val BUFFER_SIZE = 50 // Flush every 50 points
-        private const val FLUSH_INTERVAL_MS = 60_000L // Or every 60 seconds
+        // Flush su DB ogni 50 punti oppure ogni 60 secondi, qualunque condizione si verifichi prima
+        private const val BUFFER_SIZE = 50
+        private const val FLUSH_INTERVAL_MS = 60_000L
 
-        // Intent extras
         const val EXTRA_TRIP_ID = "extra_trip_id"
     }
 }

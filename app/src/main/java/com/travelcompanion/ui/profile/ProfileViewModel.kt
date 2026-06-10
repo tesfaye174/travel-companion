@@ -73,6 +73,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun estimateCountries(destinations: Set<String>): Int {
         if (destinations.isEmpty()) return 0
+        // Prova a estrarre il paese dalla stringa destinazione (es. "Roma, IT")
         val countries = destinations.mapNotNull { dest ->
             val parts = dest.split(",")
             if (parts.size >= 2) parts.last().trim().lowercase() else null

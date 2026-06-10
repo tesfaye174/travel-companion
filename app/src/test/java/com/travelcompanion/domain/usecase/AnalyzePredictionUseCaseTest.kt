@@ -3,7 +3,6 @@ package com.travelcompanion.domain.usecase
 import com.travelcompanion.domain.model.Trip
 import com.travelcompanion.domain.model.TripType
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.util.Date
@@ -19,10 +18,10 @@ class AnalyzePredictionUseCaseTest {
 
     @Test
     fun `execute with empty trips returns zero prediction`() {
-        val result = useCase.execute(emptyList(), emptyList())
+        val result = useCase.execute(emptyList())
 
         assertEquals(0.0, result.predictedKm, 0.001)
-        assertEquals("Not enough data available.", result.message)
+        assertEquals(PredictionMessage.NO_DATA, result.message)
     }
 
     @Test
@@ -31,9 +30,9 @@ class AnalyzePredictionUseCaseTest {
             createTrip(totalDistance = 100f)
         )
 
-        val result = useCase.execute(trips, emptyList())
+        val result = useCase.execute(trips)
 
-        // avg = 100, predicted = 100 * 1.2 = 120
+        // media = 100, previsione = 100 * 1.2 = 120
         assertEquals(120.0, result.predictedKm, 0.001)
     }
 
@@ -44,9 +43,9 @@ class AnalyzePredictionUseCaseTest {
             createTrip(totalDistance = 150f)
         )
 
-        val result = useCase.execute(trips, emptyList())
+        val result = useCase.execute(trips)
 
-        // avg = 100, predicted = 100 * 1.2 = 120
+        // media = 100, previsione = 100 * 1.2 = 120
         assertEquals(120.0, result.predictedKm, 0.001)
     }
 
@@ -56,10 +55,10 @@ class AnalyzePredictionUseCaseTest {
             createTrip(totalDistance = 200f)
         )
 
-        val result = useCase.execute(trips, emptyList())
+        val result = useCase.execute(trips)
 
-        // predicted = 200 * 1.2 = 240 > 100
-        assertTrue(result.message.contains("tireless traveler"))
+        // previsione = 200 * 1.2 = 240 > 100
+        assertEquals(PredictionMessage.TIRELESS_TRAVELER, result.message)
     }
 
     @Test
@@ -68,10 +67,10 @@ class AnalyzePredictionUseCaseTest {
             createTrip(totalDistance = 10f)
         )
 
-        val result = useCase.execute(trips, emptyList())
+        val result = useCase.execute(trips)
 
-        // predicted = 10 * 1.2 = 12 < 100
-        assertTrue(result.message.contains("Next month"))
+        // previsione = 10 * 1.2 = 12 < 100
+        assertEquals(PredictionMessage.NEXT_MONTH_ESTIMATE, result.message)
     }
 
     private fun createTrip(totalDistance: Float = 0f) = Trip(

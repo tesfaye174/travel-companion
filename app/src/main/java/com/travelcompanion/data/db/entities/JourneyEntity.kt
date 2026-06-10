@@ -33,6 +33,6 @@ data class JourneyEntity(
     val distance: Float,
 
     @ColumnInfo(name = "coordinates_json")
-    val coordinatesJson: String // JSON serialized list of coordinates
+    val coordinatesJson: String
 )
 

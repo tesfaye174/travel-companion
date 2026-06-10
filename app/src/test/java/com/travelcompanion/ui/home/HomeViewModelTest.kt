@@ -61,7 +61,7 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(repository, settingsDataStore)
 
         viewModel.recentTripsState.test {
-            // Skip Loading initial value
+            // Salto il valore iniziale di Loading
             val first = awaitItem()
             if (first is UiState.Loading) {
                 val success = awaitItem()
@@ -77,9 +77,9 @@ class HomeViewModelTest {
 
     @Test
     fun `quickStatsState derives count distance and duration from a single trips snapshot`() = runTest {
-        // Regression for the race where trip count and total distance were read in
-        // separate non-atomic queries and could disagree (e.g. "0 trips" / "57.3 km").
-        // Mirrors the demo data: two trips, 12.3 + 45.0 km, 2h + 4h.
+        // Test di regressione per la race in cui numero viaggi e distanza totale venivano
+        // letti da query separate e non atomiche, e potevano contraddirsi (es. "0 viaggi" / "57.3 km").
+        // Rispecchia i dati demo: due viaggi, 12.3 + 45.0 km, 2h + 4h.
         val trips = listOf(
             Trip(
                 id = 1, title = "Roma", destination = "Rome, IT", tripType = TripType.LOCAL,
@@ -97,14 +97,14 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(repository, settingsDataStore)
 
         viewModel.quickStatsState.test {
-            // Skip Loading
+            // Salto il Loading
             var item = awaitItem()
             if (item is UiState.Loading) {
                 item = awaitItem()
             }
             assertTrue(item is UiState.Success)
             val stats = (item as UiState.Success).data
-            // Count and distance come from the SAME list => always consistent.
+            // Conteggio e distanza arrivano dalla STESSA lista, quindi sono sempre coerenti.
             assertEquals(2, stats.totalTrips)
             assertEquals(57.3f, stats.totalDistance, 0.01f)
             assertEquals(6 * 60 * 60 * 1000L, stats.totalDuration)
@@ -138,7 +138,7 @@ class HomeViewModelTest {
 
         viewModel.userName.test {
             val name = awaitItem()
-            // Initial value "" or "Test User" depending on timing
+            // Il primo valore può essere "" oppure "Test User" a seconda dei tempi
             val finalName = if (name.isEmpty()) awaitItem() else name
             assertEquals("Test User", finalName)
             cancelAndConsumeRemainingEvents()

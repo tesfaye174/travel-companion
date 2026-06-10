@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
 
     private var lastBackPressMillis: Long = 0L
     private fun setupBackPressHandler() {
-        // Require a confirming second back-press within 2s to exit from Home (start destination).
+        // Serve una doppia pressione back entro 2 secondi per uscire dalla Home
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -127,7 +127,6 @@ class HomeFragment : Fragment() {
         binding.rvRecentTrips.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = tripsAdapter
-            // Item size is bounded (max 3 items) so fixed-size optimization is valid
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
         }
@@ -188,7 +187,7 @@ class HomeFragment : Fragment() {
                                     resources.getQuantityString(R.plurals.trips_count_plural, stats.totalTrips, stats.totalTrips)
                                 binding.tvTotalDistance.text = getString(R.string.total_distance_val, stats.totalDistance)
                             }
-                            is UiState.Loading -> { /* keep current values visible */ }
+                            is UiState.Loading -> { /* mantiene i valori attuali visibili */ }
                             is UiState.Error -> {
                                 binding.tvTotalTrips.text =
                                     resources.getQuantityString(R.plurals.trips_count_plural, 0, 0)
@@ -201,7 +200,7 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.recentTripsState.collect { state ->
                         when (state) {
-                            is UiState.Idle -> { /* initial state */ }
+                            is UiState.Idle -> { /* stato iniziale */ }
                             is UiState.Success -> {
                                 binding.swipeRefresh.isRefreshing = false
                                 binding.shimmerTrips.stopShimmer()

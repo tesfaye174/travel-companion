@@ -74,7 +74,7 @@ class MapFragment : Fragment() {
         setupListeners()
 
         mapView = binding.mapContainer
-        // osmdroid Configuration is initialized once in TravelCompanionApplication.onCreate()
+        // La configurazione di osmdroid è già inizializzata in TravelCompanionApplication.onCreate()
         mapView?.setTileSource(TileSourceFactory.MAPNIK)
         mapView?.setMultiTouchControls(true)
 
@@ -94,9 +94,13 @@ class MapFragment : Fragment() {
         if (PermissionUtils.hasLocationPermissions(ctx)) {
             val overlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), map)
             overlay.enableMyLocation()
-            // Auto-center on first fix so the map doesn't sit on Rome fallback for users elsewhere
+            // Al primo fix GPS si centra la mappa sulla posizione reale,
+            // evitando che rimanga sul fallback predefinito (Roma)
             overlay.runOnFirstFix {
                 map.post {
+                    // il primo fix GPS può arrivare quando il fragment è già stato distrutto
+                    // (es. cambio tab): in quel caso la view non esiste più e non va toccata
+                    if (_binding == null || mapView !== map) return@post
                     if (!hasSetInitialCenter && overlay.myLocation != null) {
                         map.controller.setZoom(14.0)
                         map.controller.setCenter(overlay.myLocation)
@@ -119,7 +123,8 @@ class MapFragment : Fragment() {
                 return true
             }
         }
-        // Insert events overlay at the bottom so it doesn't steal taps from FABs/markers
+        // L'overlay eventi va inserito in posizione 0 (sotto tutto) per non intercettare
+        // i tap su marker e FAB che stanno sopra di esso nello stack
         map.overlays.add(0, MapEventsOverlay(receiver))
     }
 
@@ -134,7 +139,9 @@ class MapFragment : Fragment() {
             .setView(input)
             .setPositiveButton(R.string.add) { _, _ ->
                 val name = input.text?.toString()?.trim().orEmpty().ifBlank { getString(R.string.geofence_default_name) }
-                val id = "geofence_${System.currentTimeMillis()}"
+                // UUID invece del timestamp: due aggiunte nello stesso millisecondo
+                // avrebbero lo stesso id (improbabile ma possibile, es. import futuro)
+                val id = "geofence_${java.util.UUID.randomUUID()}"
                 viewModel.addGeofenceArea(id, name, point.latitude, point.longitude, 100f)
                 Snackbar.make(binding.root, getString(R.string.geofence_added, name), Snackbar.LENGTH_SHORT).show()
             }
@@ -146,13 +153,15 @@ class MapFragment : Fragment() {
     private fun observeAndRender() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Coalesce rapid journey/geofence updates into one refresh per 150ms
+                // debounce a 150ms per unire aggiornamenti rapidi di journeys e geofence
+                // in un solo refresh della mappa, evitando ridisegni inutili
                 launch {
                     combine(viewModel.journeys, viewModel.geofenceAreas) { _, _ -> Unit }
                         .debounce(150)
                         .collect { refreshMap() }
                 }
-                // Don't follow the user's location after the first fix — they may have panned away.
+                // Dopo il primo centro non si segue più la posizione: l'utente potrebbe
+                // aver fatto pan manualmente e non vogliamo riportarlo indietro
                 launch {
                     viewModel.currentLocation.collect { geoPoint ->
                         if (geoPoint != null && !hasSetInitialCenter) {
@@ -168,12 +177,12 @@ class MapFragment : Fragment() {
 
     private fun refreshMap() {
         val map = mapView ?: return
-        // Remove all drawn overlays but keep the user location dot
+        // Si rimuovono tutti gli overlay tranne il pallino di posizione utente
         map.overlays.removeAll { it !is MyLocationNewOverlay }
 
         val journeys = viewModel.journeys.value
-        // Group coordinates by trip so each route is rendered as its own polyline
-        // (avoids fake "teleport" segments between unrelated trips)
+        // Si raggruppano le coordinate per trip: ogni viaggio ottiene la sua polyline separata,
+        // così non si creano segmenti fantasma tra punti di viaggi diversi
         val journeysByTrip = journeys
             .filter { it.coordinates.isNotEmpty() }
             .groupBy { it.tripId }
@@ -182,7 +191,7 @@ class MapFragment : Fragment() {
             j.coordinates.map { GeoPoint(it.latitude, it.longitude) }
         }
 
-        // Center map on first load only (don't recenter on heatmap toggle)
+        // Il centraggio avviene solo al primo caricamento: il toggle heatmap non deve spostare la vista
         if (!hasSetInitialCenter) {
             when {
                 allPoints.size >= 2 -> fitMapToPoints(map, allPoints)
@@ -192,8 +201,8 @@ class MapFragment : Fragment() {
             hasSetInitialCenter = true
         }
 
-        // Draw one polyline per trip, cycling through a color palette so adjacent
-        // trips are visually distinguishable
+        // Una polyline per viaggio, colore ciclico dalla palette per rendere distinguibili
+        // i percorsi adiacenti anche a chi ha difficoltà con i colori
         journeysByTrip.entries.forEachIndexed { idx, (tripId, tripJourneys) ->
             val tripPoints = tripJourneys
                 .sortedBy { it.startTime }
@@ -201,19 +210,19 @@ class MapFragment : Fragment() {
             if (tripPoints.size >= 2) {
                 val color = ROUTE_COLORS[idx % ROUTE_COLORS.size]
                 MapManager.drawPolyline(map, tripPoints, color, 10f)
-                // Start marker for the route
+                // Marker sul punto di partenza del percorso
                 MapManager.addMarker(map, tripPoints.first(), getString(R.string.trip_id_label, tripId))
             } else if (tripPoints.size == 1) {
                 MapManager.addMarker(map, tripPoints.first(), getString(R.string.trip_id_label, tripId))
             }
         }
 
-        // Draw heatmap if enabled
+        // La heatmap è opzionale e si attiva/disattiva dal FAB dedicato
         if (showHeatmap && allPoints.isNotEmpty()) {
             MapManager.drawHeatmap(map, allPoints)
         }
 
-        // Draw geofence circles
+        // Cerchi semitrasparenti per visualizzare il raggio delle geofence attive
         viewModel.geofenceAreas.value.forEach { area ->
             MapManager.addGeofenceCircle(
                 map,
@@ -227,12 +236,12 @@ class MapFragment : Fragment() {
 
     private fun fitMapToPoints(map: MapView, points: List<GeoPoint>) {
         val bbox = BoundingBox.fromGeoPoints(points)
-        // Post so the map has measured itself before we ask it to zoom-to-bounds
+        // post() garantisce che la MapView abbia terminato il layout prima di chiamare zoomToBoundingBox
         map.post { map.zoomToBoundingBox(bbox, true, 80) }
     }
 
     companion object {
-        // Distinct, color-blind friendly palette for distinguishing trip routes
+        // Palette accessibile (circa color-blind friendly) per i percorsi dei viaggi
         private val ROUTE_COLORS = intArrayOf(
             0xFF2563EB.toInt(), // blue
             0xFFEA580C.toInt(), // orange
@@ -251,7 +260,7 @@ class MapFragment : Fragment() {
         if (overlay?.myLocation != null) {
             MapManager.centerMap(map, overlay.myLocation, 10.0)
         } else {
-            // Default to Rome (central to existing trip data)
+            // Fallback su Roma se non c'è ancora né fix GPS né punti registrati
             MapManager.centerMap(map, GeoPoint(41.9028, 12.4964), 5.0)
         }
     }

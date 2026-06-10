@@ -117,6 +117,10 @@
     <string name="prediction_subtitle">Estimated distance for next month</string>
     <string name="prediction_km_format">%.1f km</string>
     <string name="prediction_no_data">Add more trips to see your forecast</string>
+    <string name="prediction_msg_tireless">You\'re a tireless traveler!</string>
+    <string name="prediction_msg_next_month">Next month you could travel %.1f km.</string>
+    <string name="unit_km">km</string>
+    <string name="unit_km_per_hour">km/h</string>
 
     <!-- Tracking -->
     <string name="tracking_journey">Tracking Journey</string>

@@ -37,8 +37,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             context.applicationContext,
             GeofenceReceiverEntryPoint::class.java
         ).database()
-
-        // Support both Play Services geofencing intents and platform geofence broadcasts
         if (intent.action == AppConstants.PlatformIntents.ACTION_PLATFORM_GEOFENCE) {
             val id = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_GEOFENCE_ID) ?: return
             val transitionStr = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_TRANSITION) ?: return
@@ -64,8 +62,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     private fun persistEvents(database: AppDatabase, transition: Int, ids: List<String>) {
         val transitionLabel = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) "ENTER" else "EXIT"
         val ts = System.currentTimeMillis()
-
-        // Use goAsync() to allow BroadcastReceiver to handle coroutine work
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -89,7 +85,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun showNotification(context: Context, transition: Int, ids: String) {
-        // Check POST_NOTIFICATIONS permission on Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     context,

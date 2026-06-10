@@ -23,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
 
-// Fragment for creating new trips
 @AndroidEntryPoint
 class NewTripFragment : Fragment() {
 
@@ -33,8 +32,6 @@ class NewTripFragment : Fragment() {
     private var datePickerDialog: DatePickerDialog? = null
 
     private val viewModel: NewTripViewModel by viewModels()
-
-    // Uses DateUtils for date formatting for consistency
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,8 +66,7 @@ class NewTripFragment : Fragment() {
     }
 
     private fun setupDatePickers() {
-        // One listener per field (end-icon on the TextInputLayout). Multiple listeners
-        // could trigger two dialogs on a fast double-tap.
+        // Un solo listener per evitare doppi dialog al doppio tap
         binding.etStartDate.setOnClickListener { showDatePicker(true) }
         binding.tilStartDate.setEndIconOnClickListener { showDatePicker(true) }
 
@@ -79,7 +75,7 @@ class NewTripFragment : Fragment() {
     }
 
     private fun showDatePicker(isStartDate: Boolean) {
-        // Avoid stacking dialogs if the user taps twice
+        // Evita di aprire due dialog contemporaneamente
         if (datePickerDialog?.isShowing == true) return
 
         datePickerDialog = DatePickerDialog(
@@ -126,7 +122,7 @@ class NewTripFragment : Fragment() {
                 else -> TripType.LOCAL
             }
 
-            // Multi-day trips require an explicit end date that's after the start
+            // I trip multi-day richiedono una data di fine esplicita e successiva all'inizio
             if (tripType == TripType.MULTI_DAY) {
                 if (endDateText.isEmpty()) {
                     Snackbar.make(binding.root, getString(R.string.select_end_date), Snackbar.LENGTH_SHORT).show()
@@ -161,7 +157,7 @@ class NewTripFragment : Fragment() {
                         }
                         startActivity(intent)
                         viewModel.resetSaveState()
-                        // Pop NewTripFragment so backing out of TrackingActivity returns to Home, not to this filled-in form
+                        // Chiude il form per ritornare a Home quando esci da TrackingActivity
                         findNavController().popBackStack()
                     }
                 }

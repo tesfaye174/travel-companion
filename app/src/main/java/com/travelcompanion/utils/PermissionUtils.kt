@@ -17,14 +17,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object PermissionUtils {
 
-    // Permission request codes
     private const val REQUEST_LOCATION_PERMISSION = 100
     private const val REQUEST_CAMERA_PERMISSION = 101
     private const val REQUEST_STORAGE_PERMISSION = 102
     private const val REQUEST_NOTIFICATION_PERMISSION = 103
     private const val REQUEST_BACKGROUND_LOCATION = 104
-
-    // Permission groups
     val LOCATION_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -58,7 +55,6 @@ object PermissionUtils {
         emptyArray()
     }
 
-    // Check permissions
     fun hasLocationPermissions(context: Context): Boolean {
         return hasPermissions(context, *LOCATION_PERMISSIONS)
     }
@@ -96,7 +92,6 @@ object PermissionUtils {
         }
     }
 
-    // Request permissions with modern Activity Result API
     fun registerPermissionLauncher(
         fragment: Fragment,
         onGranted: () -> Unit,
@@ -131,7 +126,6 @@ object PermissionUtils {
         }
     }
 
-    // Show rationale dialog
     fun showPermissionRationaleDialog(
         context: Context,
         title: String,
@@ -148,7 +142,6 @@ object PermissionUtils {
             .show()
     }
 
-    // Show settings dialog when permissions were denied
     fun showSettingsDialog(context: Context) {
         MaterialAlertDialogBuilder(context)
             .setTitle("Permissions Required")
@@ -168,7 +161,6 @@ object PermissionUtils {
         context.startActivity(intent)
     }
 
-    // Check if permission rationale should be shown
     fun shouldShowPermissionRationale(activity: Activity, permission: String): Boolean {
         return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
     }

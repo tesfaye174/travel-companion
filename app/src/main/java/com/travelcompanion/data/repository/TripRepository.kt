@@ -25,11 +25,9 @@ import com.travelcompanion.data.db.converters.Converters
 import javax.inject.Inject
 
 /**
- * Repository implementation using Room.
- * Handles all database operations and entity-to-domain mapping.
- *
- * All operations return Flow for reactive updates or use suspend for one-time operations.
- * Error handling is delegated to the calling layer (ViewModels/UseCases).
+ * Implementazione del repository con Room. Gestisce le operazioni sul DB
+ * e la conversione bidirezionale tra entità e modelli di dominio.
+ * Gli errori vengono propagati al layer chiamante (ViewModel/UseCase).
  */
 class TripRepository @Inject constructor(
     private val database: AppDatabase
@@ -42,7 +40,7 @@ class TripRepository @Inject constructor(
     private val geofenceAreaDao: GeofenceAreaDao = database.geofenceAreaDao()
     private val geofenceEventDao: GeofenceEventDao = database.geofenceEventDao()
 
-    // Single converter instance to avoid repeated instantiation
+    // Istanza singola: Converters non ha stato, ma evitare allocazioni ripetute è comunque buona pratica
     private val converters = Converters()
 
     override suspend fun insertTrip(trip: Trip): Long {
@@ -184,7 +182,7 @@ class TripRepository @Inject constructor(
         return tripDao.getTripCount()
     }
 
-    // Extension functions for conversion
+    // Funzioni di conversione dominio <-> entità Room, private al repository
     private fun Trip.toEntity(): TripEntity {
         return TripEntity(
             id = id,
@@ -309,11 +307,4 @@ class TripRepository @Inject constructor(
         )
     }
 
-    // Mapping entities to domain models for use in the application layer.
-    // The mapping functions convert database entities to domain models
-    // that are used throughout the application, ensuring a separation
-    // between the data layer and the rest of the app.
-    // Each mapping function is responsible for converting a single entity type.
-    // These functions are used in the repository implementation to transform
-    // data as it is read from or written to the database.
 }

@@ -30,7 +30,7 @@ class NotificationWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        // Send reminder only if no trip in the last 7 days
+        // Il promemoria viene inviato solo se l'utente non ha registrato viaggi negli ultimi 7 giorni
         val sevenDaysAgo = Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)
         val recentTrips = repository.getTripsBetweenDates(sevenDaysAgo, Date()).first()
         if (recentTrips.isEmpty()) {
@@ -40,7 +40,7 @@ class NotificationWorker @AssistedInject constructor(
     }
 
     private fun sendReminderNotification(ctx: Context) {
-        // Check POST_NOTIFICATIONS permission on Android 13+
+        // Su Android 13+ POST_NOTIFICATIONS è un permesso runtime: senza di esso la notifica non può essere inviata
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     ctx,

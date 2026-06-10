@@ -5,11 +5,7 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Date formatting utilities.
- *
- * Note: SimpleDateFormat isn't thread-safe — these are accessed only from the main thread
- * or from coroutines that don't share the instance. Computed properties re-read
- * Locale.getDefault() each call so the app stays correct after a runtime locale change.
+ * Utility per la formattazione delle date. I formati vengono rigenerati a ogni chiamata per seguire i cambi di locale.
  */
 object DateUtils {
 
@@ -73,9 +69,6 @@ object DateUtils {
         return (diff / (1000 * 60 * 60 * 24)).toInt() + 1
     }
 
-    /**
-     * Formats distance in meters to human-readable format.
-     */
     fun formatDistance(meters: Float): String {
         return when {
             meters >= 1000 -> String.format(Locale.getDefault(), "%.2f km", meters / 1000)

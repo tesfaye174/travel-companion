@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         val vibrator = getVibratorCompat()
         navView.setOnItemSelectedListener { item ->
-            // Best-effort haptic; swallow failures (emulators / devices without vibrator)
+            // Prova a fare vibrazione tattile senza bloccare se il dispositivo non la supporta
             try {
                 if (vibrator != null && vibrator.hasVibrator()) {
                     vibrator.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Apply theme BEFORE super.onCreate() to prevent activity recreation
+        // Applica il tema prima di super.onCreate() per evitare ricreazione dell'activity
         applyThemeBeforeCreate()
         super.onCreate(savedInstanceState)
 
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyThemeBeforeCreate() {
-        // Read theme directly from SharedPreferences (doesn't need Hilt injection)
+        // Legge il tema dalle SharedPreferences direttamente (Hilt non è ancora disponibile)
         val prefs = getSharedPreferences(SettingsDataStore.THEME_PREFS, MODE_PRIVATE)
         val themeMode = prefs.getString(
             SettingsDataStore.THEME_PREFS_KEY,

@@ -47,7 +47,6 @@ class TipsAdapter(
             binding.tvTipDescription.text = tip.description
             binding.ivTipIcon.setImageResource(tip.iconRes)
 
-            // Set category chip
             binding.chipCategory.text = when (tip.category) {
                 TipCategory.PACKING -> binding.root.context.getString(com.travelcompanion.R.string.tip_category_packing)
                 TipCategory.SAFETY -> binding.root.context.getString(com.travelcompanion.R.string.tip_category_safety)

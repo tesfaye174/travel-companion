@@ -40,8 +40,8 @@ class TravelCompanionApplication : Application(), Configuration.Provider {
             Timber.plant(Timber.DebugTree())
         }
 
-        // Configure osmdroid once at application startup (was previously per-Fragment).
-        // SharedPrefs read is small and is safer than races with MapFragment.setTileSource.
+        // Configura osmdroid una sola volta all'avvio (prima era fatto in ogni Fragment).
+        // Così eviti race condition con setTileSource
         OsmConfig.getInstance().load(
             applicationContext,
             getSharedPreferences("osmdroid", MODE_PRIVATE)
@@ -86,9 +86,9 @@ class TravelCompanionApplication : Application(), Configuration.Provider {
                             tripType = com.travelcompanion.domain.model.TripType.LOCAL,
                             startDate = now - 86400000L * 7,
                             endDate = now - 86400000L * 6,
-                            totalDistance = 12.3f,                  // km (matches TripsAdapter format)
-                            totalDuration = 2 * 60 * 60 * 1000L,    // 2h in millis (matches TrackingService)
-                            photoCount = 0                          // no PhotoNote entities seeded
+                            totalDistance = 12.3f,                  // in km
+                            totalDuration = 2 * 60 * 60 * 1000L,    // 2h in millisecondi
+                            photoCount = 0
                         ),
                         com.travelcompanion.data.db.entities.TripEntity(
                             title = "Demo: Torino",
@@ -96,8 +96,8 @@ class TravelCompanionApplication : Application(), Configuration.Provider {
                             tripType = com.travelcompanion.domain.model.TripType.DAY_TRIP,
                             startDate = now - 86400000L * 30,
                             endDate = now - 86400000L * 29,
-                            totalDistance = 45.0f,                  // km
-                            totalDuration = 4 * 60 * 60 * 1000L,    // 4h in millis
+                            totalDistance = 45.0f,                  // in km
+                            totalDuration = 4 * 60 * 60 * 1000L,    // 4h in millisecondi
                             photoCount = 0
                         )
                     )

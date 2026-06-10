@@ -6,8 +6,6 @@ class GenericDiffCallback<T : Any>(
     areItemsTheSame: (T, T) -> Boolean,
     areContentsTheSame: (T, T) -> Boolean
 ) : DiffUtil.ItemCallback<T>() {
-    // Store with distinct private names to avoid infinite recursion when the
-    // override calls a lambda that has the same name as the overridden method.
     private val itemsTheSame = areItemsTheSame
     private val contentsTheSame = areContentsTheSame
 

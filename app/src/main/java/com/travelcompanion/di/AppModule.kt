@@ -19,7 +19,8 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
- * Main Hilt module: database, system services, location/geofence providers.
+ * Modulo Hilt principale: espone database, NotificationManager e i provider
+ * di posizione/geofence selezionati in base al flag BUILD_USE_PLAY_SERVICES.
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -46,7 +47,8 @@ object AppModule {
                 AppDatabase.MIGRATION_4_5
             )
             .apply {
-                // Destructive migration ONLY in debug builds to prevent data loss
+                // La migrazione distruttiva è abilitata solo in debug: in produzione
+                // si preferisce un crash esplicito a una perdita silenziosa di dati
                 if (BuildConfig.DEBUG) {
                     fallbackToDestructiveMigration()
                 }

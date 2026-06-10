@@ -19,8 +19,6 @@ class NoteAdapter : ListAdapter<NoteItem, NoteAdapter.NoteViewHolder>(
     )
 ) {
 
-    // Use inherited submitList from ListAdapter
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = ItemNoteBinding.inflate(
             LayoutInflater.from(parent.context),

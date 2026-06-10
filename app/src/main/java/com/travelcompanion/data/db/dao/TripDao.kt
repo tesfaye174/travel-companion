@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TripDao {
-
-    // CRUD Operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrip(trip: TripEntity): Long
 
@@ -21,7 +19,6 @@ interface TripDao {
     @Query("DELETE FROM trips")
     suspend fun deleteAllTrips()
 
-    // Queries with Flow
     @Query("SELECT * FROM trips WHERE id = :id")
     fun getTripByIdFlow(id: Long): Flow<TripEntity?>
 
@@ -35,11 +32,9 @@ interface TripDao {
     @Query("SELECT * FROM trips WHERE start_date BETWEEN :startDate AND :endDate")
     fun getTripsBetweenDatesFlow(startDate: Long, endDate: Long): Flow<List<TripEntity>>
 
-    // Batch insert — used to seed demo data on first launch
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrips(trips: List<TripEntity>): List<Long>
 
-    // Aggregate / statistics helpers
     @Query("SELECT SUM(total_distance) FROM trips")
     suspend fun getTotalDistance(): Float?
 

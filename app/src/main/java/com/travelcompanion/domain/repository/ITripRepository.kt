@@ -11,12 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 /**
- * Repository interface for data operations.
- * Uses Flow for reactive updates and suspend for one-shot ops.
+ * Interfaccia per le operazioni sui dati.
+ * Usa Flow per gli aggiornamenti reattivi e suspend per operazioni una tantum.
  */
 interface ITripRepository {
-
-    // ========== TRIP CRUD ==========
 
     suspend fun insertTrip(trip: Trip): Long
     suspend fun updateTrip(trip: Trip)
@@ -29,35 +27,26 @@ interface ITripRepository {
     fun getTripsByType(type: TripType): Flow<List<Trip>>
     fun getTripsBetweenDates(start: Date, end: Date): Flow<List<Trip>>
 
-    // ========== JOURNEY ==========
-
     suspend fun insertJourney(journey: Journey): Long
     suspend fun updateJourney(journey: Journey)
     suspend fun deleteJourney(journey: Journey)
     fun getJourneysByTripId(tripId: Long): Flow<List<Journey>>
     fun getAllJourneys(): Flow<List<Journey>>
 
-    // ========== PHOTOS ==========
-
     suspend fun insertPhotoNote(photoNote: PhotoNote): Long
     suspend fun updatePhotoNote(photoNote: PhotoNote)
     suspend fun deletePhotoNote(photoNote: PhotoNote)
     fun getPhotoNotesByTripId(tripId: Long): Flow<List<PhotoNote>>
-
-    // ========== NOTES ==========
 
     suspend fun insertNote(note: Note): Long
     suspend fun updateNote(note: Note)
     suspend fun deleteNote(note: Note)
     fun getNotesByTripId(tripId: Long): Flow<List<Note>>
 
-    // ========== GEOFENCING ==========
-
     suspend fun upsertGeofenceArea(id: String, name: String, lat: Double, lon: Double, radiusMeters: Float)
     fun getGeofenceAreas(): Flow<List<GeofenceArea>>
     fun getGeofenceEvents(): Flow<List<GeofenceEvent>>
 
-    // ========== STATS ==========
     suspend fun getTotalDistance(): Float
     suspend fun getTotalDuration(): Long
     suspend fun getTripCount(): Int

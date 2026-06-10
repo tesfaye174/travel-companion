@@ -3,7 +3,7 @@ package com.travelcompanion.domain.model
 import java.util.Date
 
 /**
- * Main trip entity - represents a complete trip with all its data.
+ * Rappresenta un viaggio completo con tutti i dati associati.
  */
 data class Trip(
     val id: Long = 0,
@@ -20,14 +20,14 @@ data class Trip(
 )
 
 enum class TripType {
-    LOCAL,      // short trips around home
-    DAY_TRIP,   // one day trips
-    MULTI_DAY,  // longer travels
-    OTHER       // unknown/legacy values
+    LOCAL,      // gite locali
+    DAY_TRIP,   // escursioni di un giorno
+    MULTI_DAY,  // viaggi più lunghi
+    OTHER       // valori sconosciuti
 }
 
 /**
- * A recorded path segment during tracking.
+ * Un segmento di percorso registrato durante il tracciamento.
  */
 data class Journey(
     val id: Long = 0,
@@ -38,14 +38,14 @@ data class Journey(
     val coordinates: List<Coordinate> = emptyList()
 )
 
-// single GPS point
+// Singolo punto GPS
 data class Coordinate(
     val latitude: Double,
     val longitude: Double,
     val timestamp: Date = Date()
 )
 
-// photo with optional location
+// Foto con ubicazione opzionale
 data class PhotoNote(
     val id: Long = 0,
     val tripId: Long,
@@ -56,7 +56,7 @@ data class PhotoNote(
     val timestamp: Date = Date()
 )
 
-// text note attached to trip
+// Nota testuale associata al viaggio
 data class Note(
     val id: Long = 0,
     val tripId: Long,
@@ -68,7 +68,7 @@ data class Note(
     val photoPath: String? = null
 )
 
-// detailed GPS point with sensor data
+// Punto GPS dettagliato con dati dai sensori
 data class LocationPoint(
     val id: Long = 0,
     val journeyId: Long,
@@ -80,7 +80,7 @@ data class LocationPoint(
     val timestamp: Long
 )
 
-// aggregated trip data for detail screen
+// Dati aggregati del viaggio per la schermata di dettaglio
 data class TripDetails(
     val trip: Trip,
     val journeys: List<Journey> = emptyList(),
@@ -91,7 +91,7 @@ data class TripDetails(
     val locationPoints: List<LocationPoint> = emptyList()
 )
 
-// type alias kept for readability where PhotoNote is used as a "photo"
+// Alias per chiarezza quando PhotoNote rappresenta una foto
 typealias Photo = PhotoNote
 
 data class GeofenceArea(
@@ -109,7 +109,7 @@ data class GeofenceEvent(
     val timestamp: Long
 )
 
-// Monthly statistics used by repository
+// Statistiche mensili usate dal repository
 data class MonthlyStat(
     val month: Int,
     val tripCount: Int,
@@ -117,7 +117,7 @@ data class MonthlyStat(
     val totalDuration: Long
 )
 
-// Trip type aggregated statistics used across app
+// Statistiche aggregate per tipo di viaggio usate nell'app
 data class TripTypeStat(
     val tripType: TripType,
     val totalDistance: Float,

@@ -8,6 +8,7 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.travelcompanion.utils.AppConstants
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class PlayServicesGeofenceProvider @Inject constructor(@ApplicationContext private val context: Context) : GeofenceProvider {
@@ -30,7 +31,9 @@ class PlayServicesGeofenceProvider @Inject constructor(@ApplicationContext priva
         try {
             geofencingClient.addGeofences(request, getGeofencePendingIntent())
         } catch (e: SecurityException) {
-            e.printStackTrace()
+            // manca il permesso background location: logghiamo e basta,
+            // la geofence verra' ri-registrata dal worker quando il permesso c'e'
+            Timber.w(e, "addGeofence senza permesso di localizzazione")
         }
     }
 

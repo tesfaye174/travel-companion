@@ -37,6 +37,7 @@ class TripViewModel @Inject constructor(
 
     val allTrips: StateFlow<List<Trip>> = baseTripsFlow
         .combine(_searchQuery) { trips, query ->
+            // Filtra per query di ricerca (titolo, destinazione, note)
             val q = query.trim()
             if (q.isBlank()) trips
             else trips.filter {
@@ -46,6 +47,8 @@ class TripViewModel @Inject constructor(
             }
         }
         .combine(_sortOrder) { trips, order ->
+            // Ordina in base alla selezione (data, distanza, nome)
+
             when (order) {
                 SortOrder.DATE_DESC -> trips.sortedByDescending { it.startDate }
                 SortOrder.DATE_ASC -> trips.sortedBy { it.startDate }

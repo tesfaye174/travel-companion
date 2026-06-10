@@ -20,11 +20,7 @@ import com.travelcompanion.data.db.entities.PhotoNoteEntity
 import com.travelcompanion.data.db.entities.TripEntity
 
 /**
- * Room database with all DAOs.
- * Using Hilt for injection - see DatabaseModule.
- *
- * Schema export enabled for migration tracking.
- * Version 5: adds notes.photo_path
+ * Database Room con tutti i DAO. La versione 5 aggiunge photo_path alle note.
  */
 @Database(
     entities = [
@@ -52,7 +48,6 @@ abstract class AppDatabase : RoomDatabase() {
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // Schema was already at version 2 in earlier releases; no DDL needed.
             }
         }
 

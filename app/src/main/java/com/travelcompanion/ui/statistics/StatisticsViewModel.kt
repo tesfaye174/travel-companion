@@ -66,8 +66,7 @@ class StatisticsViewModel @Inject constructor(
     fun loadStatistics() {
         viewModelScope.launch {
             try {
-                // Compute aggregates off the main thread so the Statistics tab can paint
-                // its frame even if the user opens it before charts are ready.
+                // Calcola i dati in background così la schermata di statistiche si disegna subito
                 val result = withContext(Dispatchers.Default) {
                     val allTrips = repository.getAllTrips().first()
                     val filtered = filterTripsByPeriod(allTrips, currentPeriod)
@@ -99,7 +98,7 @@ class StatisticsViewModel @Inject constructor(
                         totalDistance = filtered.sumOf { it.totalDistance.toDouble() }.toFloat(),
                         totalDuration = filtered.sumOf { it.totalDuration },
                         totalPhotos = filtered.sumOf { it.photoCount },
-                        prediction = analyzePredictionUseCase.execute(filtered, emptyList()),
+                        prediction = analyzePredictionUseCase.execute(filtered),
                         monthlyStats = monthlyStats,
                         tripTypeStats = typeStats
                     )

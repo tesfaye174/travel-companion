@@ -54,7 +54,7 @@ object MapManager {
     }
 
     fun drawHeatmap(map: MapView, points: List<GeoPoint>, radius: Double = 120.0, intensity: Int = 50) {
-        // Evita sovrapposizioni inutili: raggruppa per coordinate uniche
+        // distinctBy evita cerchi sovrapposti sullo stesso punto (es. soste lunghe con molti fix identici)
         points.distinctBy { Pair(it.latitude, it.longitude) }.forEach { point ->
             addGeofenceCircle(
                 map,

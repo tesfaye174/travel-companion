@@ -123,7 +123,7 @@ class TipsFragment : Fragment() {
         chipMap.forEach { (chip, category) ->
             chip.setOnClickListener {
                 currentCategory = if (currentCategory == category) {
-                    // Deselect: revert to "All"
+                    // Se già selezionato, deseleziona e torna a "Tutti"
                     allChips.forEach { it.isChecked = false }
                     binding.chipAll.isChecked = true
                     null
@@ -136,7 +136,6 @@ class TipsFragment : Fragment() {
             }
         }
 
-        // Initial state
         binding.chipAll.isChecked = true
     }
 

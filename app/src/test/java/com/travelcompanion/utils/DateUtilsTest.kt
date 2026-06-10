@@ -7,10 +7,10 @@ import org.junit.Test
 import java.util.Locale
 
 /**
- * Locks in the formatting behaviour of [DateUtils], in particular the distance unit
- * conventions: meters below 1 km are shown in meters, values >= 1000 m are shown in km.
- * These conventions are what TrackingService and the trip UI rely on (Trip.totalDistance
- * is persisted in kilometers).
+ * Fissa il comportamento di formattazione di [DateUtils], in particolare la
+ * convenzione sulle distanze: sotto il chilometro mostro i metri, da 1000 m in su
+ * i chilometri. È la stessa convenzione su cui contano il TrackingService e la UI
+ * dei viaggi (Trip.totalDistance è salvata in chilometri).
  */
 class DateUtilsTest {
 
@@ -20,7 +20,7 @@ class DateUtilsTest {
         @BeforeClass
         @JvmStatic
         fun forceLocale() {
-            // Force a deterministic locale so "%.2f" uses a dot decimal separator.
+            // Locale fisso e deterministico, così "%.2f" usa il punto come separatore decimale.
             previousLocale = Locale.getDefault()
             Locale.setDefault(Locale.US)
         }
@@ -53,9 +53,9 @@ class DateUtilsTest {
     fun `formatDuration formats hours and minutes`() {
         // 2h 5m
         assertEquals("2h 5m", DateUtils.formatDuration((2 * 60 + 5) * 60_000L))
-        // exact hour drops the minutes component
+        // l'ora esatta non mostra i minuti
         assertEquals("3h", DateUtils.formatDuration(3 * 60 * 60_000L))
-        // sub-hour shows only minutes
+        // sotto l'ora si vedono solo i minuti
         assertEquals("45m", DateUtils.formatDuration(45 * 60_000L))
     }
 

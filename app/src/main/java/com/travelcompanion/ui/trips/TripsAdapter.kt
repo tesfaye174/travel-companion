@@ -61,7 +61,7 @@ class TripsAdapter(
             binding.tvDuration.text = DateUtils.formatDuration(trip.totalDuration)
             binding.tvPhotoCount.text = trip.photoCount.toString()
 
-            // Color-coded thumbnail: colored background + type icon
+            // Icona con colore corrispondente al tipo di viaggio
             binding.cardThumbnail.setCardBackgroundColor(ContextCompat.getColor(ctx, style.bgColorRes))
             Glide.with(ctx).clear(binding.ivThumbnail)
             binding.ivThumbnail.apply {
@@ -72,7 +72,6 @@ class TripsAdapter(
                 setColorFilter(ContextCompat.getColor(ctx, style.accentColorRes), android.graphics.PorterDuff.Mode.SRC_IN)
             }
 
-            // Color-coded chip
             binding.chipTripType.text = ctx.getString(style.labelRes)
             binding.chipTripType.chipBackgroundColor = ColorStateList.valueOf(
                 ContextCompat.getColor(ctx, style.bgColorRes)

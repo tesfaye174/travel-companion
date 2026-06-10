@@ -18,19 +18,19 @@ android {
         versionCode 1
         versionName "1.0.0"
 
-        // BuildConfig fields
+        // Flag per scegliere tra Play Services e fallback di sistema per la posizione
         buildConfigField "boolean", "USE_PLAY_SERVICES_LOCATION", "true"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
-    // Release signing config — reads values from local.properties (not committed)
-    // To configure, add these lines to local.properties:
-    //   RELEASE_STORE_FILE=path/to/keystore.jks
-    //   RELEASE_STORE_PASSWORD=your_store_password
-    //   RELEASE_KEY_ALIAS=your_key_alias
-    //   RELEASE_KEY_PASSWORD=your_key_password
+    // Firma della build di release: legge i valori da local.properties (non versionato).
+    // Per configurarla basta aggiungere queste righe a local.properties:
+    //   RELEASE_STORE_FILE=percorso/del/keystore.jks
+    //   RELEASE_STORE_PASSWORD=password_dello_store
+    //   RELEASE_KEY_ALIAS=alias_della_chiave
+    //   RELEASE_KEY_PASSWORD=password_della_chiave
     signingConfigs {
         release {
             def props = new Properties()
@@ -86,12 +86,12 @@ android {
         }
     }
 
-    // Room schema export location
+    // Dove Room esporta gli schema del database
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 
-    // Make exported Room schemas available to instrumented migration tests
+    // Rende gli schema esportati da Room disponibili ai test di migrazione strumentati
     sourceSets {
         androidTest {
             assets.srcDirs += files("$projectDir/schemas")

@@ -38,7 +38,7 @@ class NewTripViewModel @Inject constructor(
         endDate: Date,
         notes: String = ""
     ) {
-        // Caller (NewTripFragment) already validates title and destination are non-blank.
+        // Il fragment ha già validato title e destination
         viewModelScope.launch {
             val trip = Trip(
                 title = title,

@@ -59,7 +59,6 @@ class TrackingActivity : AppCompatActivity() {
         }
     }
 
-    // Service binding
     private var trackingService: TrackingService? = null
     private var serviceBound = false
 

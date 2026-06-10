@@ -21,8 +21,8 @@ class HomeViewModel @Inject constructor(
     val userName: StateFlow<String> = settingsDataStore.userNameFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-    // UI State for recent trips (last 3). Sort+take runs off the main thread via flowOn
-    // so the Home screen can paint even if Room emits a large list.
+    // UI State per i trip recenti (ultimi 3). Ordinamento e limite sono su thread in background
+    // così la Home si disegna subito anche con liste lunghe dal database
     val recentTripsState: StateFlow<UiState<List<Trip>>> = repository.getAllTrips()
         .map { trips -> trips.sortedByDescending { it.startDate }.take(3) }
         .map<List<Trip>, UiState<List<Trip>>> { UiState.Success(it) }
@@ -37,11 +37,9 @@ class HomeViewModel @Inject constructor(
             initialValue = UiState.Loading
         )
 
-    // UI State for quick stats. Derived from a SINGLE trips snapshot so trip count,
-    // distance and duration are always mutually consistent (previously three separate
-    // suspend reads could observe different DB states — e.g. demo seeding landing
-    // between the count and the sum — yielding "0 trips" next to a non-zero distance).
-    // Being Flow-based it also refreshes automatically when trips change.
+    // UI State per le statistiche veloci. Derivate da un UNICO snapshot di trip, così
+    // il conteggio, la distanza e la durata sono sempre coerenti tra loro. Essendo basato
+    // su Flow si aggiorna automaticamente quando i dati cambiano
     val quickStatsState: StateFlow<UiState<QuickStats>> = repository.getAllTrips()
         .map<List<Trip>, UiState<QuickStats>> { trips ->
             UiState.Success(
@@ -64,16 +62,12 @@ class HomeViewModel @Inject constructor(
         )
 
     /**
-     * Kept for the swipe-to-refresh gesture. Recent trips and quick stats are now both
-     * reactive Flows backed by Room, so they refresh automatically — no manual reload needed.
+     * Mantenuto per il gesto di refresh. I dati sono reattivi e si aggiornano da soli.
      */
     fun refresh() {
-        // No-op: data is reactive. Method retained for the UI's pull-to-refresh callback.
+        // No-op: i dati si aggiornano automaticamente via Flow
     }
 
-    /**
-     * Data class for quick statistics.
-     */
     data class QuickStats(
         val totalTrips: Int,
         val totalDistance: Float,

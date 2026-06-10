@@ -61,7 +61,6 @@ class Converters {
         return coordinateListAdapter.toJson(jsonList)
     }
 
-    /** Internal JSON representation for Coordinate to avoid Date serialization issues */
     private data class CoordinateJson(
         val latitude: Double,
         val longitude: Double,

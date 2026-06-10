@@ -17,6 +17,11 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
+/**
+ * Worker che ri-registra le geofence al boot o dopo che il sistema le ha cancellate.
+ * Usa setForeground() perché la re-registrazione può richiedere più di pochi secondi
+ * e WorkManager richiederebbe altrimenti un foreground service esplicito su Android 12+.
+ */
 @HiltWorker
 class GeofenceRegistrationWorker @AssistedInject constructor(
     @Assisted appContext: Context,
@@ -62,6 +67,7 @@ class GeofenceRegistrationWorker @AssistedInject constructor(
             Result.success()
         } catch (e: Exception) {
             Timber.e(e, "Error re-registering geofences on boot")
+            // Result.retry() lascia a WorkManager il compito di ripianificare con backoff esponenziale
             Result.retry()
         }
     }

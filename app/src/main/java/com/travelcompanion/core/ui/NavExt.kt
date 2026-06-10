@@ -8,10 +8,7 @@ import androidx.navigation.NavOptions
 import timber.log.Timber
 
 /**
- * Safely navigates using an action id only if the action is reachable from the
- * current destination. Prevents IllegalArgumentException crashes when the user
- * taps a button while the NavController is on a different destination (e.g.
- * during a bottom-nav tab switch or a double-tap race).
+ * Naviga in sicurezza solo se l'azione è raggiungibile dalla destinazione corrente, evitando crash da race condition.
  */
 fun NavController.safeNavigate(
     @IdRes actionId: Int,

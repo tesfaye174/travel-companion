@@ -87,8 +87,6 @@ class TripDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // locationProvider is injected by Hilt (Play Services or Platform)
-
         setupToolbar()
         setupRecyclerViews()
         setupMap()
@@ -203,12 +201,11 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun setupMap() {
-        // osmdroid Configuration is initialized once in TravelCompanionApplication.onCreate()
+        // osmdroid è configurato una sola volta in TravelCompanionApplication.onCreate()
         val mapView = binding.mapDetails
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
-        // Default to a sensible zoom so the map doesn't render at zoom 0 (whole world tiled)
-        // when the trip has no journey points yet.
+        // Zoom di default per evitare la vista del mondo intero quando non ci sono coordinate ancora
         mapView.controller.setZoom(5.0)
         mapView.controller.setCenter(GeoPoint(41.9028, 12.4964))
         mapViewRef = mapView

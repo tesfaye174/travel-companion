@@ -26,7 +26,7 @@ class PlatformLocationProvider @Inject constructor(@ApplicationContext private v
             return
         }
 
-        // Explicit permission checks for Lint
+        // Controllo esplicito richiesto da Lint: checkSelfPermission deve precedere ogni chiamata a LocationManager
         val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (!fine && !coarse) {
@@ -65,12 +65,13 @@ class PlatformLocationProvider @Inject constructor(@ApplicationContext private v
     override fun startLocationUpdates(onLocation: (Location) -> Unit, onAvailabilityChanged: ((Boolean) -> Unit)?) {
         if (!hasLocationPermission(context)) return
 
-        // Explicit permission checks for Lint
+        // Stesso controllo Lint per startLocationUpdates
         val fine2 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val coarse2 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (!fine2 && !coarse2) return
 
-        // use NETWORK_PROVIDER and GPS_PROVIDER if available
+        // Si registra lo stesso listener su entrambi i provider se disponibili,
+        // così si ottiene la posizione dal più veloce tra GPS e rete
         listener = LocationListener { loc -> onLocation(loc) }
 
         try {
@@ -93,7 +94,7 @@ class PlatformLocationProvider @Inject constructor(@ApplicationContext private v
                 )
             }
         } catch (e: SecurityException) {
-            // permission should be checked before
+            // Non dovrebbe accadere grazie ai controlli precedenti, ma lo catturiamo per sicurezza
         }
     }
 

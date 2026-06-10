@@ -8,8 +8,8 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 
 /**
- * Hilt module for providing UseCase instances.
- * UseCases encapsulate business logic and are scoped to ViewModels.
+ * Modulo Hilt per i UseCase. Lo scope ViewModelScoped garantisce che ogni ViewModel
+ * riceva la propria istanza, evitando condivisione di stato non intenzionale.
  */
 @Module
 @InstallIn(ViewModelComponent::class)

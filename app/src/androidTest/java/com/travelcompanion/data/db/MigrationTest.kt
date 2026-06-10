@@ -11,11 +11,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Instrumented migration tests. Requires a connected device/emulator:
+ * Test strumentato sulle migrazioni del database. Serve un device/emulatore collegato:
  *   ./gradlew connectedDebugAndroidTest
  *
- * Validates MIGRATION_4_5, which adds the nullable `photo_path` column to `notes`
- * so that Note.photoPath is actually persisted (previously dropped on write).
+ * Verifica la MIGRATION_4_5, che aggiunge la colonna nullable `photo_path` alla tabella
+ * `notes`, così che Note.photoPath venga davvero salvata (prima andava persa in scrittura).
  */
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
@@ -30,7 +30,7 @@ class MigrationTest {
 
     @Test
     fun migrate4To5_addsPhotoPathColumn_andPreservesRows() {
-        // Create v4 and insert a note WITHOUT photo_path.
+        // Creo la v4 e inserisco una nota SENZA photo_path.
         helper.createDatabase(dbName, 4).apply {
             execSQL(
                 "INSERT INTO notes (trip_id, title, content, timestamp) " +
@@ -39,12 +39,12 @@ class MigrationTest {
             close()
         }
 
-        // Run the migration.
+        // Eseguo la migrazione.
         val db = helper.runMigrationsAndValidate(
             dbName, 5, true, AppDatabase.MIGRATION_4_5
         )
 
-        // Old row survives and the new column is present and defaults to NULL.
+        // La riga vecchia sopravvive e la nuova colonna esiste, con default NULL.
         db.query("SELECT content, photo_path FROM notes").use { c ->
             assertTrue(c.moveToFirst())
             assertEquals("hello", c.getString(0))

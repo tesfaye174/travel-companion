@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Platform geofence provider using periodic location updates to detect
- * enter/exit transitions. Sends a platform broadcast that `GeofenceBroadcastReceiver`
- * also understands.
+ * Implementazione del geofencing senza Play Services: usa aggiornamenti periodici
+ * di LocationManager per rilevare le transizioni enter/exit e le notifica tramite broadcast
+ * compatibile con GeofenceBroadcastReceiver.
  */
 class PlatformGeofenceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -28,7 +28,7 @@ class PlatformGeofenceProvider @Inject constructor(
 ) : GeofenceProvider {
 
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    private val geofences = mutableMapOf<String, Triple<Double, Double, Float>>() // id -> (lat, lon, radius)
+    private val geofences = mutableMapOf<String, Triple<Double, Double, Float>>() // id -> (lat, lon, raggio in metri)
     private val insideState = mutableMapOf<String, Boolean>()
     private var listener: LocationListener? = null
     private var currentIntervalMs: Long = AppConstants.Tracking.LOCATION_UPDATE_INTERVAL_MS
@@ -37,7 +37,7 @@ class PlatformGeofenceProvider @Inject constructor(
     private val LONG_INTERVAL_MS = 60_000L
 
     init {
-        // Load persisted geofences from DB on startup
+        // Al primo avvio si ricaricano le geofence salvate su DB, così sopravvivono ai riavvii dell'app
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val areas = database.geofenceAreaDao().getAll().first()
@@ -126,7 +126,9 @@ class PlatformGeofenceProvider @Inject constructor(
             }
         }
 
-        // Backoff logic: if no transitions for a while, reduce frequency
+        // Backoff adattivo: se non ci sono transizioni per IDLE_THRESHOLD aggiornamenti
+        // consecutivi, si allunga l'intervallo a 60 secondi per risparmiare batteria;
+        // al primo evento rilevato si torna all'intervallo normale.
         if (anyTransition) {
             idleCounter = 0
             if (currentIntervalMs != AppConstants.Tracking.LOCATION_UPDATE_INTERVAL_MS) {
@@ -143,12 +145,12 @@ class PlatformGeofenceProvider @Inject constructor(
     }
 
     private fun restartListeningWithInterval() {
-        // Re-register location updates with new interval
+        // Per cambiare l'intervallo è necessario de-registrare e ri-registrare il listener
         listener?.let {
             try {
                 locationManager.removeUpdates(it)
             } catch (e: Exception) {
-                // ignore
+                // ignoriamo eventuali eccezioni sulla rimozione
             }
             listener = null
             startListeningIfNeeded()

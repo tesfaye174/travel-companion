@@ -51,7 +51,7 @@ class ProfileFragment : Fragment() {
 
     private fun setupUI() {
         val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
-        // Load persisted first-launch timestamp instead of "today"
+        // Carica il timestamp del primo accesso salvato
         viewLifecycleOwner.lifecycleScope.launch {
             val ts = viewModel.getMemberSince()
             binding.tvMemberSince.text = getString(R.string.member_since, dateFormat.format(Date(ts)))

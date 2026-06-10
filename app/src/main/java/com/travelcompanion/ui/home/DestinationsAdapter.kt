@@ -22,7 +22,7 @@ class DestinationsAdapter(
 ) {
 
     companion object {
-        // Color rotation for placeholder cards — resolved once at first bind
+        // Colori cicli per le card senza immagine, risolti una sola volta
         private val CARD_COLOR_RES = intArrayOf(
             R.color.gradient_start,
             R.color.trip_local,
@@ -53,7 +53,7 @@ class DestinationsAdapter(
         private val binding: ItemDestinationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        // Cached per-ViewHolder to avoid recomputing on every bind
+        // Padding calcolato una sola volta, salvato nel ViewHolder per non ricalcolare
         private val placeholderPadding =
             (32 * binding.root.resources.displayMetrics.density).toInt()
 
