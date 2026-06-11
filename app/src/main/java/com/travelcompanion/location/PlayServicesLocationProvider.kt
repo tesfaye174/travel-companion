@@ -6,7 +6,7 @@ import android.os.Looper
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.travelcompanion.utils.AppConstants
-import com.travelcompanion.utils.LocationUtils
+import com.travelcompanion.utils.PermissionUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class PlayServicesLocationProvider @Inject constructor(@ApplicationContext priva
     private val fused: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private var callback: LocationCallback? = null
 
-    override fun hasLocationPermission(context: Context): Boolean = LocationUtils.hasLocationPermission(context)
+    override fun hasLocationPermission(context: Context): Boolean = PermissionUtils.hasLocationPermissions(context)
 
     override fun getCurrentLocation(onSuccess: (Location) -> Unit, onFailure: (Exception) -> Unit) {
         if (!hasLocationPermission(context)) {

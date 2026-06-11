@@ -23,7 +23,7 @@ le librerie di Android Jetpack.
 
 - **Tracciamento GPS** in tempo reale tramite foreground service.
 - **Visualizzazione su mappa** dei percorsi con polilinee e marker (OpenStreetMap via OSMDroid, supporto offline).
-- **Foto geolocalizzate** scattate con CameraX e associate al viaggio.
+- **Foto geolocalizzate** scattate con la fotocamera di sistema e associate al viaggio.
 - **Note testuali** per documentare il viaggio.
 - **Statistiche** sui viaggi con grafici (MPAndroidChart).
 - **Geofencing**: notifiche di ingresso/uscita dalle aree salvate.
@@ -108,9 +108,9 @@ app/src/main/java/com/travelcompanion/
 | **Preferenze** | DataStore 1.0.0 |
 | **Asincronia** | Coroutines 1.7.3 + Flow |
 | **Navigazione** | Navigation Component 2.7.7 |
-| **Mappe** | OSMDroid 6.1.18 (file OSM offline) |
+| **Mappe** | OSMDroid 6.1.18 |
 | **Posizione** | Fused Location Provider 21.1.0 |
-| **Fotocamera** | CameraX 1.3.1 |
+| **Fotocamera** | Intent di sistema (TakePicture + FileProvider) |
 | **Background** | WorkManager 2.9.0 |
 | **Grafici** | MPAndroidChart 3.1.0 |
 | **Immagini** | Glide 4.16.0 |

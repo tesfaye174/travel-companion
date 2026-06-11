@@ -41,6 +41,15 @@
         android:name="android.hardware.location.gps"
         android:required="true" />
 
+    <!-- Da Android 11 le app non vedono gli altri package: senza questa dichiarazione
+         resolveActivity() sul mailto torna sempre null e "Contatta il supporto" non apre nulla -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
     <application
         android:name=".TravelCompanionApplication"
         android:allowBackup="true"

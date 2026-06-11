@@ -45,12 +45,8 @@ object MapManager {
         map.controller.setCenter(point)
     }
 
-    fun clearPolylines(map: MapView) = clearOverlaysOfType<Polyline>(map)
-    fun clearMarkers(map: MapView) = clearOverlaysOfType<Marker>(map)
-    fun clearGeofences(map: MapView) = clearOverlaysOfType<Polygon>(map)
-
-    private inline fun <reified T> clearOverlaysOfType(map: MapView) {
-        map.overlays.removeAll { it is T }
+    fun clearPolylines(map: MapView) {
+        map.overlays.removeAll { it is Polyline }
     }
 
     fun drawHeatmap(map: MapView, points: List<GeoPoint>, radius: Double = 120.0, intensity: Int = 50) {

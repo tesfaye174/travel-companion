@@ -22,7 +22,6 @@
 -keep @androidx.room.Database class *
 -keep class com.travelcompanion.data.db.entities.** { *; }
 -keep interface com.travelcompanion.data.db.dao.** { *; }
--dontwarn androidx.room.paging.**
 
 # ===== Hilt / Dagger =====
 -keep class dagger.** { *; }
@@ -42,14 +41,8 @@
 -keep class **JsonAdapter { <init>(...); <fields>; }
 
 # ===== Google Play Services =====
--keep class com.google.android.gms.maps.** { *; }
 -keep class com.google.android.gms.location.** { *; }
--keep class com.google.maps.android.** { *; }
 -dontwarn com.google.android.gms.**
-
-# ===== CameraX =====
--keep class androidx.camera.** { *; }
--dontwarn androidx.camera.**
 
 # ===== Glide =====
 -keep public class * implements com.bumptech.glide.module.GlideModule

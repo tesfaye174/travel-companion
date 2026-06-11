@@ -9,7 +9,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.travelcompanion.utils.AppConstants
-import com.travelcompanion.utils.LocationUtils
+import com.travelcompanion.utils.PermissionUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class PlatformLocationProvider @Inject constructor(@ApplicationContext private v
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     private var listener: LocationListener? = null
 
-    override fun hasLocationPermission(context: Context): Boolean = LocationUtils.hasLocationPermission(context)
+    override fun hasLocationPermission(context: Context): Boolean = PermissionUtils.hasLocationPermissions(context)
 
     override fun getCurrentLocation(onSuccess: (Location) -> Unit, onFailure: (Exception) -> Unit) {
         if (!hasLocationPermission(context)) {
