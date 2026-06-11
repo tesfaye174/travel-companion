@@ -129,3 +129,6 @@ travel-companion-consegna-*.zip
 delivery_package/
 hs_err_pid*.log
 replay_pid*.log
+
+# appunti di lavoro locali, non vanno in consegna
+correzione.md

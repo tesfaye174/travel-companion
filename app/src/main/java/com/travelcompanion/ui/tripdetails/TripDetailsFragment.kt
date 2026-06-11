@@ -174,7 +174,7 @@ class TripDetailsFragment : Fragment() {
     }
 
     private fun savePhoto(imagePath: String) {
-        // Get current location if available
+        // se ho il permesso allego la posizione alla foto, altrimenti la salvo senza
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationProvider.getCurrentLocation({ location ->
                 viewModel.addPhotoNote(

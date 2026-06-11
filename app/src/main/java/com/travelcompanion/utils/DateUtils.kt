@@ -9,34 +9,11 @@ import java.util.Locale
  */
 object DateUtils {
 
+    // pubblico perché NewTripFragment lo usa anche per il parsing dei campi data
     val dateFormat: SimpleDateFormat get() = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    private val timeFormat: SimpleDateFormat get() = SimpleDateFormat("HH:mm", Locale.getDefault())
-    private val dateTimeFormat: SimpleDateFormat get() = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-
-    fun formatDate(timestamp: Long): String {
-        return dateFormat.format(Date(timestamp))
-    }
 
     fun formatDate(date: Date): String {
         return dateFormat.format(date)
-    }
-
-    fun formatTime(timestamp: Long): String {
-        return timeFormat.format(Date(timestamp))
-    }
-
-    fun formatDateTime(timestamp: Long): String {
-        return dateTimeFormat.format(Date(timestamp))
-    }
-
-    fun formatDateTime(date: Date): String {
-        return dateTimeFormat.format(date)
-    }
-
-    fun formatDateRange(startDate: Long, endDate: Long): String {
-        val start = formatDate(startDate)
-        val end = formatDate(endDate)
-        return "$start - $end"
     }
 
     fun formatDateRange(start: Date, end: Date?): String {
@@ -45,11 +22,6 @@ object DateUtils {
         } else {
             "${formatDate(start)} - ${formatDate(end)}"
         }
-    }
-
-    fun getDaysDifference(startDate: Long, endDate: Long): Int {
-        val diff = endDate - startDate
-        return (diff / (1000 * 60 * 60 * 24)).toInt() + 1
     }
 
     fun formatDuration(durationMillis: Long): String {
@@ -64,11 +36,6 @@ object DateUtils {
         }
     }
 
-    fun getDaysDifference(start: Date, end: Date): Int {
-        val diff = end.time - start.time
-        return (diff / (1000 * 60 * 60 * 24)).toInt() + 1
-    }
-
     fun formatDistance(meters: Float): String {
         return when {
             meters >= 1000 -> String.format(Locale.getDefault(), "%.2f km", meters / 1000)
@@ -76,4 +43,3 @@ object DateUtils {
         }
     }
 }
-

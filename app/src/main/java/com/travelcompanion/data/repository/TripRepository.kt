@@ -43,15 +43,20 @@ class TripRepository @Inject constructor(
     // Istanza singola: Converters non ha stato, ma evitare allocazioni ripetute è comunque buona pratica
     private val converters = Converters()
 
+    // La UI valida già i campi, ma il repository è l'unico punto da cui passano
+    // tutte le scritture: rivalidare qui protegge anche i chiamanti futuri
     override suspend fun insertTrip(trip: Trip): Long {
+        TripValidationUtils.validateForCreate(trip)
         return tripDao.insertTrip(trip.toEntity())
     }
 
     override suspend fun updateTrip(trip: Trip) {
+        TripValidationUtils.validateForUpdate(trip)
         tripDao.updateTrip(trip.toEntity())
     }
 
     override suspend fun deleteTrip(trip: Trip) {
+        TripValidationUtils.validateForDelete(trip)
         tripDao.deleteTrip(trip.toEntity())
     }
 

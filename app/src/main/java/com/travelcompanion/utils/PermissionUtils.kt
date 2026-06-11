@@ -22,18 +22,15 @@ object PermissionUtils {
     private const val REQUEST_STORAGE_PERMISSION = 102
     private const val REQUEST_NOTIFICATION_PERMISSION = 103
     private const val REQUEST_BACKGROUND_LOCATION = 104
-    val LOCATION_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else {
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-    }
+    // Solo i permessi foreground: ACCESS_BACKGROUND_LOCATION NON va messo qui.
+    // Da Android 11 il sistema ignora le richieste che mischiano background e foreground,
+    // e tenerlo nel controllo faceva fallire hasLocationPermissions() anche con il
+    // permesso "Mentre usi l'app" concesso (la mappa non si centrava mai).
+    // Per il background c'è hasBackgroundLocationPermission(), da chiedere a parte.
+    val LOCATION_PERMISSIONS = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 

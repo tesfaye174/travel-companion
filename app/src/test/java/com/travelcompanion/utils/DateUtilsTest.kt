@@ -58,11 +58,4 @@ class DateUtilsTest {
         // sotto l'ora si vedono solo i minuti
         assertEquals("45m", DateUtils.formatDuration(45 * 60_000L))
     }
-
-    @Test
-    fun `getDaysDifference is inclusive of both endpoints`() {
-        val dayMs = 24 * 60 * 60 * 1000L
-        assertEquals(1, DateUtils.getDaysDifference(0L, 0L))
-        assertEquals(3, DateUtils.getDaysDifference(0L, 2 * dayMs))
-    }
 }
