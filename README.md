@@ -161,16 +161,6 @@ app/src/main/java/com/travelcompanion/
    ./gradlew installDebug
    ```
 
-### Esecuzione dei test
-
-```bash
-# Test unitari
-./gradlew test
-
-# Test strumentati (richiede dispositivo o emulatore)
-./gradlew connectedAndroidTest
-```
-
 ## Schema del database
 
 L'app utilizza Room con sei tabelle:
@@ -225,18 +215,6 @@ File rilevanti:
 | `CAMERA` | Scatto delle foto |
 | `POST_NOTIFICATIONS` | Notifiche di tracciamento e geofence |
 | `FOREGROUND_SERVICE_LOCATION` | Tracciamento in foreground service |
-
-## Test
-
-Il progetto include tre suite di test unitari:
-
-- `TripValidationUtilsTest` — validazione date e titolo del viaggio.
-- `AnalyzePredictionUseCaseTest` — caso d'uso di analisi predittiva.
-- `HomeViewModelTest` — stato della Home e flussi `StateFlow`.
-
-Le dipendenze di test comprendono JUnit 4, MockK, Turbine, Truth e
-`coroutines-test`. Per i test strumentati sono dichiarate (anche se non
-ancora utilizzate diffusamente) AndroidX Test, Espresso e Room Testing.
 
 ## Licenza
 
