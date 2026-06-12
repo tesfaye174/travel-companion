@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.travelcompanion.R
 import com.travelcompanion.data.db.AppDatabase
 import com.travelcompanion.data.db.entities.GeofenceEventEntity
+import com.travelcompanion.data.preferences.SettingsDataStore
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import dagger.hilt.EntryPoint
@@ -21,6 +22,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -30,19 +32,19 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     @InstallIn(SingletonComponent::class)
     interface GeofenceReceiverEntryPoint {
         fun database(): AppDatabase
+        fun settings(): SettingsDataStore
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        val database = EntryPointAccessors.fromApplication(
+        val entryPoint = EntryPointAccessors.fromApplication(
             context.applicationContext,
             GeofenceReceiverEntryPoint::class.java
-        ).database()
+        )
         if (intent.action == AppConstants.PlatformIntents.ACTION_PLATFORM_GEOFENCE) {
             val id = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_GEOFENCE_ID) ?: return
             val transitionStr = intent.getStringExtra(AppConstants.PlatformIntents.EXTRA_TRANSITION) ?: return
             val transition = if (transitionStr == "ENTER") Geofence.GEOFENCE_TRANSITION_ENTER else Geofence.GEOFENCE_TRANSITION_EXIT
-            persistEvents(database, transition, listOf(id))
-            showNotification(context, transition, id)
+            handleEvent(context, entryPoint, transition, listOf(id), id)
             return
         }
 
@@ -54,18 +56,19 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             val triggeringGeofences = event.triggeringGeofences
             val ids = triggeringGeofences?.joinToString { it.requestId } ?: "Unknown"
 
-            persistEvents(database, transition, triggeringGeofences?.map { it.requestId }.orEmpty())
-            showNotification(context, transition, ids)
+            handleEvent(context, entryPoint, transition, triggeringGeofences?.map { it.requestId }.orEmpty(), ids)
         }
     }
 
-    private fun persistEvents(database: AppDatabase, transition: Int, ids: List<String>) {
+    // Persistenza e notifica stanno nella stessa coroutine perché leggere la preferenza
+    // notifyPoi da DataStore è una suspend fun: nel onReceive sincrono non si può fare
+    private fun handleEvent(context: Context, entryPoint: GeofenceReceiverEntryPoint, transition: Int, ids: List<String>, idsLabel: String) {
         val transitionLabel = if (transition == Geofence.GEOFENCE_TRANSITION_ENTER) "ENTER" else "EXIT"
         val ts = System.currentTimeMillis()
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val dao = database.geofenceEventDao()
+                val dao = entryPoint.database().geofenceEventDao()
                 ids.forEach { id ->
                     dao.insert(
                         GeofenceEventEntity(
@@ -76,6 +79,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     )
                 }
                 Timber.d("Persisted ${ids.size} geofence events")
+
+                // L'evento si salva comunque nello storico, la notifica solo se l'utente la vuole
+                if (entryPoint.settings().notifyPoiFlow.first()) {
+                    showNotification(context, transition, idsLabel)
+                }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to persist geofence events")
             } finally {

@@ -181,6 +181,9 @@ class SettingsFragment : Fragment() {
                     saveToDownloads(jsonContent)
                 }
                 Toast.makeText(requireContext(), R.string.export_data_success, Toast.LENGTH_LONG).show()
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                // l'utente ha lasciato la schermata durante l'export: non è un errore, niente toast
+                throw e
             } catch (e: IOException) {
                 Timber.e(e)
                 Toast.makeText(requireContext(), R.string.export_data_error, Toast.LENGTH_SHORT).show()

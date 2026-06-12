@@ -16,6 +16,7 @@ import androidx.work.WorkerParameters
 import com.travelcompanion.R
 import com.travelcompanion.utils.AppConstants
 import com.travelcompanion.MainActivity
+import com.travelcompanion.data.preferences.SettingsDataStore
 import com.travelcompanion.domain.repository.ITripRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -26,10 +27,17 @@ import java.util.Date
 class NotificationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
-    private val repository: ITripRepository
+    private val repository: ITripRepository,
+    private val settingsDataStore: SettingsDataStore
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        // L'utente può disattivare i promemoria dalle impostazioni: in quel caso il worker
+        // gira lo stesso (è periodico) ma non deve mandare niente
+        if (!settingsDataStore.notifyRemindersFlow.first()) {
+            return Result.success()
+        }
+
         // Il promemoria viene inviato solo se l'utente non ha registrato viaggi negli ultimi 7 giorni
         val sevenDaysAgo = Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)
         val recentTrips = repository.getTripsBetweenDates(sevenDaysAgo, Date()).first()
